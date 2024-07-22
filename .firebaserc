@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "wishlist-676f9": {
+      "hosting": {
+        "wishlist": [
+          "wishlist-676f9"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "wishlist-676f9"
+  }
+}

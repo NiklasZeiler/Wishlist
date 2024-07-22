@@ -1,10 +1,13 @@
-body {
-    margin: 0;
-    background-color: rgb(5, 23, 30);
-    color: white;
+.overlay {
     display: flex;
     align-items: center;
     height: 100vh;
     justify-content: center;
     flex-direction: column;
+}
+
+.user {
+    position: absolute;
+    top: 20px;
+    right: 60px;
 }
