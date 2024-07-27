@@ -2,12 +2,12 @@
     <h1 class="headline">
         Wunschliste
     </h1>
-    <form>
+    <form (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm">
         <input type="email" placeholder="Bitte E-Mail angeben">
         <input type="password" placeholder="Bitte Passwort eingeben">
         <div class="buttons">
-            <a class="button loginBtn" routerLink="/login" type="button">Login</a>
-            <a class="button" routerLink="/registration" type="button">Registrieren</a>
+            <button class="button" type="submit">Login</button>
+            <button class="button" (click)="navigateToRegistration()" type="button">Registrieren</button>
         </div>
 
     </form>
