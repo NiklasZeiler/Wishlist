@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FirebaseService } from '../Service/firebase.service';
 import { CommonModule } from '@angular/common';
+import { Wish } from '../interfaces/wish.interface';
 
 @Component({
   selector: 'app-wishes',
@@ -10,7 +11,17 @@ import { CommonModule } from '@angular/common';
   styleUrl: './wishes.component.scss'
 })
 export class WishesComponent {
-  constructor(public firebase: FirebaseService) {
+
+  constructor(private firebase: FirebaseService) {
   }
+
+  getWishes(): Wish[] {
+    return this.firebase.wishes;
+  }
+
+  deleteWish() {
+
+  }
+
 
 }

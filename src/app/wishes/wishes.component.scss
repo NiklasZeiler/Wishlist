@@ -1,0 +1,28 @@
+.headline {
+    position: fixed;
+    top: 60px;
+    left: 10px;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    position: fixed;
+    top: 170px;
+    left: 0;
+
+    .first_tr {
+        justify-content: space-around !important;
+        margin-bottom: 20px;
+    }
+
+    tr {
+        display: flex;
+        justify-content: space-evenly;
+
+        :first-child{
+            margin-bottom: 20px;
+        }
+    }
+}

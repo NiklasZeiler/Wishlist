@@ -1,9 +1,38 @@
+<section class="wishes-container">
+    <h1 class="headline">Wünsche</h1>
+    <div class="wishes">
 
+        <table class="table">
+            <tr class="first_tr">
+                <th>Wunsch</th>
+                <!-- <th>Beschreibung</th> -->
+                <th>Bild</th>
+                <th>Link</th>
+                <th>Aktionen</th>
+            </tr>
+            <tr *ngFor="let wish of getWishes()">
+                <td>{{wish.wish}}</td>
+                <!-- <td>{{ wish["description"] }}</td> -->
+                <td><img [src]=wish.image alt="{{wish.altText}}"></td>
+                <td><a href="{{wish.link}}">{{wish.link}}</a></td>
+                <td>
+                    <button>Löschen</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">Keine Wünsche vorhanden</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <button>Wunsch hinzufügen</button>
+    </div>
 
-<ul>
+    <!-- <ul>
     @for (item of (this.firebase.items$ | async); track item) {
     <li>
         {{ item["wish"] }}
     </li>
     }
-</ul>
+</ul> -->
+</section>
