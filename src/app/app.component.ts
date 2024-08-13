@@ -4,12 +4,13 @@ import { WishesComponent } from "./wishes/wishes.component";
 import { LoginComponent } from "./login/login.component";
 import { OverlayComponent } from "./overlay/overlay.component";
 import { FormsModule } from '@angular/forms';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, WishesComponent, LoginComponent, OverlayComponent, FormsModule],
+  imports: [RouterOutlet, RouterLink, WishesComponent, LoginComponent, OverlayComponent, FormsModule, MatMenuModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
