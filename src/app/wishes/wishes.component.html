@@ -5,34 +5,25 @@
         <table class="table">
             <tr class="first_tr">
                 <th>Wunsch</th>
-                <!-- <th>Beschreibung</th> -->
                 <th>Bild</th>
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
             <tr *ngFor="let wish of getWishes()">
                 <td>{{wish.wish}}</td>
-                <!-- <td>{{ wish["description"] }}</td> -->
-                <td><img [src]=wish.image alt="{{wish.altText}}"></td>
+                <td><img [src]=wish.image></td>
                 <td><a href="{{wish.link}}">{{wish.link}}</a></td>
                 <td>
                     <button>Löschen</button>
                 </td>
             </tr>
+            <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
             <tr>
-                <td colspan="4">Keine Wünsche vorhanden</td>
+                <!-- <td colspan="4">Keine Wünsche vorhanden</td> -->
             </tr>
         </table>
     </div>
     <div>
-        <button>Wunsch hinzufügen</button>
+        <button (click)="navigateToAddWish()">Wunsch hinzufügen</button>
     </div>
-
-    <!-- <ul>
-    @for (item of (this.firebase.items$ | async); track item) {
-    <li>
-        {{ item["wish"] }}
-    </li>
-    }
-</ul> -->
 </section>

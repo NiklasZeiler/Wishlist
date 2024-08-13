@@ -5,5 +5,4 @@ export interface Wish {
     link: string;
     priority: string;
     image: string;
-    altText: string;
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FirebaseService } from '../Service/firebase.service';
 import { CommonModule } from '@angular/common';
 import { Wish } from '../interfaces/wish.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-wishes',
@@ -12,7 +13,7 @@ import { Wish } from '../interfaces/wish.interface';
 })
 export class WishesComponent {
 
-  constructor(private firebase: FirebaseService) {
+  constructor(private firebase: FirebaseService, private router: Router) {
   }
 
   getWishes(): Wish[] {
@@ -21,6 +22,9 @@ export class WishesComponent {
 
   deleteWish() {
 
+  }
+  navigateToAddWish() {
+    this.router.navigate(['/addWishes'])
   }
 
 
