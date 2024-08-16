@@ -1,37 +1,27 @@
 <section class="addWish">
     <h1 class="headline">Wunsch hinzufügen</h1>
     <div class="form">
-        <label for="image">Bild einfügen</label>
-        <input type="text" id="image" placeholder="Bitte füge den Link vom Bild ein">
+        <label for="image">Bild auswählen</label>
+        <input [(ngModel)]="image" (change)="this.firebase.changePicture($event)" type="file" id="image" required>
         <label for="url">Link einfügen</label>
-        <input type="url" name="url" id="url" placeholder="Link zum Wunsch">
+        <input [(ngModel)]="url" type="url" name="url" id="url" placeholder="Link zum Wunsch" required>
         <label for="prio">Priorität auswählen</label>
-        <!--dropdown to choose priority-->
-        <button mat-button [matMenuTriggerFor]="menu">Priorität</button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item>Niedrig</button>
-            <button mat-menu-item>Mittel</button>
-            <button mat-menu-item>Hoch</button>
-        </mat-menu>
+        <div class="row">
+            <div class="col">
+                <div ngbDropdown class="d-inline-block">
+                    <button type="button" class="btn btn-outline-primary prio" id="dropdownBasic1" ngbDropdownToggle>
+                        Priorität: {{ selectedPriority }}
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                        <button ngbDropdownItem (click)="setPriority('Niedrig')">Niedrig</button>
+                        <button ngbDropdownItem (click)="setPriority('Mittel')">Mittel</button>
+                        <button ngbDropdownItem (click)="setPriority('Hoch')">Hoch</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <label for="wish">Wunsch eingeben</label>
-        <input type="text" id="wish" placeholder="Name des Wunsches">
-        <button>Wunsch hinzufügen</button>
+        <input [(ngModel)]="wish" type="text" id="wish" placeholder="Name des Wunsches">
+        <button (touchstart)="this.addWish($event)">Wunsch hinzufügen</button>
     </div>
-    <!-- <form class="form" action=""> -->
-    <!-- <label for="image">Bild einfügen</label>
-    <input type="text" id="image" placeholder="Bitte füge den Link vom Bild ein">
-    <label for="url">Link einfügen</label>
-    <input type="url" name="url" id="url" placeholder="Link zum Wunsch">
-    <label for="prio">Priorität auswählen</label>
-    dropdown to choose priority
-    <button mat-button [matMenuTriggerFor]="menu">Priorität</button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item>Niedrig</button>
-        <button mat-menu-item>Mittel</button>
-        <button mat-menu-item>Hoch</button>
-    </mat-menu>
-    <label for="wish">Wunsch eingeben</label>
-    <input type="text" id="wish" placeholder="Name des Wunsches">
-    <button>Wunsch hinzufügen</button> -->
-    <!-- </form> -->
 </section>

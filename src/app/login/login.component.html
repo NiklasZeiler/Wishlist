@@ -7,7 +7,7 @@
         <input type="password" placeholder="Bitte Passwort eingeben">
         <div class="buttons">
             <button class="button" type="submit">Login</button>
-            <button class="button" (click)="navigateToRegistration()" type="button">Registrieren</button>
+            <button class="button" (touchstart)="navigateToRegistration($event)" type="button">Registrieren</button>
         </div>
 
     </form>

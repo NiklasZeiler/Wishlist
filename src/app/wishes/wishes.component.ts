@@ -23,9 +23,12 @@ export class WishesComponent {
   deleteWish() {
 
   }
-  navigateToAddWish() {
+  navigateToAddWish(event: TouchEvent) {
+    event.preventDefault();
     this.router.navigate(['/addWishes'])
   }
+
+
 
 
 }

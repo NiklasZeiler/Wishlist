@@ -13,7 +13,8 @@ export class LoginComponent {
 
   constructor(private router: Router) { }
 
-  navigateToRegistration() {
+  navigateToRegistration(event: TouchEvent) {
+    event.preventDefault();
     this.router.navigate(["/registration"]);
   }
 
