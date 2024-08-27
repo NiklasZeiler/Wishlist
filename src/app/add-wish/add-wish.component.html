@@ -10,7 +10,7 @@
             <div class="col">
                 <div ngbDropdown class="d-inline-block">
                     <button type="button" class="btn btn-outline-primary prio" id="dropdownBasic1" ngbDropdownToggle>
-                        Priorität: {{ selectedPriority }}
+                        Priorität: {{ this.firebase.selectedPriority }}
                     </button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                         <button ngbDropdownItem (click)="setPriority('Niedrig')">Niedrig</button>

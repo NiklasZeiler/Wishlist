@@ -19,11 +19,11 @@ export class AddWishComponent {
   image: string = ""
   url: string = "";
   wish: string = ""
-  selectedPriority: string = "";
+
 
 
   setPriority(priority: string) {
-    this.selectedPriority = priority;
+    this.firebase.selectedPriority = priority;
   }
 
 
@@ -53,7 +53,7 @@ export class AddWishComponent {
       type: "wish",
       wish: this.wish,
       link: this.url,
-      priority: this.selectedPriority,
+      priority: this.firebase.selectedPriority,
       image: this.image,
     };
     this.firebase.addWish(wish);

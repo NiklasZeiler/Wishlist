@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, setDoc, getFirestore } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, setDoc } from '@angular/fire/firestore';
 import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 
@@ -12,12 +12,15 @@ export class FirebaseService {
   wishes: Wish[] = [];
   photoUrl: string = ""
   file: any;
+  selectedPriority: string = "";
 
 
   unsubWish;
 
 
   firestore: Firestore = inject(Firestore);
+
+  prioDocRef = doc(this.firestore, "wishes", "priority")
 
 
   constructor() {
@@ -27,64 +30,25 @@ export class FirebaseService {
 
   changePicture(event: any) {
     this.file = event.target.files[0];
-    // const storageRef = ref(getStorage(), `wishes/${file.name}`);
-    // const uploadTask = uploadBytesResumable(storageRef, file);
   }
 
-  // async updateFirestore(documentUrl: string) {
-  //   const db = getFirestore();
-  //   let docRef = doc(db, "wishes")
-
-  //   await setDoc(docRef, {
-  //     wishes: this.wishes
-  //   }).catch((error) => {
-  //     console.error("Error writing document: ", error);
-  //   });
-  // }
-
-
-  // async addWish(item: Wish) {
-  //   this.photoUrl = "";
-  //   if (this.file) {
-  //     const storage = getStorage();
-  //     let storageRef = ref(storage, `images/${this.file.name}`);
-  //     uploadBytesResumable(storageRef, this.file, this.file).then(
-  //       () => {
-  //         getDownloadURL(storageRef).then((imageUrl) => {
-  //           this.photoUrl = imageUrl;
-  //         })
-  //       }
-  //     )
-  //     // this.updateFirestore(this.photoUrl)
-  //   }
-  //   await addDoc(this.getWishesRef(), item).catch((err) => {
-  //     console.error(err);
-  //   }).then((docRef) => {
-  //     console.log("Document written: ", docRef);
-  //   });
-  // }
 
   async addWish(item: Wish) {
     if (this.file) {
       const storage = getStorage();
       let storageRef = ref(storage, `images/${this.file.name}`);
 
-      // Upload file and get download URL
       const uploadTaskSnapshot = await uploadBytesResumable(storageRef, this.file);
       this.photoUrl = await getDownloadURL(uploadTaskSnapshot.ref);
-
-      // Add the photo URL to the item
       item.image = this.photoUrl;
     }
 
-    // Save the wish with the image URL
     await addDoc(this.getWishesRef(), item).catch((err) => {
       console.error(err);
     }).then((docRef) => {
       console.log("Document written: ", docRef);
     });
   }
-
 
   ngOnDestroy() {
     this.unsubWish();
@@ -96,6 +60,16 @@ export class FirebaseService {
       list.forEach((item) => {
         this.wishes.push(this.setWishObject(item.data(), item.id));
       });
+    })
+  }
+
+  setPriority(priority: string) {
+    this.selectedPriority = priority;
+  }
+
+  async updatePriority() {
+    await updateDoc(this.prioDocRef, {
+      "priority": this.selectedPriority,
     })
   }
 

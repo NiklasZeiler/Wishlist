@@ -10,7 +10,8 @@
                 <th>Aktionen</th>
             </tr>
             <tr *ngFor="let wish of getWishes()">
-                <td>{{wish.wish}}</td>
+                <td [ngStyle]="getPriorityStyle(wish.priority)">{{ wish.wish }}</td>
+                <!-- <td #prio>{{wish.wish}}</td> -->
                 <td><img [src]=wish.image></td>
                 <td><a href="{{wish.link}}">{{wish.link}}</a></td>
                 <td>
