@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FirebaseService } from '../Service/firebase.service';
 import { CommonModule } from '@angular/common';
 import { Wish } from '../interfaces/wish.interface';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.component';
 
 @Component({
   selector: 'app-wishes',
@@ -12,13 +14,18 @@ import { Router } from '@angular/router';
   styleUrl: './wishes.component.scss'
 })
 export class WishesComponent {
+  @Input() wish!: Wish
 
-  constructor(private firebase: FirebaseService, private router: Router) {
+  constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog) {
   }
 
 
   getWishes(): Wish[] {
     return this.firebase.wishes;
+  }
+
+  trackByWishId(index: number, wish: any): string {
+    return wish.id; // or whatever unique identifier you have
   }
 
   deleteWish() {
@@ -40,6 +47,20 @@ export class WishesComponent {
       default:
         return {};
     }
+  }
+
+  changePriority(wish: Wish): void {
+    const dialogRef = this.dialog.open(ChangePrioComponent, {
+      width: '250px',
+      data: { wish: wish }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        wish.priority = result.priority;
+        this.firebase.updatePriority(wish)
+      }
+    });
   }
 
 

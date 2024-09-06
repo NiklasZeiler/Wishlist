@@ -20,9 +20,6 @@ export class FirebaseService {
 
   firestore: Firestore = inject(Firestore);
 
-  prioDocRef = doc(this.firestore, "wishes", "priority")
-
-
   constructor() {
     this.unsubWish = this.subWishList();
   }
@@ -51,12 +48,15 @@ export class FirebaseService {
   }
 
   ngOnDestroy() {
-    this.unsubWish();
+    if (this.unsubWish) {
+      this.unsubWish();
+    }
   }
 
   subWishList() {
-    this.wishes = [];
+
     return onSnapshot(this.getWishesRef(), (list) => {
+      this.wishes = [];
       list.forEach((item) => {
         this.wishes.push(this.setWishObject(item.data(), item.id));
       });
@@ -67,11 +67,36 @@ export class FirebaseService {
     this.selectedPriority = priority;
   }
 
-  async updatePriority() {
-    await updateDoc(this.prioDocRef, {
-      "priority": this.selectedPriority,
-    })
+  async updatePriority(wish: Wish) {
+    if (wish.id) {
+      let docRef = this.getSingleDocRef(this.getColIdFromWish(wish), wish.id)
+      await updateDoc(docRef, this.getCleanJson(wish)).catch((err) => {
+        console.log(err);
+      });
+    }
   }
+
+  getCleanJson(wish: Wish): {} {
+    return {
+      type: wish.type,
+      wish: wish.wish,
+      link: wish.link,
+      priority: wish.priority,
+      image: wish.image,
+    }
+  }
+
+  getColIdFromWish(wish: Wish) {
+    return wish.type === "wish" ? "wishes" : wish.type;
+  }
+
+  // getColIdFromWish(wish: Wish) {
+  //   if (wish.type == "wish") {
+  //     return "wishes";
+  //   } else {
+  //     return "wish.type";
+  //   }
+  // }
 
   getWishesRef() {
     return collection(this.firestore, 'wishes');
@@ -87,5 +112,9 @@ export class FirebaseService {
       altText: obj.altText || "",
       priority: obj.priority || "",
     } as Wish;
+  }
+
+  getSingleDocRef(colId: string, docId: string) {
+    return doc(collection(this.firestore, colId), docId)
   }
 }

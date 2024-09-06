@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Priorität ändern</h1>
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>Priorität</mat-label>
+        <mat-select [(value)]="selectedPriority">
+            <mat-option *ngFor="let option of priorityOptions" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Abbrechen</button>
+    <button mat-button (click)="onSave()">Speichern</button>
+</div>

@@ -13,13 +13,14 @@
     left: 0;
 
     .first_tr {
-        justify-content: space-around !important;
+        justify-content: space-between !important;
         margin-bottom: 20px;
     }
 
     tr {
         display: flex;
-        justify-content: space-evenly;
+        justify-content: space-around;
+        align-items: baseline;
 
         :first-child {
             margin-bottom: 20px;
@@ -36,8 +37,15 @@
         background-color: white !important;
     }
 
+    .addWishBtn {
+        display: flex;
+        justify-content: center;
+    }
+
     img {
         padding: 0 !important;
         width: 100px;
+        height: 50px;
+        object-fit: cover;
     }
 }

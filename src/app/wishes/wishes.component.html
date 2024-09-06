@@ -9,9 +9,9 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr *ngFor="let wish of getWishes()">
-                <td [ngStyle]="getPriorityStyle(wish.priority)">{{ wish.wish }}</td>
-                <!-- <td #prio>{{wish.wish}}</td> -->
+            <tr *ngFor="let wish of getWishes(); trackBy: trackByWishId">
+                <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
+                </td>
                 <td><img [src]=wish.image></td>
                 <td><a href="{{wish.link}}">{{wish.link}}</a></td>
                 <td>
@@ -22,9 +22,12 @@
             <tr>
                 <!-- <td colspan="4">Keine Wünsche vorhanden</td> -->
             </tr>
+            <div class="addWishBtn">
+                <button (touchstart)="navigateToAddWish($event)">Wunsch hinzufügen</button>
+            </div>
         </table>
     </div>
-    <div>
+    <!-- <div>
         <button (touchstart)="navigateToAddWish($event)">Wunsch hinzufügen</button>
-    </div>
+    </div> -->
 </section>

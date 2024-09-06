@@ -3,6 +3,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../Service/firebase.service';
 import { Wish } from '../interfaces/wish.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-wish',
@@ -13,7 +14,7 @@ import { Wish } from '../interfaces/wish.interface';
 })
 export class AddWishComponent {
 
-  constructor(public firebase: FirebaseService) {
+  constructor(public firebase: FirebaseService, private router: Router) {
   }
 
   image: string = ""
@@ -25,24 +26,6 @@ export class AddWishComponent {
   setPriority(priority: string) {
     this.firebase.selectedPriority = priority;
   }
-
-
-  // addWish(event: TouchEvent) {
-  //   this.firebase.photoUrl = this.image
-
-  //   event.preventDefault();
-  //   console.log('Add wish');
-  //   let wish: Wish = {
-  //     type: "wish",
-  //     wish: this.wish,
-  //     link: this.url,
-  //     priority: this.selectedPriority,
-  //     image: this.image,
-  //   }
-  //   console.log(wish);
-  //   this.firebase.addWish(wish);
-
-  // }
 
   addWish(event: TouchEvent) {
     this.firebase.photoUrl = this.image
@@ -57,6 +40,7 @@ export class AddWishComponent {
       image: this.image,
     };
     this.firebase.addWish(wish);
+    this.router.navigate(['/wishes'])
   }
 
 }
