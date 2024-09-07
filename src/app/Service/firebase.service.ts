@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, setDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, setDoc, deleteDoc } from '@angular/fire/firestore';
 import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { Feedback } from '../interfaces/feedback.interface';
 
 
 
@@ -10,18 +11,21 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 })
 export class FirebaseService {
   wishes: Wish[] = [];
+  feedbacks: Feedback[] = [];
   photoUrl: string = ""
   file: any;
   selectedPriority: string = "";
 
 
   unsubWish;
+  unsubFeedback;
 
 
   firestore: Firestore = inject(Firestore);
 
   constructor() {
     this.unsubWish = this.subWishList();
+    this.unsubFeedback = this.subFeedbackList();
   }
 
 
@@ -47,20 +51,42 @@ export class FirebaseService {
     });
   }
 
+  async addFeedback(feedback: Feedback) {
+    await addDoc(this.getFeedbackRef(), feedback).catch((err) => {
+      console.error(err);
+    }).then((docRef) => {
+      console.log("Document written: ", docRef);
+    });
+  }
+
   ngOnDestroy() {
     if (this.unsubWish) {
       this.unsubWish();
     }
+    if (this.unsubFeedback) {
+      this.unsubFeedback();
+    }
   }
 
   subWishList() {
-
     return onSnapshot(this.getWishesRef(), (list) => {
       this.wishes = [];
       list.forEach((item) => {
         this.wishes.push(this.setWishObject(item.data(), item.id));
       });
     })
+  }
+
+  subFeedbackList() {
+    return onSnapshot(this.getFeedbackRef(), (list) => {
+      this.feedbacks = [];
+      list.forEach((item) => {
+        this.feedbacks.push(this.setFeedbackObject(item.data(), item.id));
+      });
+      console.log(this.feedbacks);
+    })
+
+
   }
 
   setPriority(priority: string) {
@@ -70,11 +96,25 @@ export class FirebaseService {
   async updatePriority(wish: Wish) {
     if (wish.id) {
       let docRef = this.getSingleDocRef(this.getColIdFromWish(wish), wish.id)
-      await updateDoc(docRef, this.getCleanJson(wish)).catch((err) => {
-        console.log(err);
-      });
+      await updateDoc(docRef, this.getCleanJson(wish))
     }
   }
+
+  async updateLikes(feedBack: Feedback) {
+    if (feedBack.id) {
+      let docRef = this.getSingleDocRef(this.getColIdFromFeedback(feedBack), feedBack.id)
+      await updateDoc(docRef, this.getCleanFeedbackJson(feedBack))
+    }
+  }
+
+  async deleteWish(wish: Wish) {
+    if (wish.id) {
+      let docRef = this.getSingleDocRef(this.getColIdFromWish(wish), wish.id)
+      await deleteDoc(docRef)
+    }
+  }
+
+
 
   getCleanJson(wish: Wish): {} {
     return {
@@ -86,8 +126,20 @@ export class FirebaseService {
     }
   }
 
+  getCleanFeedbackJson(feedback: Feedback) {
+    return {
+      type: feedback.type,
+      feedback: feedback.feedback,
+      likes: feedback.likes,
+    }
+  }
+
   getColIdFromWish(wish: Wish) {
     return wish.type === "wish" ? "wishes" : wish.type;
+  }
+
+  getColIdFromFeedback(feedback: Feedback) {
+    return feedback.type === "feedback" ? "feedback" : feedback.type;
   }
 
   // getColIdFromWish(wish: Wish) {
@@ -102,6 +154,10 @@ export class FirebaseService {
     return collection(this.firestore, 'wishes');
   }
 
+  getFeedbackRef() {
+    return collection(this.firestore, 'feedback');
+  }
+
   setWishObject(obj: any, id: string): Wish {
     return {
       id: id,
@@ -112,6 +168,15 @@ export class FirebaseService {
       altText: obj.altText || "",
       priority: obj.priority || "",
     } as Wish;
+  }
+
+  setFeedbackObject(obj: any, id: string): Feedback {
+    return {
+      id: id,
+      feedback: obj.feedback || "",
+      type: obj.type || "feedback",
+      likes: obj.likes || 0,
+    } as Feedback
   }
 
   getSingleDocRef(colId: string, docId: string) {

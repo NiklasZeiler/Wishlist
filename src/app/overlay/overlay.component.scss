@@ -1,14 +1,11 @@
-.overlay {
-    display: flex;
-    align-items: center;
-    height: 100vh;
-    justify-content: center;
-    flex-direction: column;
-    width: 100vw;
+.menu {
+    background-color: transparent;
+    color: white;
+    border: unset;
 }
 
 .user {
-    position: absolute;
-    top: 20px;
-    right: 60px;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
 }

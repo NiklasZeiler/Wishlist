@@ -13,9 +13,9 @@
                 <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
                 </td>
                 <td><img [src]=wish.image></td>
-                <td><a href="{{wish.link}}">{{wish.link}}</a></td>
+                <td><a href=`${{wish.link}}`>{{wish.link}}</a></td>
                 <td>
-                    <button>Löschen</button>
+                    <button (click)="deleteWish(wish)">Löschen</button>
                 </td>
             </tr>
             <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
@@ -27,7 +27,4 @@
             </div>
         </table>
     </div>
-    <!-- <div>
-        <button (touchstart)="navigateToAddWish($event)">Wunsch hinzufügen</button>
-    </div> -->
 </section>

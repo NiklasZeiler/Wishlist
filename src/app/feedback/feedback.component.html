@@ -1,0 +1,18 @@
+<div class="feedback_container">
+    <h1>Feedback</h1>
+    <h5>Ich bitte euch mir ein kurzes Feedback zu geben, was ich noch verbessern sollte</h5>
+
+    <div class="feedback">
+        <textarea [(ngModel)]="text" placeholder="Bitte Feedback eingeben..."></textarea>
+        <button (click)="addFeedback()">Abschicken</button>
+    </div>
+    <div class="placeholder"></div>
+    <div class="feedback_text" *ngFor="let feedback of getFeedback()">
+        <span>{{feedback.feedback}}</span>
+        <div class="likes">
+            <mat-icon (click)="count()">thumb_up</mat-icon>
+            <span id="counter">0</span>
+        </div>
+
+    </div>
+</div>

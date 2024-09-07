@@ -25,11 +25,11 @@ export class WishesComponent {
   }
 
   trackByWishId(index: number, wish: any): string {
-    return wish.id; // or whatever unique identifier you have
+    return wish.id;
   }
 
-  deleteWish() {
-
+  deleteWish(wish: Wish) {
+    this.firebase.deleteWish(wish)
   }
   navigateToAddWish(event: TouchEvent) {
     event.preventDefault();

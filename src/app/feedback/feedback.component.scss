@@ -1,0 +1,44 @@
+.feedback_container {
+    display: flex;
+    flex-direction: column;
+    margin: 300px 0 0 20px;
+    height: 100vh;
+
+    h1 {
+        margin-bottom: 50px;
+    }
+
+    h5 {
+        margin-bottom: 20px;
+    }
+}
+
+.feedback {
+    textarea {
+        width: 300px;
+        height: 200px;
+    }
+}
+
+.feedback {
+    width: 250px;
+}
+
+.placeholder {
+    margin-top: 50px;
+    color: transparent;
+}
+
+.feedback_text {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+    // overflow-y: scroll;
+
+    .likes {
+        display: flex;
+        span {
+            margin-left: 5px;
+        }
+    }
+}

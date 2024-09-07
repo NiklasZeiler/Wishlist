@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
