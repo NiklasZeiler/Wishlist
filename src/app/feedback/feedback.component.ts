@@ -34,16 +34,22 @@ export class FeedbackComponent {
       likes: 0
     };
     this.firebase.addFeedback(feedBack);
+    this.text = "";
   }
 
   getFeedback() {
     return this.firebase.feedbacks;
   }
 
-  count() {
-    let count = document.getElementById("counter") as HTMLElement;
-    this.likes = this.likes + 1
-    count.innerHTML = this.likes.toString();
+  count(feedback: Feedback) {
+    this.firebase.updateLikes(feedback).then(() => {
+      let count = document.getElementById(`conter-${feedback.id}`) as HTMLElement;
+      if (count) {
+        count.innerHTML = feedback.likes.toString();
+      }
+    }).catch(err => {
+      console.error('Error updating likes in Firestore:', err);
+    });
   }
 
 }

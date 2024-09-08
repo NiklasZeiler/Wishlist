@@ -9,21 +9,26 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr *ngFor="let wish of getWishes(); trackBy: trackByWishId">
+            <tr *ngFor="let wish of getWishes(); trackBy: trackByWishId" [ngClass]="{'completed': wish.completed}"
+                [style.pointer-events]="wish.completed ? 'none' : 'auto'">
                 <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
                 </td>
                 <td><img [src]=wish.image></td>
                 <td><a href=`${{wish.link}}`>{{wish.link}}</a></td>
+                <!-- Löschen Button nur wenn Eigentümer der Liste angemeldet,
+                wenn Gast oder Schenker auf Liste zugreift dann Erledigt -->
                 <td>
-                    <button (click)="deleteWish(wish)">Löschen</button>
+                    <button [disabled]="wish.completed" (click)="handleButton(wish)">{{test ? "Löschen" :
+                        "Erledigt"}}</button>
                 </td>
             </tr>
             <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
             <tr>
-                <!-- <td colspan="4">Keine Wünsche vorhanden</td> -->
+                <!-- <td *ngIf="this.wishes.length === 0" colspan="4">Keine Wünsche vorhanden</td> -->
             </tr>
             <div class="addWishBtn">
-                <button (touchstart)="navigateToAddWish($event)">Wunsch hinzufügen</button>
+                <button [class.opacity]="!test" [disabled]="!test" (touchstart)="navigateToAddWish($event)">Wunsch
+                    hinzufügen</button>
             </div>
         </table>
     </div>

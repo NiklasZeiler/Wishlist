@@ -1,8 +1,7 @@
 .feedback_container {
     display: flex;
     flex-direction: column;
-    margin: 300px 0 0 20px;
-    height: 100vh;
+    margin: 0 0 0 20px;
 
     h1 {
         margin-bottom: 50px;
@@ -29,14 +28,23 @@
     color: transparent;
 }
 
+.overflow {
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.6) rgba(0, 0, 0, 0.1);
+}
+
 .feedback_text {
-    margin-top: 10px;
+    margin: 10px 5px 0 0;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: baseline;
     // overflow-y: scroll;
 
     .likes {
         display: flex;
+        width: 50px;
         span {
             margin-left: 5px;
         }

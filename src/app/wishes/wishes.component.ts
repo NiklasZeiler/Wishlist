@@ -16,8 +16,12 @@ import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.componen
 export class WishesComponent {
   @Input() wish!: Wish
 
+  test: boolean = true;
+
   constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog) {
   }
+
+
 
 
   getWishes(): Wish[] {
@@ -58,9 +62,21 @@ export class WishesComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         wish.priority = result.priority;
-        this.firebase.updatePriority(wish)
+        this.firebase.updateWish(wish)
       }
     });
+  }
+
+  handleButton(wish: Wish) {
+    // Wenn der User angemeldet ist und auf seiner eigenen WUnschliste ist
+    if (this.test == true) {
+      this.deleteWish(wish)
+    } else {
+
+      // Wenn der User nicht angemeldet ist oder auf einer anderen Wunschliste ist
+      wish.completed = true
+      this.firebase.updateWish(wish)
+    }
   }
 
 

@@ -20,6 +20,7 @@ export class AddWishComponent {
   image: string = ""
   url: string = "";
   wish: string = ""
+  completed: boolean = false
 
 
 
@@ -38,6 +39,7 @@ export class AddWishComponent {
       link: this.url,
       priority: this.firebase.selectedPriority,
       image: this.image,
+      completed: this.completed,
     };
     this.firebase.addWish(wish);
     this.router.navigate(['/wishes'])

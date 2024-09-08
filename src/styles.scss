@@ -7,7 +7,7 @@ body {
     color: white !important;
     display: flex;
     align-items: center;
-    height: 100%;
+    height: auto;
     justify-content: center;
     flex-direction: column;
     margin: 0;
@@ -44,15 +44,20 @@ body {
     color: green !important;
 }
 
-.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after, .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-indeterminate::after {
+.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after,
+.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-indeterminate::after {
     color: green !important;
 }
 
 html,
 body {
-    height: 100%;
+    height: auto;
 }
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
+
+

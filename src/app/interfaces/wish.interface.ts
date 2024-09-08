@@ -5,4 +5,5 @@ export interface Wish {
     link: string;
     priority: string;
     image: string;
+    completed: boolean;
 }

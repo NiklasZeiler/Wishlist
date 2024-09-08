@@ -48,4 +48,13 @@
         height: 50px;
         object-fit: cover;
     }
+
+    .completed {
+        opacity: 0.5;
+    }
+
+    button.opacity {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 }

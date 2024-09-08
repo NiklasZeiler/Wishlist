@@ -93,17 +93,19 @@ export class FirebaseService {
     this.selectedPriority = priority;
   }
 
-  async updatePriority(wish: Wish) {
+  async updateWish(wish: Wish) {
     if (wish.id) {
       let docRef = this.getSingleDocRef(this.getColIdFromWish(wish), wish.id)
       await updateDoc(docRef, this.getCleanJson(wish))
     }
   }
 
-  async updateLikes(feedBack: Feedback) {
-    if (feedBack.id) {
-      let docRef = this.getSingleDocRef(this.getColIdFromFeedback(feedBack), feedBack.id)
-      await updateDoc(docRef, this.getCleanFeedbackJson(feedBack))
+  async updateLikes(feedback: Feedback) {
+    if (feedback.id) {
+      let docRef = this.getSingleDocRef(this.getColIdFromFeedback(feedback), feedback.id)
+      await updateDoc(docRef, {
+        likes: feedback.likes + 1
+      })
     }
   }
 
@@ -123,6 +125,7 @@ export class FirebaseService {
       link: wish.link,
       priority: wish.priority,
       image: wish.image,
+      completed: wish.completed,
     }
   }
 
@@ -167,6 +170,7 @@ export class FirebaseService {
       image: obj.image || "",
       altText: obj.altText || "",
       priority: obj.priority || "",
+      completed: obj.completed || false,
     } as Wish;
   }
 
