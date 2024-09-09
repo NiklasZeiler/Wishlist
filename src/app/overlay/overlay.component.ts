@@ -26,4 +26,8 @@ export class OverlayComponent {
     this.router.navigate(["/feedback"])
   }
 
+  navigateToLogin() {
+    this.router.navigate(["/login"])
+  }
+
 }

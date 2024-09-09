@@ -84,7 +84,6 @@ export class FirebaseService {
       list.forEach((item) => {
         this.feedbacks.push(this.setFeedbackObject(item.data(), item.id));
       });
-      console.log(this.feedbacks);
     })
 
 

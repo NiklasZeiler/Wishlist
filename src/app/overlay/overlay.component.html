@@ -4,10 +4,10 @@
 
 <mat-menu #menu="matMenu">
     <span class="user">Benutzer</span>
-    <button (click)="navigateToFeedback()" mat-menu-item>
+    <button (touchstart)="navigateToFeedback()" mat-menu-item>
         <span>Feedback</span>
     </button>
-    <button mat-menu-item disabled>
+    <button (touchstart)="navigateToLogin()" mat-menu-item>
         <span>Abmelden</span>
     </button>
     <!-- <button mat-menu-item>

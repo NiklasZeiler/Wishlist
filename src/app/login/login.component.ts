@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoginService } from '../Service/login.service';
 
 @Component({
   selector: 'app-login',
@@ -10,28 +11,21 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-
-  constructor(private router: Router) { }
+  constructor(private router: Router, private login: LoginService) { }
 
   navigateToRegistration(event: TouchEvent) {
     event.preventDefault();
     this.router.navigate(["/registration"]);
   }
 
-  onLogin(form: any) {
-    // const { email, password } = form.value;
-    // this.loginService.login(email, password).subscribe(
-    // response => {
-    // Handle successful login
-    // console.log('Login successful', response);
+  onLogin() {
     this.router.navigate(['/wishes']);
-    // },
-    // error => {
-    // Handle login error
-    // console.error('Login failed', error);
-    // alert('Login failed, please try again.');
-    // }
-    // );
+    this.login.onAuthStateChanged((user) => {
+      console.log(user);
+
+      // Your code here//
+    });
+
   }
 
 }

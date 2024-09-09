@@ -21,7 +21,7 @@ export class RegistrationComponent {
   constructor(private login: LoginService, private router: Router) { }
 
   register() {
-    this.login.createUserWithEmailAndPassword(this.email, this.password)
+    this.login.createUserWithEmailAndPassword(this.email, this.password, this.name)
     this.router.navigate(['/wishes']);
   }
 
