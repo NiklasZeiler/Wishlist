@@ -3,7 +3,7 @@
 </button>
 
 <mat-menu #menu="matMenu">
-    <span class="user">Benutzer</span>
+    <span class="user" (touchstart)="openUserMenu()">{{this.getUserName()}}</span>
     <button (touchstart)="navigateToFeedback()" mat-menu-item>
         <span>Feedback</span>
     </button>

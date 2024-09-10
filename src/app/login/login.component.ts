@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginService } from '../Service/login.service';
+import { AuthService } from '../Service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +11,8 @@ import { LoginService } from '../Service/login.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  constructor(private router: Router, private login: LoginService) { }
+  constructor(private router: Router, private auth: AuthService) { }
+
 
   navigateToRegistration(event: TouchEvent) {
     event.preventDefault();
@@ -19,12 +20,16 @@ export class LoginComponent {
   }
 
   onLogin() {
-    this.router.navigate(['/wishes']);
-    this.login.onAuthStateChanged((user) => {
-      console.log(user);
+    // this.router.navigate(['/wishes']);
+    // this.login.onAuthStateChanged((user) => {
+    //   console.log(user, " user");
+    //   if (user) {
+    //     const uid = user.uid;
+    //     console.log(uid, " uid");
 
-      // Your code here//
-    });
+    //   }
+    //   // Your code here//
+    // });
 
   }
 

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { LoginService } from '../Service/login.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../Service/auth.service';
 
 @Component({
   selector: 'app-registration',
@@ -18,10 +18,10 @@ export class RegistrationComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private login: LoginService, private router: Router) { }
+  constructor(private auth: AuthService, private router: Router) { }
 
   register() {
-    this.login.createUserWithEmailAndPassword(this.email, this.password, this.name)
+    this.auth.createUserWithEmailAndPassword(this.email, this.password, this.name)
     this.router.navigate(['/wishes']);
   }
 
