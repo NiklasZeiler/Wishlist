@@ -2,14 +2,15 @@
     <h1 class="headline">
         Wunschliste
     </h1>
-    <div>
-        <input type="email" placeholder="Bitte E-Mail angeben">
-        <input type="password" placeholder="Bitte Passwort eingeben">
+    <div class="inputFields">
+        <input type="email" [(ngModel)]="email" placeholder="Bitte E-Mail angeben">
+        <input type="password" [(ngModel)]="password" placeholder="Bitte Passwort eingeben">
         <div class="buttons">
             <button class="button" (touchstart)="onLogin()" type="submit">Login</button>
             <button class="button" (touchstart)="navigateToRegistration($event)" type="button">Registrieren</button>
-            <span>Passwort vergessen</span>
+
         </div>
+        <span class="forgot" (touchstart)="forgotPassword()">Passwort vergessen</span>
 
     </div>
 

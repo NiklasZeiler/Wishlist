@@ -16,6 +16,11 @@
         width: 200px;
     }
 
+    .inputFields {
+        display: flex;
+        flex-direction: column;
+    }
+
     form button {
         margin: 5px;
         padding: 5px;
@@ -37,5 +42,16 @@
         text-shadow: 0 1px 0 #ffffff;
         outline: 0;
         box-shadow: 3px 3px 7px -1px rgba(255, 255, 255, 0.75);
+        margin: 10px 5px 10px 0;
+    }
+
+    .forgot {
+        text-decoration: underline;
+        display: flex;
+        justify-content: center;
+    }
+
+    input {
+        margin-top: 5px;
     }
 }

@@ -31,8 +31,12 @@ export class OverlayComponent {
     this.router.navigate(["/login"])
   }
 
+  navigateToWish() {
+    this.router.navigate(["/wishes"])
+  }
+
   openUserMenu() {
-    this.router.navigate(["/changeProfile"])
+    this.router.navigate(["/userProfil"])
   }
 
   getUserName() {

@@ -11,6 +11,11 @@ import { AuthService } from '../Service/auth.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+
+
+  email: string = '';
+  password: string = '';
+
   constructor(private router: Router, private auth: AuthService) { }
 
 
@@ -20,17 +25,14 @@ export class LoginComponent {
   }
 
   onLogin() {
-    // this.router.navigate(['/wishes']);
-    // this.login.onAuthStateChanged((user) => {
-    //   console.log(user, " user");
-    //   if (user) {
-    //     const uid = user.uid;
-    //     console.log(uid, " uid");
+    this.router.navigate(['/wishes']);
+    this.auth.signInWithEmailAndPassword(this.email, this.password)
+    this.auth.listenToAuthState()
 
-    //   }
-    //   // Your code here//
-    // });
+  }
 
+  forgotPassword() {
+    this.auth.forgotPassword(this.email);
   }
 
 }

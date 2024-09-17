@@ -4,7 +4,7 @@ import { WishesComponent } from './wishes/wishes.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { AddWishComponent } from './add-wish/add-wish.component';
 import { FeedbackComponent } from './feedback/feedback.component';
-import { ChangeUserProfilComponent } from './change-user-profil/change-user-profil.component';
+import { UserProfilComponent } from './user-profil/user-profil.component';
 
 
 export const routes: Routes = [
@@ -14,6 +14,6 @@ export const routes: Routes = [
     { path: "registration", component: RegistrationComponent },
     { path: "addWishes", component: AddWishComponent },
     { path: "feedback", component: FeedbackComponent },
-    { path: "changeProfile", component: ChangeUserProfilComponent }
+    { path: "userProfil", component: UserProfilComponent }
 ];
 

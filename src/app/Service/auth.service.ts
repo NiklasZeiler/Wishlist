@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification } from '@angular/fire/auth';
+import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -21,14 +21,13 @@ export class AuthService {
 
   constructor() {
     this.auth = getAuth();
-    this.listenToAuthState();
   }
 
   // Method to get the latest user profile info
   private getUserProfil(user: User | null) {
     if (user !== null) {
-      const { displayName, email, emailVerified, uid } = user;
-      console.log('User profile:', { displayName, email, emailVerified, uid });
+      const { displayName, email, emailVerified, uid, metadata } = user;
+      console.log('User profile:', { displayName, email, emailVerified, uid, metadata });
     }
   }
 
@@ -75,6 +74,17 @@ export class AuthService {
     }
   }
 
+  forgotPassword(email: string) {
+    sendPasswordResetEmail(this.auth, email).then(() => {
+      console.log('Password reset email sent to:', email);
+    }).catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("Error: ", errorCode, errorMessage);
+
+    })
+  }
+
   async updateUserName(name: string) {
     const currentUser = this.auth.currentUser;
 
@@ -100,6 +110,7 @@ export class AuthService {
     if (currentUser) {
       try {
         await updateEmail(currentUser, email);
+        await sendEmailVerification(currentUser)
 
         this.userSubject.next(currentUser); // Update user state
         console.log('User profile updated:', currentUser);
@@ -111,6 +122,22 @@ export class AuthService {
       console.error('No user signed in.');
       throw new Error('No user signed in.');
     }
+  }
+
+  async updateUserPassword(password: string) {
+    const currentUser = this.auth.currentUser;
+    const newPassword = password;
+
+    if (currentUser) {
+      try {
+        await updatePassword(currentUser, newPassword);
+        console.log('Password updated successfully');
+      } catch (error) {
+        console.error('Error updating password:', error);
+        throw error;
+      }
+    }
+
   }
 
   // onAuthStateChanged(callback: (user: User | null) => void): () => void {
