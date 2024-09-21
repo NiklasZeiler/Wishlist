@@ -28,10 +28,9 @@ export class AddWishComponent {
     this.firebase.selectedPriority = priority;
   }
 
-  addWish(event: TouchEvent) {
+  addWish() {
     this.firebase.photoUrl = this.image
 
-    event.preventDefault();
     console.log('Add wish');
     const wish: Wish = {
       type: "wish",

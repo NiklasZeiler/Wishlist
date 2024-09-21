@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail } from '@angular/fire/auth';
+import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -19,6 +19,7 @@ export class AuthService {
 
 
 
+
   constructor() {
     this.auth = getAuth();
   }
@@ -35,6 +36,7 @@ export class AuthService {
     try {
       // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+      this.auth.languageCode = "de"
       const user = userCredential.user;
 
       // Update user profile to set display name (username)
@@ -69,6 +71,8 @@ export class AuthService {
       this.userSubject.next(user); // Update user state
       return user;
     } catch (error) {
+      // Dialog öffnen das dieser User nicht existiert
+
       console.error('Error signing in:', error);
       throw error;
     }
@@ -76,6 +80,7 @@ export class AuthService {
 
   forgotPassword(email: string) {
     sendPasswordResetEmail(this.auth, email).then(() => {
+      this.auth.languageCode = "de"
       console.log('Password reset email sent to:', email);
     }).catch((error) => {
       const errorCode = error.code;
@@ -87,7 +92,6 @@ export class AuthService {
 
   async updateUserName(name: string) {
     const currentUser = this.auth.currentUser;
-
     if (currentUser) {
       try {
         await updateProfile(currentUser, { displayName: name });
@@ -106,6 +110,7 @@ export class AuthService {
 
   async updateUserEmail(email: string) {
     const currentUser = this.auth.currentUser;
+    this.auth.languageCode = "de"
 
     if (currentUser) {
       try {
@@ -138,6 +143,15 @@ export class AuthService {
       }
     }
 
+  }
+
+  logOut() {
+    signOut(this.auth).then(() => {
+      this.userSubject.next(null); // Clear user state
+      console.log('User signed out');
+    }).catch(() => {
+      console.error('Error signing out');
+    });
   }
 
   // onAuthStateChanged(callback: (user: User | null) => void): () => void {

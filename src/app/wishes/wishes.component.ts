@@ -5,6 +5,7 @@ import { Wish } from '../interfaces/wish.interface';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.component';
+import { AuthService } from '../Service/auth.service';
 
 @Component({
   selector: 'app-wishes',
@@ -19,6 +20,7 @@ export class WishesComponent {
   test: boolean = true;
 
   constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog) {
+
   }
 
 
@@ -35,8 +37,7 @@ export class WishesComponent {
   deleteWish(wish: Wish) {
     this.firebase.deleteWish(wish)
   }
-  navigateToAddWish(event: TouchEvent) {
-    event.preventDefault();
+  navigateToAddWish() {
     this.router.navigate(['/addWishes'])
   }
 

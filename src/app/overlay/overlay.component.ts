@@ -49,4 +49,8 @@ export class OverlayComponent {
     return userName;
   }
 
+  logOut() {
+    this.auth.logOut();
+  }
+
 }

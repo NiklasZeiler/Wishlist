@@ -3,18 +3,14 @@
 </button>
 
 <mat-menu #menu="matMenu">
-    <span class="user" (touchstart)="openUserMenu()">{{this.getUserName()}}</span>
-    <button (touchstart)="navigateToFeedback()" mat-menu-item>
+    <span class="user" (click)="openUserMenu()">{{this.getUserName()}}</span>
+    <button (click)="navigateToFeedback()" mat-menu-item>
         <span>Feedback</span>
     </button>
-    <button (touchstart)="navigateToWish()" mat-menu-item>
+    <button (click)="navigateToWish()" mat-menu-item>
         <span>Wünsche</span>
     </button>
-    <button (touchstart)="navigateToLogin()" mat-menu-item>
+    <button (click)="navigateToLogin(); logOut()" mat-menu-item>
         <span>Abmelden</span>
     </button>
-    <!-- <button mat-menu-item>
-    <mat-icon>notifications_off</mat-icon>
-    <span>Disable alerts</span>
-  </button> -->
 </mat-menu>

@@ -18,17 +18,17 @@
         <div class="form-group">
             <label for="name">Name ändern</label>
             <input type="text" [(ngModel)]="name" placeholder="Neuen Namen angeben" required>
-            <button (touchstart)="updateName()">Ändern</button>
+            <button (click)="updateName()">Ändern</button>
         </div>
         <div class="form-group">
             <label for="name">E-Mail ändern</label>
             <input type="text" [(ngModel)]="email" placeholder="Neue E-Mail angeben" required>
-            <button (touchstart)="updateEmail()">Ändern</button>
+            <button (click)="updateEmail()">Ändern</button>
         </div>
         <div class="form-group">
             <label for="password">Passwort ändern</label>
             <input type="password" [(ngModel)]="password" placeholder="Neues Passwort eingeben" required>
-            <button (touchstart)="changePassword()">Ändern</button>
+            <button (click)="changePassword()">Ändern</button>
         </div>
     </div>
 </section>

@@ -22,6 +22,6 @@
         </div>
         <label for="wish">Wunsch eingeben</label>
         <input [(ngModel)]="wish" type="text" id="wish" placeholder="Name des Wunsches">
-        <button (touchstart)="this.addWish($event)">Wunsch hinzufügen</button>
+        <button (click)="this.addWish()">Wunsch hinzufügen</button>
     </div>
 </section>

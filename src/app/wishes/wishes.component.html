@@ -27,7 +27,7 @@
                 <!-- <td *ngIf="this.wishes.length === 0" colspan="4">Keine Wünsche vorhanden</td> -->
             </tr>
             <div class="addWishBtn">
-                <button [class.opacity]="!test" [disabled]="!test" (touchstart)="navigateToAddWish($event)">Wunsch
+                <button [class.opacity]="!test" [disabled]="!test" (click)="navigateToAddWish()">Wunsch
                     hinzufügen</button>
             </div>
         </table>

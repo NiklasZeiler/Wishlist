@@ -6,11 +6,12 @@
         <input type="email" [(ngModel)]="email" placeholder="Bitte E-Mail angeben">
         <input type="password" [(ngModel)]="password" placeholder="Bitte Passwort eingeben">
         <div class="buttons">
-            <button class="button" (touchstart)="onLogin()" type="submit">Login</button>
-            <button class="button" (touchstart)="navigateToRegistration($event)" type="button">Registrieren</button>
+            <button class="button" (click)="onLogin()" type="submit">Login</button>
+            <button class="button" (click)="navigateToRegistration()" type="button">Registrieren</button>
 
         </div>
-        <span class="forgot" (touchstart)="forgotPassword()">Passwort vergessen</span>
+        <!-- Dialog öffnen in dem eine Email adresse angegeben werden muss -->
+        <span class="forgot" (click)="openDialog()">Passwort vergessen</span>
 
     </div>
 

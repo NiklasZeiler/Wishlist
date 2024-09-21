@@ -1,8 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, setDoc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, setDoc, deleteDoc, CollectionReference } from '@angular/fire/firestore';
 import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { Feedback } from '../interfaces/feedback.interface';
+import { AuthService } from './auth.service';
+import { getAuth } from "firebase/auth";
 
 
 
@@ -18,15 +20,21 @@ export class FirebaseService {
   selectedPriority: string = "";
 
 
-  unsubWish;
+  // unsubWish;
   unsubFeedback;
 
 
   firestore: Firestore = inject(Firestore);
+  authh = getAuth();
 
-  constructor() {
-    this.unsubWish = this.subWishList();
+  constructor(private auth: AuthService) {
+    // this.unsubWish = this.subWishList();
     this.unsubFeedback = this.subFeedbackList();
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.subscribeToUserWishes(user.uid);
+      }
+    });
   }
 
 
@@ -34,8 +42,26 @@ export class FirebaseService {
     this.file = event.target.files[0];
   }
 
+  //alte funktion ohne user spezifische Liste
+  // async addWish(item: Wish) {
+  //   if (this.file) {
+  //     const storage = getStorage();
+  //     let storageRef = ref(storage, `images/${this.file.name}`);
+
+  //     const uploadTaskSnapshot = await uploadBytesResumable(storageRef, this.file);
+  //     this.photoUrl = await getDownloadURL(uploadTaskSnapshot.ref);
+  //     item.image = this.photoUrl;
+  //   }
+
+  //   await addDoc(this.getWishesRef(), item).catch((err) => {
+  //     console.error(err);
+  //   }).then((docRef) => {
+  //     console.log("Document written: ", docRef);
+  //   });
+  // }
 
   async addWish(item: Wish) {
+    const user = this.auth.auth.currentUser;
     if (this.file) {
       const storage = getStorage();
       let storageRef = ref(storage, `images/${this.file.name}`);
@@ -44,12 +70,9 @@ export class FirebaseService {
       this.photoUrl = await getDownloadURL(uploadTaskSnapshot.ref);
       item.image = this.photoUrl;
     }
-
-    await addDoc(this.getWishesRef(), item).catch((err) => {
-      console.error(err);
-    }).then((docRef) => {
-      console.log("Document written: ", docRef);
-    });
+    if (user) {
+      await addDoc(this.getWishesRef(user.uid), item);
+    }
   }
 
   async addFeedback(feedback: Feedback) {
@@ -61,22 +84,33 @@ export class FirebaseService {
   }
 
   ngOnDestroy() {
-    if (this.unsubWish) {
-      this.unsubWish();
-    }
+    // if (this.unsubWish) {
+    //   this.unsubWish();
+    // }
     if (this.unsubFeedback) {
       this.unsubFeedback();
     }
   }
 
-  subWishList() {
-    return onSnapshot(this.getWishesRef(), (list) => {
+  // Subscribe to the user's wish list
+  subscribeToUserWishes(userId: string) {
+    const wishRef = this.getWishesRef(userId);
+    return onSnapshot(wishRef, (snapshot) => {
       this.wishes = [];
-      list.forEach((item) => {
-        this.wishes.push(this.setWishObject(item.data(), item.id));
+      snapshot.forEach((doc) => {
+        this.wishes.push({ id: doc.id, ...doc.data() } as Wish);
       });
-    })
+    });
   }
+  //alte funktion ohne user spezifische Liste
+  // subWishList() {
+  //   return onSnapshot(this.getWishesRef(), (list) => {
+  //     this.wishes = [];
+  //     list.forEach((item) => {
+  //       this.wishes.push(this.setWishObject(item.data(), item.id));
+  //     });
+  //   })
+  // }
 
   subFeedbackList() {
     return onSnapshot(this.getFeedbackRef(), (list) => {
@@ -93,10 +127,20 @@ export class FirebaseService {
     this.selectedPriority = priority;
   }
 
+
+  //alte funktion ohne user spezifische Liste
+  // async updateWish(wish: Wish) {
+  //   if (wish.id) {
+  //     let docRef = this.getSingleDocRef(this.getColIdFromWish(wish), wish.id)
+  //     await updateDoc(docRef, this.getCleanJson(wish))
+  //   }
+  // }
+
   async updateWish(wish: Wish) {
-    if (wish.id) {
-      let docRef = this.getSingleDocRef(this.getColIdFromWish(wish), wish.id)
-      await updateDoc(docRef, this.getCleanJson(wish))
+    const user = this.auth.auth.currentUser;
+    if (user && wish.id) {
+      const docRef = doc(this.getWishesRef(user.uid), wish.id);
+      await updateDoc(docRef, this.getCleanJson(wish));
     }
   }
 
@@ -108,11 +152,19 @@ export class FirebaseService {
       })
     }
   }
+  //alte funktion ohne user spezifische Liste
+  // async deleteWish(wish: Wish) {
+  //   if (wish.id) {
+  //     let docRef = this.getSingleDocRef(this.getColIdFromWish(wish), wish.id)
+  //     await deleteDoc(docRef)
+  //   }
+  // }
 
   async deleteWish(wish: Wish) {
-    if (wish.id) {
-      let docRef = this.getSingleDocRef(this.getColIdFromWish(wish), wish.id)
-      await deleteDoc(docRef)
+    const user = this.auth.auth.currentUser;
+    if (user && wish.id) {
+      const docRef = doc(this.getWishesRef(user.uid), wish.id);
+      await deleteDoc(docRef);
     }
   }
 
@@ -152,9 +204,12 @@ export class FirebaseService {
   //     return "wish.type";
   //   }
   // }
-
-  getWishesRef() {
-    return collection(this.firestore, 'wishes');
+  //alte funktion ohne user spezifische Liste
+  // getWishesRef() {
+  //   return collection(this.firestore, 'wishes');
+  // }
+  private getWishesRef(userId: string): CollectionReference {
+    return collection(this.firestore, `users/${userId}/wishes`);
   }
 
   getFeedbackRef() {
