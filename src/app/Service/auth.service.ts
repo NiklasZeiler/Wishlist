@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut } from '@angular/fire/auth';
+import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence, browserSessionPersistence } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -66,11 +66,15 @@ export class AuthService {
 
   async signInWithEmailAndPassword(email: string, password: string) {
     try {
+      // setPersistence(this.auth, browserSessionPersistence).then(async () => {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       const user = userCredential.user;
       this.userSubject.next(user); // Update user state
       return user;
-    } catch (error) {
+      // });
+    }
+
+    catch (error) {
       // Dialog öffnen das dieser User nicht existiert
 
       console.error('Error signing in:', error);

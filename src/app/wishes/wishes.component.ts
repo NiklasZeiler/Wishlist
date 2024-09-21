@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { Wish } from '../interfaces/wish.interface';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.component';
 import { AuthService } from '../Service/auth.service';
 
 @Component({
   selector: 'app-wishes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './wishes.component.html',
   styleUrl: './wishes.component.scss'
 })
@@ -18,6 +19,10 @@ export class WishesComponent {
   @Input() wish!: Wish
 
   test: boolean = true;
+  showBigImg: boolean = false;
+  previewImage: boolean = false;
+  presentedImage: any;
+  currentBigImage: any;
 
   constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog) {
 
@@ -78,6 +83,23 @@ export class WishesComponent {
       wish.completed = true
       this.firebase.updateWish(wish)
     }
+  }
+
+  openImage(image: any): void {
+    this.showBigImg = true;
+    this.previewImage = true;
+    this.currentBigImage = image;
+    this.presentedImage = image;
+  }
+
+
+  /**
+   * close big image
+   */
+  closeImage() {
+    this.showBigImg = false;
+    this.previewImage = false;
+
   }
 
 

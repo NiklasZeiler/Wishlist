@@ -58,3 +58,14 @@
         cursor: not-allowed;
     }
 }
+
+.bigImagebox {
+    z-index: 99;
+    position: absolute;
+    top: 110px;
+    left: 28px;
+}
+
+.bigImage {
+    width: 360px;
+}
