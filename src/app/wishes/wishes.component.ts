@@ -18,7 +18,7 @@ import { AuthService } from '../Service/auth.service';
 export class WishesComponent {
   @Input() wish!: Wish
 
-  test: boolean = true;
+  test: boolean = false;
   showBigImg: boolean = false;
   previewImage: boolean = false;
   presentedImage: any;
@@ -27,9 +27,6 @@ export class WishesComponent {
   constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog) {
 
   }
-
-
-
 
   getWishes(): Wish[] {
     return this.firebase.wishes;
@@ -74,13 +71,14 @@ export class WishesComponent {
   }
 
   handleButton(wish: Wish) {
-    // Wenn der User angemeldet ist und auf seiner eigenen WUnschliste ist
+    // Wenn der User angemeldet ist und auf seiner eigenen Wunschliste ist
     if (this.test == true) {
       this.deleteWish(wish)
     } else {
 
       // Wenn der User nicht angemeldet ist oder auf einer anderen Wunschliste ist
       wish.completed = true
+      wish.completedAt = new Date()
       this.firebase.updateWish(wish)
     }
   }

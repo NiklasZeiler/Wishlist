@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../Service/auth.service';
+import { FirebaseService } from '../Service/firebase.service';
 
 @Component({
   selector: 'app-user-profil',
@@ -17,13 +18,15 @@ export class UserProfilComponent {
   userName: any;
   userEmail: any;
   lastLogin: any;
+  formattedDate: any
 
-  constructor(private auth: AuthService) {
+  constructor(private auth: AuthService, private firebase: FirebaseService) {
   }
 
   ngOnInit() {
     this.getUserInfo();
     this.auth.listenToAuthState();
+    this.deleteOlderWishes()
   }
 
 
@@ -36,12 +39,7 @@ export class UserProfilComponent {
       this.lastLogin = new Date(loginTime).toLocaleString()
 
     })
-
-
-
   }
-
-
 
   updateName() {
     this.auth.updateUserName(this.name)
@@ -55,6 +53,30 @@ export class UserProfilComponent {
     this.auth.updateUserPassword(this.password)
   }
 
+  deleteOlderWishes() {
+    const currentDate = new Date()
+    if (this.formattedDate > currentDate) {
+      this.firebase.deleteOldWishes(this.formattedDate)
+    } else {
+      return
+    }
 
+  }
+
+  saveDate(selectedDate: string) {
+    this.formattedDate = this.formatDate(selectedDate);
+    console.log('Selected date:', this.formattedDate);
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const day = ('0' + date.getDate()).slice(-2); // Get day with leading zero
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Get month with leading zero
+    const year = date.getFullYear(); // Get full year
+
+    return `${day}.${month}.${year}`; // Format as dd.mm.yyyy
+  }
 
 }

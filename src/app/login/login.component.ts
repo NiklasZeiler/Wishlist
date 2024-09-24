@@ -34,7 +34,7 @@ export class LoginComponent {
 
   onLogin() {
     this.router.navigate(['/wishes']);
-    this.auth.signInWithEmailAndPassword(this.email, this.password)
+    this.auth.signInWithEmail(this.email, this.password)
     this.auth.listenToAuthState()
 
   }

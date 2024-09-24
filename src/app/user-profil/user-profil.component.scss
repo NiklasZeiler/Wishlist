@@ -4,7 +4,7 @@
     align-items: flex-end;
 }
 
-.form-group{
+.form-group {
     display: flex;
     align-items: center;
 }
@@ -18,9 +18,24 @@ button {
     color: white;
     font-weight: bold;
     line-height: 25px;
-    box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow:
+        0 8px 16px 0 rgba(255, 255, 255, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 input {
     margin: 5px 0 0 5px;
+}
+
+.saveDate {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+
+    #actionDate {
+        margin-bottom: 5px;
+    }
+    .saveBtn {
+        margin-bottom: 20px;
+    }
 }

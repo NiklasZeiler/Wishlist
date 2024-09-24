@@ -1,20 +1,18 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence, browserSessionPersistence } from '@angular/fire/auth';
+// import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
+import { browserLocalPersistence, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence } from 'firebase/auth';
+import { Auth } from '@angular/fire/auth';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+
   auth: Auth = inject(Auth)
-  // user = this.auth.currentUser
-  // user: User | null = null
-  // displayName: string | null = null
-  // email: string | null = null
-  // emailVerified: boolean | undefined
-  // uid: string | undefined
-  private userSubject = new BehaviorSubject<User | null>(null);
+  public userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable(); // Expose as observable to subscribe
 
 
@@ -22,6 +20,7 @@ export class AuthService {
 
   constructor() {
     this.auth = getAuth();
+    this.listenToAuthState();
   }
 
   // Method to get the latest user profile info
@@ -32,7 +31,7 @@ export class AuthService {
     }
   }
 
-  async createUserWithEmailAndPassword(email: string, password: string, username: string) {
+  async createUser(email: string, password: string, username: string) {
     try {
       // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
@@ -64,16 +63,14 @@ export class AuthService {
     });
   }
 
-  async signInWithEmailAndPassword(email: string, password: string) {
+  async signInWithEmail(email: string, password: string) {
     try {
-      // setPersistence(this.auth, browserSessionPersistence).then(async () => {
+      await setPersistence(this.auth, browserLocalPersistence)
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       const user = userCredential.user;
       this.userSubject.next(user); // Update user state
       return user;
-      // });
     }
-
     catch (error) {
       // Dialog öffnen das dieser User nicht existiert
 
@@ -85,6 +82,7 @@ export class AuthService {
   forgotPassword(email: string) {
     sendPasswordResetEmail(this.auth, email).then(() => {
       this.auth.languageCode = "de"
+      //Dialog öffnen, das eine Email zum zurücksetzen des Passworts verschickt wurde
       console.log('Password reset email sent to:', email);
     }).catch((error) => {
       const errorCode = error.code;
@@ -121,8 +119,10 @@ export class AuthService {
         await updateEmail(currentUser, email);
         await sendEmailVerification(currentUser)
 
+
         this.userSubject.next(currentUser); // Update user state
         console.log('User profile updated:', currentUser);
+        //Dialog öffnen das man die neue Email Adresse verifiziern muss
       } catch (error) {
         console.error('Error updating user profile:', error);
         throw error;
@@ -141,6 +141,7 @@ export class AuthService {
       try {
         await updatePassword(currentUser, newPassword);
         console.log('Password updated successfully');
+        //Dialog öffnen das man das Passwort erfolgreich geändert hat
       } catch (error) {
         console.error('Error updating password:', error);
         throw error;
@@ -157,8 +158,4 @@ export class AuthService {
       console.error('Error signing out');
     });
   }
-
-  // onAuthStateChanged(callback: (user: User | null) => void): () => void {
-  //   return onAuthStateChanged(this.auth, callback);
-  // }
 }
