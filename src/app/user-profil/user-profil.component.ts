@@ -19,6 +19,7 @@ export class UserProfilComponent {
   userEmail: any;
   lastLogin: any;
   formattedDate: any
+  savedDate: string | null = null;
 
   constructor(private auth: AuthService, private firebase: FirebaseService) {
   }
@@ -27,6 +28,7 @@ export class UserProfilComponent {
     this.getUserInfo();
     this.auth.listenToAuthState();
     this.deleteOlderWishes()
+    this.savedDate = localStorage.getItem('formattedDate');
   }
 
 
@@ -57,6 +59,7 @@ export class UserProfilComponent {
     const currentDate = new Date()
     if (this.formattedDate > currentDate) {
       this.firebase.deleteOldWishes(this.formattedDate)
+      localStorage.clear();
     } else {
       return
     }
@@ -65,6 +68,7 @@ export class UserProfilComponent {
 
   saveDate(selectedDate: string) {
     this.formattedDate = this.formatDate(selectedDate);
+    localStorage.setItem('formattedDate', this.formattedDate);
     console.log('Selected date:', this.formattedDate);
   }
 
@@ -79,4 +83,7 @@ export class UserProfilComponent {
     return `${day}.${month}.${year}`; // Format as dd.mm.yyyy
   }
 
+  getFormattedDate() {
+    return this.savedDate
+  }
 }

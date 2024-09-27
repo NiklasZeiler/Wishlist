@@ -9,7 +9,11 @@
     <!-- Hier Datum einfügen zu welchem Datum 
     die Wünsche gelöscht werden sollen wenn sie vom Schenker
     als erledigt makiert wurden  -->
-    <h4>Datum des Ereignisses</h4>
+    <div>
+        <h4>Datum des Ereignisses</h4>
+        <span>{{ getFormattedDate() || "Kein Datum gespeichert"}}</span>
+    </div>
+
     <div class="saveDate">
         <input type="date" name="date" id="actionDate" #dateInput>
         <button class="saveBtn" (click)="saveDate(dateInput.value)">Speichern</button>
