@@ -4,7 +4,8 @@ import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { Feedback } from '../interfaces/feedback.interface';
 import { AuthService } from './auth.service';
-import { getAuth } from "firebase/auth";
+import { User } from 'firebase/auth';
+
 
 
 
@@ -21,13 +22,13 @@ export class FirebaseService {
 
   unsubFeedback;
 
-
   firestore: Firestore = inject(Firestore);
-  authh = getAuth();
+  currentUser: User | null = null
 
   constructor(private auth: AuthService) {
     this.unsubFeedback = this.subFeedbackList();
     this.auth.user$.subscribe(user => {
+      this.currentUser = user
       if (user) {
         this.subscribeToUserWishes(user.uid);
       }
@@ -96,6 +97,7 @@ export class FirebaseService {
 
   async updateWish(wish: Wish) {
     const user = this.auth.auth.currentUser;
+
     if (user && wish.id) {
       const docRef = doc(this.getWishesRef(user.uid), wish.id);
       await updateDoc(docRef, this.getCleanJson(wish));
@@ -112,8 +114,9 @@ export class FirebaseService {
   }
 
   async deleteOldWishes(setDate: any) {
-    const user = this.auth.auth.currentUser;
     const currentDate = setDate
+    const user = this.auth.auth.currentUser
+
     if (user) {
       const wishesRef = this.getWishesRef(user.uid);
       const expiredWishesQuery = query(wishesRef, where('complete', '==', true), where('completedAt', '>', currentDate));
@@ -121,7 +124,11 @@ export class FirebaseService {
       querySnapshot.forEach(async (doc) => {
         await deleteDoc(doc.ref);
       });
+      return
     }
+
+
+
   }
 
 

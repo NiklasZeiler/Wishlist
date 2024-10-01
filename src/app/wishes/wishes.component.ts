@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.component';
-import { AuthService } from '../Service/auth.service';
+import { HelperService } from '../Service/helper.service';
 
 @Component({
   selector: 'app-wishes',
@@ -18,16 +18,19 @@ import { AuthService } from '../Service/auth.service';
 export class WishesComponent {
   @Input() wish!: Wish
 
-  test: boolean = false;
+  test: boolean = true;
   showBigImg: boolean = false;
   previewImage: boolean = false;
   presentedImage: any;
   currentBigImage: any;
 
-  constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog) {
+  constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog, private help: HelperService) {
 
   }
 
+  ngOnInit() {
+    this.help.waitForUser()
+  }
   getWishes(): Wish[] {
     return this.firebase.wishes;
   }

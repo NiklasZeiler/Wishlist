@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../Service/auth.service';
 import { FirebaseService } from '../Service/firebase.service';
+import { HelperService } from '../Service/helper.service';
 
 @Component({
   selector: 'app-user-profil',
@@ -18,17 +19,14 @@ export class UserProfilComponent {
   userName: any;
   userEmail: any;
   lastLogin: any;
-  formattedDate: any
-  savedDate: string | null = null;
 
-  constructor(private auth: AuthService, private firebase: FirebaseService) {
+
+  constructor(private auth: AuthService, private firebase: FirebaseService, public help: HelperService) {
   }
 
   ngOnInit() {
     this.getUserInfo();
     this.auth.listenToAuthState();
-    this.deleteOlderWishes()
-    this.savedDate = localStorage.getItem('formattedDate');
   }
 
 
@@ -55,35 +53,24 @@ export class UserProfilComponent {
     this.auth.updateUserPassword(this.password)
   }
 
-  deleteOlderWishes() {
-    const currentDate = new Date()
-    if (this.formattedDate > currentDate) {
-      this.firebase.deleteOldWishes(this.formattedDate)
-      localStorage.clear();
-    } else {
-      return
-    }
-
-  }
-
   saveDate(selectedDate: string) {
-    this.formattedDate = this.formatDate(selectedDate);
-    localStorage.setItem('formattedDate', this.formattedDate);
-    console.log('Selected date:', this.formattedDate);
+    let formattedDate = this.help.formatDate(selectedDate);
+    localStorage.setItem('formattedDate', formattedDate);
+    console.log('Selected date:', formattedDate);
   }
 
-  formatDate(dateString: string): string {
-    if (!dateString) return '';
+  // formatDate(dateString: string): string {
+  //   if (!dateString) return '';
 
-    const date = new Date(dateString);
-    const day = ('0' + date.getDate()).slice(-2); // Get day with leading zero
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Get month with leading zero
-    const year = date.getFullYear(); // Get full year
+  //   const date = new Date(dateString);
+  //   const day = ('0' + date.getDate()).slice(-2); // Get day with leading zero
+  //   const month = ('0' + (date.getMonth() + 1)).slice(-2); // Get month with leading zero
+  //   const year = date.getFullYear(); // Get full year
 
-    return `${day}.${month}.${year}`; // Format as dd.mm.yyyy
-  }
+  //   return `${day}.${month}.${year}`; // Format as dd.mm.yyyy
+  // }
 
   getFormattedDate() {
-    return this.savedDate
+    return this.help.savedDate
   }
 }

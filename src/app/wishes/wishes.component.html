@@ -18,7 +18,8 @@
                 <!-- Löschen Button nur wenn Eigentümer der Liste angemeldet,
                 wenn Gast oder Schenker auf Liste zugreift dann Erledigt -->
                 <td>
-                    <button [disabled]="wish.completed" (click)="handleButton(wish)">{{test ? "Löschen" :
+                    <button [disabled]="wish.completed" (click)="handleButton(wish)">{{test ? "Löschen"
+                        :
                         "Erledigt"}}</button>
                 </td>
             </tr>
