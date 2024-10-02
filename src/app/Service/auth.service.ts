@@ -1,8 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 // import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
-import { browserLocalPersistence, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence } from 'firebase/auth';
+import { browserLocalPersistence, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence } from 'firebase/auth';
 import { Auth } from '@angular/fire/auth';
+import { ChangePasswordComponent } from '../dialogs/change-password/change-password.component';
+import { MatDialog } from '@angular/material/dialog';
+import { EmailExistsComponent } from '../dialogs/email-exists/email-exists.component';
+import { environment } from '../../environments/environments';
+import { initializeApp } from 'firebase/app';
 
 
 @Injectable({
@@ -18,7 +23,8 @@ export class AuthService {
 
 
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
+
     this.auth = getAuth();
     this.listenToAuthState();
   }
@@ -30,6 +36,8 @@ export class AuthService {
       console.log('User profile:', { displayName, email, emailVerified, uid, metadata });
     }
   }
+
+
 
   async createUser(email: string, password: string, username: string) {
     try {
@@ -49,6 +57,16 @@ export class AuthService {
       console.error('Error during registration:', error);
       throw error;
     }
+    // }
+
+
+
+    // ) {
+    //   console.error('Error during registration:', error);
+    //   throw error;
+    // }
+    // }
+
   }
 
   // Listen for authentication state changes
@@ -61,6 +79,14 @@ export class AuthService {
         this.userSubject.next(null); // User signed out
       }
     });
+  }
+
+  async checkIfEmailExists(email: string) {
+    // TO DO: Neue Sammlung für emails erstellen im firebase service
+    // - Email addressen die benutzt werden in der Sammlung speichern
+    // - Diese Sammlung überprüfen ob die angegebene Email bereits verwendet wird
+    // - Wenn ja, return true, ansonsten false
+    // return false; // Placeholder for actual implementation
   }
 
   async signInWithEmail(email: string, password: string) {
@@ -141,6 +167,7 @@ export class AuthService {
       try {
         await updatePassword(currentUser, newPassword);
         console.log('Password updated successfully');
+        this.dialog.open(ChangePasswordComponent)
         //Dialog öffnen das man das Passwort erfolgreich geändert hat
       } catch (error) {
         console.error('Error updating password:', error);

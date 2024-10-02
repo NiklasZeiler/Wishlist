@@ -119,16 +119,15 @@ export class FirebaseService {
 
     if (user) {
       const wishesRef = this.getWishesRef(user.uid);
-      const expiredWishesQuery = query(wishesRef, where('complete', '==', true), where('completedAt', '>', currentDate));
-      const querySnapshot = await getDocs(expiredWishesQuery);
-      querySnapshot.forEach(async (doc) => {
-        await deleteDoc(doc.ref);
-      });
-      return
+      const allWishesQuery = await getDocs(wishesRef)
+
+      for (const doc of allWishesQuery.docs) {
+        const wishData = doc.data();
+        if (wishData["completed"] === true && wishData["completedAt"] < currentDate) {
+          await deleteDoc(doc.ref);
+        }
+      }
     }
-
-
-
   }
 
 

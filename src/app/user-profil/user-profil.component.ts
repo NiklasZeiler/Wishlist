@@ -54,21 +54,22 @@ export class UserProfilComponent {
   }
 
   saveDate(selectedDate: string) {
-    let formattedDate = this.help.formatDate(selectedDate);
+    let formattedDate = this.formatDate(selectedDate);
     localStorage.setItem('formattedDate', formattedDate);
     console.log('Selected date:', formattedDate);
+    location.reload();
   }
 
-  // formatDate(dateString: string): string {
-  //   if (!dateString) return '';
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
 
-  //   const date = new Date(dateString);
-  //   const day = ('0' + date.getDate()).slice(-2); // Get day with leading zero
-  //   const month = ('0' + (date.getMonth() + 1)).slice(-2); // Get month with leading zero
-  //   const year = date.getFullYear(); // Get full year
+    const date = new Date(dateString);
+    const day = ('0' + date.getDate()).slice(-2); // Get day with leading zero
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Get month with leading zero
+    const year = date.getFullYear(); // Get full year
 
-  //   return `${day}.${month}.${year}`; // Format as dd.mm.yyyy
-  // }
+    return `${day}.${month}.${year}`; // Format as dd.mm.yyyy
+  }
 
   getFormattedDate() {
     return this.help.savedDate

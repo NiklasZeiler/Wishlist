@@ -18,7 +18,7 @@ import { HelperService } from '../Service/helper.service';
 export class WishesComponent {
   @Input() wish!: Wish
 
-  test: boolean = true;
+  test: boolean = false;
   showBigImg: boolean = false;
   previewImage: boolean = false;
   presentedImage: any;

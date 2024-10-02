@@ -45,6 +45,7 @@ export class HelperService {
         console.log("Saved date is older. Deleting older wishes...");
         // Call your delete logic here using firebase service
         this.firebase.deleteOldWishes(savedDateFormatted); // Example call
+        localStorage.clear()
       } else {
         console.log("Saved date is newer or same.");
       }
