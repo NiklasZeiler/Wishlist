@@ -3,17 +3,15 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-email-exists',
+  selector: 'app-passwordtoshort',
   standalone: true,
   imports: [],
-  templateUrl: './email-exists.component.html',
-  styleUrl: './email-exists.component.scss'
+  templateUrl: './passwordtoshort.component.html',
+  styleUrl: './passwordtoshort.component.scss'
 })
-export class EmailExistsComponent {
+export class PasswordtoshortComponent {
 
-
-  constructor(public dialogRef: MatDialogRef<EmailExistsComponent>, private router: Router) { }
-
+  constructor(public dialogRef: MatDialogRef<PasswordtoshortComponent>, private router: Router) { }
 
   close(): void {
     this.dialogRef.close();

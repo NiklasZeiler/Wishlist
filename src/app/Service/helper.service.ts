@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { AuthService } from './auth.service';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class HelperService {
+
 
   savedDate: string | null = null;
   currentDate = new Date()
@@ -19,32 +21,26 @@ export class HelperService {
       const user = this.auth.auth.currentUser;
       if (user) {
         console.log("User is authenticated");
-        clearInterval(interval); // Stop polling
-        this.deleteOlderWishes(); // Call your function here
+        clearInterval(interval);
+        this.deleteOlderWishes();
       } else {
         console.log("Waiting for user to authenticate...");
       }
-    }, 1000); // Check every second
+    }, 1000);
   }
-
 
 
   deleteOlderWishes() {
     const currentDateFormatted = this.formatDate(this.currentDate)
     let savedDateFormatted = this.savedDate ? this.savedDate : null;
 
-    console.log(currentDateFormatted);
-    console.log(savedDateFormatted, " formattedDate");
-
     if (savedDateFormatted) {
-      const savedDateObject = this.parseDate(savedDateFormatted); // Convert saved date to Date object
-      const currentDateObject = this.parseDate(currentDateFormatted); // Convert current date to Date object
+      const savedDateObject = this.parseDate(savedDateFormatted);
+      const currentDateObject = this.parseDate(currentDateFormatted);
       console.log(currentDateObject);
 
       if (savedDateObject < currentDateObject) {
-        console.log("Saved date is older. Deleting older wishes...");
-        // Call your delete logic here using firebase service
-        this.firebase.deleteOldWishes(savedDateFormatted); // Example call
+        this.firebase.deleteOldWishes(savedDateFormatted);
         localStorage.clear()
       } else {
         console.log("Saved date is newer or same.");

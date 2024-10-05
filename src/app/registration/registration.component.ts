@@ -22,7 +22,6 @@ export class RegistrationComponent {
 
   register() {
     this.auth.createUser(this.email, this.password, this.name)
-    this.router.navigate(['/wishes']);
   }
 
 }

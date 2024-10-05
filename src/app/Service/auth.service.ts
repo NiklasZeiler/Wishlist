@@ -6,8 +6,8 @@ import { Auth } from '@angular/fire/auth';
 import { ChangePasswordComponent } from '../dialogs/change-password/change-password.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EmailExistsComponent } from '../dialogs/email-exists/email-exists.component';
-import { environment } from '../../environments/environments';
-import { initializeApp } from 'firebase/app';
+import { Router } from '@angular/router';
+import { PasswordtoshortComponent } from '../dialogs/passwordtoshort/passwordtoshort.component';
 
 
 @Injectable({
@@ -23,7 +23,7 @@ export class AuthService {
 
 
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private router: Router) {
 
     this.auth = getAuth();
     this.listenToAuthState();
@@ -37,36 +37,41 @@ export class AuthService {
     }
   }
 
-
-
   async createUser(email: string, password: string, username: string) {
     try {
       // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       this.auth.languageCode = "de"
       const user = userCredential.user;
-
       // Update user profile to set display name (username)
       await updateProfile(user, { displayName: username });
       await sendEmailVerification(user)
       this.userSubject.next(user);
       console.log('User registered and profile updated:', user);
       console.log('Verification email sent to:', user.email);
+      this.router.navigate(['/wishes']);
       return user;
     } catch (error) {
       console.error('Error during registration:', error);
+      if (error = "auth/email-already-in-use") {
+        this.dialog.open(EmailExistsComponent, {
+          width: '350px',
+          height: '200px',
+          disableClose: true,
+        });
+        return
+      }
+
+      if (error = "auth/weak-password") {
+        this.dialog.open(PasswordtoshortComponent, {
+          width: '350px',
+          height: '200px',
+          disableClose: true,
+        });
+        return
+      }
       throw error;
     }
-    // }
-
-
-
-    // ) {
-    //   console.error('Error during registration:', error);
-    //   throw error;
-    // }
-    // }
-
   }
 
   // Listen for authentication state changes
@@ -81,13 +86,14 @@ export class AuthService {
     });
   }
 
-  async checkIfEmailExists(email: string) {
-    // TO DO: Neue Sammlung für emails erstellen im firebase service
-    // - Email addressen die benutzt werden in der Sammlung speichern
-    // - Diese Sammlung überprüfen ob die angegebene Email bereits verwendet wird
-    // - Wenn ja, return true, ansonsten false
-    // return false; // Placeholder for actual implementation
-  }
+
+  // async checkIfEmailExists(email: string) {
+  //   // TO DO: Neue Sammlung für emails erstellen im firebase service
+  //   // - Email addressen die benutzt werden in der Sammlung speichern
+  //   // - Diese Sammlung überprüfen ob die angegebene Email bereits verwendet wird
+  //   // - Wenn ja, return true, ansonsten false
+  //   // return false; // Placeholder for actual implementation
+  // }
 
   async signInWithEmail(email: string, password: string) {
     try {

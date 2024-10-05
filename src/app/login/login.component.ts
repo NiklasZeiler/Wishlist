@@ -27,7 +27,6 @@ export class LoginComponent {
 
   constructor(private router: Router, private auth: AuthService) { }
 
-
   navigateToRegistration() {
     this.router.navigate(["/registration"]);
   }
@@ -38,10 +37,6 @@ export class LoginComponent {
     this.auth.listenToAuthState()
 
   }
-
-  // forgotPassword() {
-  //   this.auth.forgotPassword(this.email);
-  // }
 
   openDialog(): void {
     this.dialog.open(ForgotPasswordComponent);

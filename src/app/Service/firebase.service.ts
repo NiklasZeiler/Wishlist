@@ -5,6 +5,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/
 import { Feedback } from '../interfaces/feedback.interface';
 import { AuthService } from './auth.service';
 import { User } from 'firebase/auth';
+import { Email } from '../interfaces/email.interface';
 
 
 
@@ -16,17 +17,20 @@ import { User } from 'firebase/auth';
 export class FirebaseService {
   wishes: Wish[] = [];
   feedbacks: Feedback[] = [];
+  emails: Email[] = [];
   photoUrl: string = ""
   file: any;
   selectedPriority: string = "";
 
   unsubFeedback;
+  // unsubEmail;
 
   firestore: Firestore = inject(Firestore);
   currentUser: User | null = null
 
   constructor(private auth: AuthService) {
     this.unsubFeedback = this.subFeedbackList();
+    // this.unsubEmail = this.subUsedEmailList();
     this.auth.user$.subscribe(user => {
       this.currentUser = user
       if (user) {
@@ -87,8 +91,6 @@ export class FirebaseService {
         this.feedbacks.push(this.setFeedbackObject(item.data(), item.id));
       });
     })
-
-
   }
 
   setPriority(priority: string) {
@@ -170,22 +172,9 @@ export class FirebaseService {
     return collection(this.firestore, `users/${userId}/wishes`);
   }
 
-  getFeedbackRef() {
+  private getFeedbackRef() {
     return collection(this.firestore, 'feedback');
   }
-
-  // setWishObject(obj: any, id: string): Wish {
-  //   return {
-  //     id: id,
-  //     type: obj.type || 'wish',
-  //     wish: obj.wish || "",
-  //     link: obj.link || "",
-  //     image: obj.image || "",
-  //     altText: obj.altText || "",
-  //     priority: obj.priority || "",
-  //     completedAt: obj.completedAt || null,
-  //   } as Wish;
-  // }
 
   setFeedbackObject(obj: any, id: string): Feedback {
     return {
