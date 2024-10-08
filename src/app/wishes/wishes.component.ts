@@ -19,12 +19,10 @@ export class WishesComponent {
   @Input() wish!: Wish
 
   test: boolean = false;
-  showBigImg: boolean = false;
-  previewImage: boolean = false;
-  presentedImage: any;
-  currentBigImage: any;
+  
 
-  constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog, private help: HelperService) {
+
+  constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog, public help: HelperService) {
 
   }
 
@@ -32,6 +30,8 @@ export class WishesComponent {
     this.help.waitForUser()
   }
   getWishes(): Wish[] {
+    console.log(this.firebase.wishes);
+    this.help.wishLength = this.firebase.wishes.length
     return this.firebase.wishes;
   }
 
@@ -72,38 +72,4 @@ export class WishesComponent {
       }
     });
   }
-
-  handleButton(wish: Wish) {
-    // Wenn der User angemeldet ist und auf seiner eigenen Wunschliste ist
-    if (this.test == true) {
-      this.deleteWish(wish)
-    } else {
-
-      // Wenn der User nicht angemeldet ist oder auf einer anderen Wunschliste ist
-      wish.completed = true
-      wish.completedAt = new Date()
-      this.firebase.updateWish(wish)
-    }
-  }
-
-  openImage(image: any): void {
-    this.showBigImg = true;
-    this.previewImage = true;
-    this.currentBigImage = image;
-    this.presentedImage = image;
-  }
-
-
-  /**
-   * close big image
-   */
-  closeImage() {
-    this.showBigImg = false;
-    this.previewImage = false;
-
-  }
-
-
-
-
 }

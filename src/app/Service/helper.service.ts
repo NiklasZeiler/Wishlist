@@ -11,6 +11,11 @@ export class HelperService {
 
   savedDate: string | null = null;
   currentDate = new Date()
+  showBigImg: boolean = false;
+  previewImage: boolean = false;
+  presentedImage: any;
+  currentBigImage: any;
+  wishLength: number = 0;
 
   constructor(private firebase: FirebaseService, private auth: AuthService) {
     this.savedDate = localStorage.getItem('formattedDate');
@@ -62,4 +67,21 @@ export class HelperService {
     const [day, month, year] = dateString.split('.').map(Number);
     return new Date(year, month - 1, day);
   }
+
+  openImage(image: any): void {
+    this.showBigImg = true;
+    this.previewImage = true;
+    this.currentBigImage = image;
+    this.presentedImage = image;
+  }
+
+  /**
+   * close big image
+   */
+  closeImage() {
+    this.showBigImg = false;
+    this.previewImage = false;
+  }
+
+
 }
