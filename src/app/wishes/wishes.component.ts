@@ -18,7 +18,7 @@ import { HelperService } from '../Service/helper.service';
 export class WishesComponent {
   @Input() wish!: Wish
 
-  test: boolean = false;
+  test: boolean = true;
   
 
 

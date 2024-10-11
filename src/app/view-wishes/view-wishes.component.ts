@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Wish } from '../interfaces/wish.interface';
 import { FirebaseService } from '../Service/firebase.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '../Service/helper.service';
 import { CommonModule } from '@angular/common';
@@ -18,8 +18,9 @@ export class ViewWishesComponent {
   @Input() wish!: Wish
 
   noWishes: boolean = false;
+  wishId: string = "";
 
-  constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog, public help: HelperService) {
+  constructor(private firebase: FirebaseService, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, public help: HelperService) {
 
   }
 

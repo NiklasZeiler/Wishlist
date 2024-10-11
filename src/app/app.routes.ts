@@ -16,6 +16,6 @@ export const routes: Routes = [
     { path: "addWishes", component: AddWishComponent },
     { path: "feedback", component: FeedbackComponent },
     { path: "userProfil", component: UserProfilComponent },
-    { path: 'viewWish/:id', component: ViewWishesComponent },
+    { path: 'viewWish/:userId', component: ViewWishesComponent },
 ];
 

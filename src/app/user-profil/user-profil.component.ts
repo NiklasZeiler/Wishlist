@@ -21,10 +21,12 @@ export class UserProfilComponent {
   lastLogin: any;
 
 
-  constructor(private auth: AuthService, private firebase: FirebaseService, public help: HelperService) {
+
+  constructor(private auth: AuthService, public help: HelperService) {
   }
 
   ngOnInit() {
+    this.help.waitForUser()
     this.getUserInfo();
     this.auth.listenToAuthState();
   }
@@ -37,6 +39,7 @@ export class UserProfilComponent {
       this.userEmail = user?.email;
       loginTime = user?.metadata.lastSignInTime
       this.lastLogin = new Date(loginTime).toLocaleString()
+
 
     })
   }
