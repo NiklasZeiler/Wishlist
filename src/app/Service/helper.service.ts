@@ -11,9 +11,18 @@ export class HelperService {
 
   savedDate: string | null = null;
   currentDate = new Date()
+  showBigImg: boolean = false;
+  previewImage: boolean = false;
+  presentedImage: any;
+  currentBigImage: any;
+  wishLength: number = 0;
+  sharedLink: string = "";
+  displayLink: string = "";
+
 
   constructor(private firebase: FirebaseService, private auth: AuthService) {
     this.savedDate = localStorage.getItem('formattedDate');
+
   }
 
   waitForUser() {
@@ -22,6 +31,8 @@ export class HelperService {
       if (user) {
         console.log("User is authenticated");
         clearInterval(interval);
+        this.sharedLink = `${window.location.origin}/viewWish/${user?.uid}`;
+        this.displayLink = this.getShortLink(this.sharedLink)
         this.deleteOlderWishes();
       } else {
         console.log("Waiting for user to authenticate...");
@@ -29,6 +40,22 @@ export class HelperService {
     }, 1000);
   }
 
+  getShortLink(url: string): string {
+    const maxLength = 30;
+    return url.length > maxLength ? url.substring(0, maxLength) + "..." : url;
+  }
+
+  copyToClipboard(): void {
+    navigator.clipboard.writeText(this.sharedLink).then(
+      () => {
+        console.log('URL copied to clipboard');
+        alert('URL copied to clipboard');
+      },
+      (err) => {
+        console.error('Error copying URL: ', err);
+      }
+    );
+  }
 
   deleteOlderWishes() {
     const currentDateFormatted = this.formatDate(this.currentDate)
@@ -62,4 +89,21 @@ export class HelperService {
     const [day, month, year] = dateString.split('.').map(Number);
     return new Date(year, month - 1, day);
   }
+
+  openImage(image: any): void {
+    this.showBigImg = true;
+    this.previewImage = true;
+    this.currentBigImage = image;
+    this.presentedImage = image;
+  }
+
+  /**
+   * close big image
+   */
+  closeImage() {
+    this.showBigImg = false;
+    this.previewImage = false;
+  }
+
+
 }

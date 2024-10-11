@@ -1,5 +1,5 @@
 <section class="wishes-container">
-    <h1 class="headline">Wünsche</h1>
+    <h1 class="headline">Wünsche von</h1>
     <div class="wishes">
 
         <table class="table">
@@ -9,25 +9,20 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr *ngFor="let wish of getWishes(); trackBy: trackByWishId">
-                <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
+            <tr *ngFor="let wish of getWishes(); trackBy: trackByWishId" [ngClass]="{'completed': wish.completed}"
+                [style.pointer-events]="wish.completed ? 'none' : 'auto'">
+                <td [ngStyle]="getPriorityStyle(wish.priority)">{{ wish.wish }}
                 </td>
                 <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
                 <td><a href=`${{wish.link}}`>{{wish.link}}</a></td>
-                <!-- Löschen Button nur wenn Eigentümer der Liste angemeldet,
-                wenn Gast oder Schenker auf Liste zugreift dann Erledigt -->
                 <td>
-                    <button (click)="deleteWish(wish)">Löschen</button>
+                    <button (click)="wishDone(wish)">Erledigt</button>
                 </td>
             </tr>
             <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
             <tr>
                 <td *ngIf="this.help.wishLength === 0" colspan="4">Keine Wünsche vorhanden</td>
             </tr>
-            <div class="addWishBtn">
-                <button [class.opacity]="!test" [disabled]="!test" (click)="navigateToAddWish()">Wunsch
-                    hinzufügen</button>
-            </div>
         </table>
         <div *ngIf="this.help.showBigImg" class="bigImagebox">
             <mat-icon (click)="this.help.closeImage()" aria-hidden="false"> close </mat-icon>

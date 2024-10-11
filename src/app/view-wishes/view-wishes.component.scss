@@ -1,0 +1,71 @@
+.headline {
+    position: fixed;
+    top: 60px;
+    left: 10px;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    position: fixed;
+    top: 170px;
+    left: 0;
+
+    .first_tr {
+        justify-content: space-between !important;
+        margin-bottom: 20px;
+    }
+
+    tr {
+        display: flex;
+        justify-content: space-around;
+        align-items: baseline;
+
+        :first-child {
+            margin-bottom: 20px;
+        }
+    }
+
+    a {
+        color: white !important;
+        background-color: unset !important;
+    }
+
+    button {
+        padding: 4px !important;
+        background-color: white !important;
+    }
+
+    .addWishBtn {
+        display: flex;
+        justify-content: center;
+    }
+
+    img {
+        padding: 0 !important;
+        width: 100px;
+        height: 50px;
+        object-fit: cover;
+    }
+
+    .completed {
+        opacity: 0.5;
+    }
+
+    button.opacity {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.bigImagebox {
+    z-index: 99;
+    position: absolute;
+    top: 110px;
+    left: 28px;
+}
+
+.bigImage {
+    width: 360px;
+}

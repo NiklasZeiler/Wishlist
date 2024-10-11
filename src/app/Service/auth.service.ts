@@ -84,9 +84,8 @@ export class AuthService {
         this.userSubject.next(null); // User signed out
       }
     });
+
   }
-
-
   // async checkIfEmailExists(email: string) {
   //   // TO DO: Neue Sammlung für emails erstellen im firebase service
   //   // - Email addressen die benutzt werden in der Sammlung speichern
