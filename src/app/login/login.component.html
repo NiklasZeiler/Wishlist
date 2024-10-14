@@ -6,7 +6,8 @@
         <input type="email" [(ngModel)]="email" placeholder="Bitte E-Mail angeben">
         <input type="password" [(ngModel)]="password" placeholder="Bitte Passwort eingeben">
         <div class="buttons">
-            <button class="button" (click)="onLogin()" type="submit">Login</button>
+            <button [disabled]="!email || email.trim() === ''" class="button" (click)="onLogin()"
+                type="submit">Login</button>
             <button class="button" (click)="navigateToRegistration()" type="button">Registrieren</button>
 
         </div>

@@ -1,16 +1,19 @@
 <button class="menu" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>menu</mat-icon>
 </button>
-
+<!-- Wenn niemand eingeloggt ist kann man auch nichts klicken außer Feedback -->
 <mat-menu #menu="matMenu">
-    <span class="user" (click)="openUserMenu()">{{this.getUserName()}}</span>
+    <span [ngClass]="{'disabled-span': noUser}" class="user" (click)="openUserMenu()">{{this.getUserName()}}</span>
     <button (click)="navigateToFeedback()" mat-menu-item>
         <span>Feedback</span>
     </button>
-    <button (click)="navigateToWish()" mat-menu-item>
+    <button [disabled]="noUser" (click)="navigateToWish()" mat-menu-item>
         <span>Wünsche</span>
     </button>
-    <button (click)="navigateToLogin(); logOut()" mat-menu-item>
+    <button [disabled]="noUser" (click)="navigateToLogin(); logOut()" mat-menu-item>
         <span>Abmelden</span>
+    </button>
+    <button (click)="navigateToLogin()" mat-menu-item>
+        <span>Login</span>
     </button>
 </mat-menu>
