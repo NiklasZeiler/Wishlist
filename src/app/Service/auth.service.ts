@@ -29,6 +29,11 @@ export class AuthService {
     this.listenToAuthState();
   }
 
+  isLoggedIn(): boolean {
+    // Check if user is authenticated
+    return !!this.userSubject.value;
+  }
+
   // Method to get the latest user profile info
   private getUserProfil(user: User | null) {
     if (user !== null) {

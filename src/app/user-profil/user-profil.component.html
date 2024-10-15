@@ -27,22 +27,22 @@
         <div class="form-group">
             <label for="name">Name ändern</label>
             <input type="text" [(ngModel)]="name" placeholder="Neuen Namen angeben" required>
-            <button (click)="updateName()">Ändern</button>
+            <button [disabled]="!name || name.trim() === ''" (click)="updateName()">Ändern</button>
         </div>
         <div class="form-group">
             <label for="name">E-Mail ändern</label>
             <input type="text" [(ngModel)]="email" placeholder="Neue E-Mail angeben" required>
-            <button (click)="updateEmail()">Ändern</button>
+            <button [disabled]="!email || email.trim() === ''" (click)="updateEmail()">Ändern</button>
         </div>
         <div class="form-group">
             <label for="password">Passwort ändern</label>
             <input type="password" [(ngModel)]="password" placeholder="Neues Passwort eingeben" required>
-            <button (click)="changePassword()">Ändern</button>
+            <button [disabled]="!password || password.trim() === ''" (click)="changePassword()">Ändern</button>
         </div>
     </div>
 </section>
 
 <section class="shareableLink">
-    <span>Link: {{this.help.displayLink}}</span>
+    <!-- <span>Link: {{this.help.displayLink}}</span> -->
     <button (click)="this.help.copyToClipboard()">Wunschliste teilen</button>
 </section>

@@ -1,9 +1,0 @@
-{
-  "hosting": [
-    {
-      "target": "wishlist",
-      "source": ".",
-      "frameworksBackend": {}
-    }
-  ]
-}
