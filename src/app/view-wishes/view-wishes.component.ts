@@ -20,7 +20,7 @@ export class ViewWishesComponent {
   noWishes: boolean = false;
   wishId: string = "";
 
-  constructor(private firebase: FirebaseService, private router: Router, private route: ActivatedRoute, public dialog: MatDialog, public help: HelperService) {
+  constructor(private firebase: FirebaseService, public dialog: MatDialog, public help: HelperService) {
 
   }
 

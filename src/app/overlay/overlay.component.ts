@@ -30,15 +30,13 @@ export class OverlayComponent {
 
   ngOnInit() {
     this.auth.user$.subscribe(user => {
-      console.log(user, " user im overlay");
       if (user != null) {
         this.noUser = false
       }
-      this.router.events.subscribe(() => {
-        this.checkRoute();
-      });
-
     })
+    this.router.events.subscribe(() => {
+      this.checkRoute();
+    });
   }
 
   checkRoute() {
