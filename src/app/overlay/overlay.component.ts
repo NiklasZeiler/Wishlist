@@ -43,6 +43,8 @@ export class OverlayComponent {
 
   checkRoute() {
     this.isRestrictedRoute = this.router.url.startsWith("/viewWish/")
+    console.log(this.isRestrictedRoute, " is route from copy link");
+
     if (this.isRestrictedRoute == true) {
       this.userLoggedIn = false
     }
