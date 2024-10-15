@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -18,11 +19,17 @@ export class HelperService {
   wishLength: number = 0;
   sharedLink: string = "";
   displayLink: string = "";
+  isRestrictedRoute = false;
+  userLoggedIn = true;
 
 
-  constructor(private firebase: FirebaseService, private auth: AuthService) {
+  constructor(private firebase: FirebaseService, private auth: AuthService, private router: Router) {
     this.savedDate = localStorage.getItem('formattedDate');
 
+  }
+
+  checkIfRouteIsView() {
+    this.checkRoute()
   }
 
   waitForUser() {
@@ -56,6 +63,16 @@ export class HelperService {
       }
     );
   }
+
+  checkRoute() {
+    this.isRestrictedRoute = this.router.url.startsWith("/viewWish/")
+    console.log(this.isRestrictedRoute, " is route from copy link");
+
+    if (this.isRestrictedRoute == true) {
+      this.userLoggedIn = false
+    }
+  }
+
 
   deleteOlderWishes() {
     const currentDateFormatted = this.formatDate(this.currentDate)
