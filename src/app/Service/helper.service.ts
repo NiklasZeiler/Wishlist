@@ -28,10 +28,6 @@ export class HelperService {
 
   }
 
-  checkIfRouteIsView() {
-    this.checkRoute()
-  }
-
   waitForUser() {
     const interval = setInterval(() => {
       const user = this.auth.auth.currentUser;
@@ -65,8 +61,7 @@ export class HelperService {
   }
 
   checkRoute() {
-    this.isRestrictedRoute = this.router.url.startsWith("/viewWish/")
-    console.log(this.isRestrictedRoute, " is route from copy link");
+    this.isRestrictedRoute = this.router.url.includes("/viewWish/")
 
     if (this.isRestrictedRoute == true) {
       this.userLoggedIn = false

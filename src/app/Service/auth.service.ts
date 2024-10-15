@@ -91,13 +91,6 @@ export class AuthService {
     });
 
   }
-  // async checkIfEmailExists(email: string) {
-  //   // TO DO: Neue Sammlung für emails erstellen im firebase service
-  //   // - Email addressen die benutzt werden in der Sammlung speichern
-  //   // - Diese Sammlung überprüfen ob die angegebene Email bereits verwendet wird
-  //   // - Wenn ja, return true, ansonsten false
-  //   // return false; // Placeholder for actual implementation
-  // }
 
   async signInWithEmail(email: string, password: string) {
     try {
