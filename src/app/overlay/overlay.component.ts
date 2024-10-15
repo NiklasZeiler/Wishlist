@@ -20,6 +20,8 @@ import { AuthService } from '../Service/auth.service';
 export class OverlayComponent {
 
   noUser = true;
+  isRestrictedRoute = false;
+  userLoggedIn = true;
 
   constructor(private router: Router, private auth: AuthService) {
 
@@ -28,12 +30,22 @@ export class OverlayComponent {
 
   ngOnInit() {
     this.auth.user$.subscribe(user => {
-      console.log(user);
+      console.log(user, " user im overlay");
       if (user != null) {
         this.noUser = false
       }
+      this.router.events.subscribe(() => {
+        this.checkRoute();
+      });
 
     })
+  }
+
+  checkRoute() {
+    this.isRestrictedRoute = this.router.url.startsWith("/viewWish/")
+    if (this.isRestrictedRoute == true) {
+      this.userLoggedIn = false
+    }
   }
 
   navigateToFeedback() {

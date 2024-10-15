@@ -3,17 +3,19 @@
 </button>
 <!-- Wenn niemand eingeloggt ist kann man auch nichts klicken außer Feedback -->
 <mat-menu #menu="matMenu">
-    <span [ngClass]="{'disabled-span': noUser}" class="user" (click)="openUserMenu()">{{this.getUserName()}}</span>
+    <span [ngClass]="{'disabled-span': noUser || !userLoggedIn}" class="user"
+        (click)="openUserMenu()">{{this.getUserName()}}</span>
     <button (click)="navigateToFeedback()" mat-menu-item>
         <span>Feedback</span>
     </button>
-    <button [disabled]="noUser" (click)="navigateToWish()" mat-menu-item>
+    <button [disabled]="noUser || !userLoggedIn" (click)="navigateToWish()" mat-menu-item>
         <span>Wünsche</span>
     </button>
-    <button [disabled]="noUser" (click)="navigateToLogin(); logOut()" mat-menu-item>
-        <span>Abmelden</span>
-    </button>
-    <button (click)="navigateToLogin()" mat-menu-item>
+    <button [disabled]="!noUser || !userLoggedIn" (click)="navigateToLogin()" mat-menu-item>
         <span>Login</span>
     </button>
+    <button [disabled]="noUser || !userLoggedIn" (click)="navigateToLogin(); logOut()" mat-menu-item>
+        <span>Abmelden</span>
+    </button>
+
 </mat-menu>
