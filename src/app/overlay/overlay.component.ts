@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { AddWishComponent } from '../add-wish/add-wish.component';
 import { AuthService } from '../Service/auth.service';
+import { HelperService } from '../Service/helper.service';
 
 
 
@@ -20,10 +21,9 @@ import { AuthService } from '../Service/auth.service';
 export class OverlayComponent {
 
   noUser = true;
-  isRestrictedRoute = false;
-  userLoggedIn = true;
 
-  constructor(private router: Router, private auth: AuthService) {
+
+  constructor(private router: Router, private auth: AuthService, public help: HelperService) {
 
   }
 
@@ -34,19 +34,10 @@ export class OverlayComponent {
         this.noUser = false
       }
     })
-    this.router.events.subscribe(() => {
-      this.checkRoute();
-    });
+
   }
 
-  checkRoute() {
-    this.isRestrictedRoute = this.router.url.startsWith("/viewWish/")
-    console.log(this.isRestrictedRoute, " is route from copy link");
 
-    if (this.isRestrictedRoute == true) {
-      this.userLoggedIn = false
-    }
-  }
 
   navigateToFeedback() {
     this.router.navigate(["/feedback"])
