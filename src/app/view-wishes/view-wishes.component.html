@@ -1,5 +1,5 @@
 <section class="wishes-container">
-    <h1 class="headline">Wünsche von</h1>
+    <h1 class="headline">Wünsche von {{getUserName()}}</h1>
     <div class="wishes">
 
         <table class="table">
@@ -18,10 +18,6 @@
                 <td>
                     <button (click)="wishDone(wish)">Erledigt</button>
                 </td>
-            </tr>
-            <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
-            <tr>
-                <td *ngIf="this.help.wishLength === 0" colspan="4">Keine Wünsche vorhanden</td>
             </tr>
         </table>
         <div *ngIf="this.help.showBigImg" class="bigImagebox">

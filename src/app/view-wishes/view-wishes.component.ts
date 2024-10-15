@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '../Service/helper.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../Service/auth.service';
+import { User } from 'firebase/auth';
 
 @Component({
   selector: 'app-view-wishes',
@@ -19,18 +21,27 @@ export class ViewWishesComponent {
 
   noWishes: boolean = false;
   wishId: string = "";
+  userName: any = ""
+  constructor(private firebase: FirebaseService, private auth: AuthService, public dialog: MatDialog, public help: HelperService) {
 
-  constructor(private firebase: FirebaseService, public dialog: MatDialog, public help: HelperService) {
+  }
 
+  ngOnInit() {
+    this.help.checkRoute()
   }
 
   getWishes(): Wish[] {
-    console.log(this.firebase.wishes);
-
     return this.firebase.wishes;
   }
 
-  trackByWishId(index: number, wish: any): string {
+  getUserName() {
+    this.auth.user$.subscribe(user => {
+      this.userName = user?.displayName;
+    });
+    return this.userName;
+  }
+
+  trackByWishId(wish: any): string {
     return wish.id;
   }
 
