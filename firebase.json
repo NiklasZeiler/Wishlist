@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/wishlist",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
