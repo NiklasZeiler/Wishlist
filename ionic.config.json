@@ -1,7 +1,0 @@
-{
-  "name": "wishlist",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "angular-standalone"
-}
