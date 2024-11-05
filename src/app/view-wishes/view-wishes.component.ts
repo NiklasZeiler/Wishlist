@@ -22,23 +22,28 @@ export class ViewWishesComponent {
   noWishes: boolean = false;
   wishId: string = "";
   userName: any = ""
+  wishes: any = []
   constructor(private firebase: FirebaseService, private auth: AuthService, public dialog: MatDialog, public help: HelperService) {
 
   }
 
   ngOnInit() {
     this.help.checkRoute()
+    this.firebase.wishlists$.subscribe(wishlists => {
+      this.wishes = wishlists;
+    });
+    this.auth.createAnonymosUser()
   }
 
-  getWishes(): Wish[] {
-    return this.firebase.wishes;
+  getWishList() {
+    console.log(this.wishes);
+
+    this.getUserName()
   }
 
   getUserName() {
-    this.auth.user$.subscribe(user => {
-      this.userName = user?.displayName;
-    });
-    return this.userName;
+    return 
+
   }
 
   trackByWishId(wish: any): string {

@@ -19,7 +19,8 @@ export class WishesComponent {
   @Input() wish!: Wish
 
   test: boolean = true;
-  
+  wishes: any = []
+
 
 
   constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog, public help: HelperService) {
@@ -28,12 +29,28 @@ export class WishesComponent {
 
   ngOnInit() {
     this.help.waitForUser()
+    this.getWishes()
   }
-  getWishes(): Wish[] {
-    console.log(this.firebase.wishes);
+
+  getWishes() {
     this.help.wishLength = this.firebase.wishes.length
-    return this.firebase.wishes;
+    this.wishes = this.firebase.wishes
+    console.log(this.wishes);
+
+    // this.setWishToPrivate(this.firebase.wishes)
+
   }
+
+  // setWishToPrivate(wishes: any): void {
+  //   if (wishes.length === 0) {
+  //     return;
+  //   }
+  //   wishes.forEach((wish: any) => {
+  //     wish.isPublic = false
+  //     this.firebase.updateWish(wish)
+
+  //   });
+  // }
 
   trackByWishId(index: number, wish: any): string {
     return wish.id;

@@ -6,10 +6,8 @@ import { Feedback } from '../interfaces/feedback.interface';
 import { AuthService } from './auth.service';
 import { User } from 'firebase/auth';
 import { Email } from '../interfaces/email.interface';
-
-
-
-
+import { Wishlist } from '../interfaces/wishlist.interface';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,24 +15,30 @@ import { Email } from '../interfaces/email.interface';
 export class FirebaseService {
   wishes: Wish[] = [];
   feedbacks: Feedback[] = [];
+  // wishlists: Wishlist[] = [];
+  private wishlistsSubject = new BehaviorSubject<any[]>([]);
+  wishlists$ = this.wishlistsSubject.asObservable();
   emails: Email[] = [];
   photoUrl: string = ""
   file: any;
   selectedPriority: string = "";
+  userName: string | null = "";
 
   unsubFeedback;
-  // unsubEmail;
+  // unsubWishlist;
 
   firestore: Firestore = inject(Firestore);
   currentUser: User | null = null
 
   constructor(private auth: AuthService) {
     this.unsubFeedback = this.subFeedbackList();
-    // this.unsubEmail = this.subUsedEmailList();
+    // this.unsubWishlist = this.subSharedWishlist();
     this.auth.user$.subscribe(user => {
       this.currentUser = user
       if (user) {
         this.subscribeToUserWishes(user.uid);
+        this.loadWishlists(user.uid)
+        this.userName = user.displayName
       }
     });
   }
@@ -59,6 +63,28 @@ export class FirebaseService {
     }
   }
 
+  async addWishlist(item: Wishlist) {
+    console.log(item);
+    const user = this.auth.auth.currentUser;
+    if (user) {
+      item.displayName = user.displayName;
+      if (this.file) {
+        const storage = getStorage();
+        let storageRef = ref(storage, `images/${this.file.name}`);
+
+        const uploadTaskSnapshot = await uploadBytesResumable(storageRef, this.file);
+        this.photoUrl = await getDownloadURL(uploadTaskSnapshot.ref);
+        item.wishes.forEach(element => {
+          element.image = this.photoUrl;
+        });
+
+      }
+
+      await addDoc(this.getSharedWishlistRef(user.uid), item);
+    }
+
+  }
+
   async addFeedback(feedback: Feedback) {
     await addDoc(this.getFeedbackRef(), feedback).catch((err) => {
       console.error(err);
@@ -71,6 +97,9 @@ export class FirebaseService {
     if (this.unsubFeedback) {
       this.unsubFeedback();
     }
+    // if (this.unsubWishlist) {
+    //   this.unsubWishlist();
+    // }
   }
 
   // Subscribe to the user's wish list
@@ -93,6 +122,22 @@ export class FirebaseService {
     })
   }
 
+  // subSharedWishlist() {
+  //   return onSnapshot(this.getSharedWishlistRef(), (list) => {
+  //     this.wishlists = []
+  //     list.forEach((item) => {
+  //       this.wishlists.push(this.setWishlistsObject(item.data(), item.id));
+  //     });
+  //   })
+  // }
+
+  loadWishlists(userId: string) {
+    onSnapshot(this.getSharedWishlistRef(userId), (snapshot) => {
+      const wishlists = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      this.wishlistsSubject.next(wishlists);
+    });
+  }
+
   setPriority(priority: string) {
     this.selectedPriority = priority;
   }
@@ -104,6 +149,10 @@ export class FirebaseService {
       const docRef = doc(this.getWishesRef(user.uid), wish.id);
       await updateDoc(docRef, this.getCleanJson(wish));
     }
+  }
+
+  async updateWishlist(wishlist: Wishlist) {
+
   }
 
   async updateLikes(feedback: Feedback) {
@@ -168,12 +217,20 @@ export class FirebaseService {
   getColIdFromFeedback(feedback: Feedback) {
     return feedback.type === "feedback" ? "feedback" : feedback.type;
   }
+
+  getColIdFromWishlists(wishlists: Wishlist) {
+    return wishlists.type === "shared" ? "wishlists" : wishlists.type;
+  }
   private getWishesRef(userId: string): CollectionReference {
     return collection(this.firestore, `users/${userId}/wishes`);
   }
 
   private getFeedbackRef() {
     return collection(this.firestore, 'feedback');
+  }
+
+  private getSharedWishlistRef(userId: string) {
+    return collection(this.firestore, `wishlists/${userId}/wishes`);
   }
 
   setFeedbackObject(obj: any, id: string): Feedback {
@@ -184,6 +241,25 @@ export class FirebaseService {
       likes: obj.likes || 0,
     } as Feedback
   }
+
+
+  setWishlistsObject(obj: any, id: string): Wishlist {
+    return {
+      id: id,
+      name: obj.name || "",
+      type: obj.type || "shared",
+      displayName: obj.displayName || null,
+      wishes: obj.wishes?.map((wish: any) => ({
+        wishName: wish.wishName || "",
+        link: wish.link || "",
+        image: wish.image || "",
+        priority: wish.priority || "low",
+        completedAt: wish.completedAt || null,
+        completed: wish.completed || false,
+      })) || [],
+    } as Wishlist
+  }
+
 
   getSingleDocRef(colId: string, docId: string) {
     return doc(collection(this.firestore, colId), docId)

@@ -9,13 +9,11 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr *ngFor="let wish of getWishes(); trackBy: trackByWishId">
+            <tr *ngFor="let wish of wishes; trackBy: trackByWishId">
                 <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
                 </td>
                 <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
                 <td><a href=`${{wish.link}}`>{{wish.link}}</a></td>
-                <!-- Löschen Button nur wenn Eigentümer der Liste angemeldet,
-                wenn Gast oder Schenker auf Liste zugreift dann Erledigt -->
                 <td>
                     <button (click)="deleteWish(wish)">Löschen</button>
                 </td>

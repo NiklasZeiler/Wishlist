@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../Service/firebase.service';
 import { Wish } from '../interfaces/wish.interface';
 import { Router } from '@angular/router';
+import { Wishlist } from '../interfaces/wishlist.interface';
 
 @Component({
   selector: 'app-add-wish',
@@ -20,6 +21,8 @@ export class AddWishComponent {
   image: string = ""
   url: string = "";
   wish: string = ""
+  wishlists: string = ""
+  displayName: string | null = "";
   currentDate: any = null;
   completed: boolean = false
 
@@ -43,7 +46,25 @@ export class AddWishComponent {
       completed: this.completed
 
     };
+    const wishlists: Wishlist = {
+      type: "shared",
+      displayName: this.displayName,
+      wishes: [
+        {
+          wishName: this.wish,
+          link: this.url,
+          image: this.image,
+          priority: this.firebase.selectedPriority,
+          completedAt: this.currentDate,
+          completed: this.completed,
+        }
+      ]
+
+    }
+
+
     this.firebase.addWish(wish);
+    this.firebase.addWishlist(wishlists)
     this.router.navigate(['/wishes'])
   }
 

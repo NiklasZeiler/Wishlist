@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 // import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
-import { browserLocalPersistence, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence } from 'firebase/auth';
+import { browserLocalPersistence, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence, signInAnonymously } from 'firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { ChangePasswordComponent } from '../dialogs/change-password/change-password.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -77,6 +77,21 @@ export class AuthService {
       }
       throw error;
     }
+  }
+
+  async createAnonymosUser() {
+    try {
+      await setPersistence(this.auth, browserLocalPersistence)
+      const userCredential = await signInAnonymously(this.auth);
+      const user = userCredential.user;
+      this.userSubject.next(user); // Update user state
+      return user;
+    }
+    catch (error) {
+      console.error('Error signing in anonymously:', error);
+      throw error;
+    }
+
   }
 
   // Listen for authentication state changes
