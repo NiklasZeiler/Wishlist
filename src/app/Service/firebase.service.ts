@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDocs, setDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDocs, setDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { Feedback } from '../interfaces/feedback.interface';
@@ -73,26 +73,76 @@ export class FirebaseService {
     }
   }
 
-
-
-  async generateShareLink() {
+  async generateOrGetShareCode(): Promise<string | null> {
     const user = this.auth.auth.currentUser;
 
-    if (user) {
-      const sharedCodeRef = doc(this.getSharedRef(user.uid));
-      const shareCode = uuidv4();
-      // const createdAt = firebase.firestore.FieldValue.serverTimestamp();
-      await setDoc(sharedCodeRef, { shareCode });
-
-      const shareLink = `https://localhost:4200/${user.uid}?shareCode=${shareCode}`;
-      console.log("Teilungs-Link:", shareLink);
-
-      return shareLink;
+    if (!user) {
+      console.error("Kein angemeldeter Benutzer.");
+      return null;
     }
 
-    console.error("Benutzer nicht angemeldet. Kein Teilungs-Link generiert.");
-    return null;
+    const sharedCodeRef = this.getSharedRef(user.uid);
+
+    // Prüfe, ob bereits ein `shareCode` existiert
+    const sharedCodeSnapshot = await getDocs(sharedCodeRef);
+
+    if (!sharedCodeSnapshot.empty) {
+      // Verwende den bestehenden `shareCode`
+      const existingCode = sharedCodeSnapshot.docs[0].data()["shareCode"];
+      console.log("Bestehender Teilungs-Link:", `https://localhost:4200/wishes?shareCode=${existingCode}`);
+      return existingCode;
+    }
+
+    // Generiere einen neuen `shareCode`, wenn keiner existiert
+    const newSharedCodeRef = doc(sharedCodeRef);
+    const shareCode = uuidv4();
+
+    await setDoc(newSharedCodeRef, { shareCode, createdAt: serverTimestamp() });
+
+    console.log("Neuer Teilungs-Link:", `https://localhost:4200/wishes?shareCode=${shareCode}`);
+    return shareCode;
   }
+
+  async loadSharedWishListByShareCode(shareCode: string): Promise<any[] | null> {
+    // Finde den Benutzer mit dem `shareCode`
+    const usersCollection = collection(this.firestore, 'users');
+    const userSnapshot = await getDocs(usersCollection);
+    let userId: string | null = null;
+
+    for (const userDoc of userSnapshot.docs) {
+      const sharedCodeCollection = collection(this.firestore, `users/${userDoc.id}/sharedCode`);
+      const sharedCodeSnapshot = await getDocs(sharedCodeCollection);
+
+      for (const codeDoc of sharedCodeSnapshot.docs) {
+        const codeData = codeDoc.data();
+        if (codeData["shareCode"] === shareCode) {
+          userId = userDoc.id;
+          break;
+        }
+      }
+
+      if (userId) {
+        break; // Benutzer gefunden, keine weitere Iteration nötig
+      }
+    }
+
+    if (!userId) {
+      console.error('Ungültiger Teilen-Code.');
+      return null;
+    }
+
+    // Lade die Wünsche des Benutzers
+    const wishesSnapshot = await getDocs(collection(this.firestore, `users/${userId}/wishes`));
+    return wishesSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  }
+
+
+
+
+
 
 
   // Subscribe to the user's wish list

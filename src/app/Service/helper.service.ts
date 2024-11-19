@@ -44,7 +44,7 @@ export class HelperService {
   }
 
   copyToClipboard(): void {
-    this.firebase.generateShareLink()
+    this.firebase.generateOrGetShareCode()
   }
 
   // getShortLink(url: string): string {
