@@ -1,13 +1,14 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, setDoc, deleteDoc, CollectionReference, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDocs, setDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { Feedback } from '../interfaces/feedback.interface';
 import { AuthService } from './auth.service';
 import { User } from 'firebase/auth';
 import { Email } from '../interfaces/email.interface';
-import { Wishlist } from '../interfaces/wishlist.interface';
 import { BehaviorSubject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
+import { firebase } from 'firebaseui-angular';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,6 @@ import { BehaviorSubject } from 'rxjs';
 export class FirebaseService {
   wishes: Wish[] = [];
   feedbacks: Feedback[] = [];
-  // wishlists: Wishlist[] = [];
   private wishlistsSubject = new BehaviorSubject<any[]>([]);
   wishlists$ = this.wishlistsSubject.asObservable();
   emails: Email[] = [];
@@ -23,21 +23,17 @@ export class FirebaseService {
   file: any;
   selectedPriority: string = "";
   userName: string | null = "";
-
   unsubFeedback;
-  // unsubWishlist;
 
   firestore: Firestore = inject(Firestore);
   currentUser: User | null = null
 
   constructor(private auth: AuthService) {
     this.unsubFeedback = this.subFeedbackList();
-    // this.unsubWishlist = this.subSharedWishlist();
     this.auth.user$.subscribe(user => {
       this.currentUser = user
       if (user) {
         this.subscribeToUserWishes(user.uid);
-        this.loadWishlists(user.uid)
         this.userName = user.displayName
       }
     });
@@ -63,28 +59,6 @@ export class FirebaseService {
     }
   }
 
-  async addWishlist(item: Wishlist) {
-    console.log(item);
-    const user = this.auth.auth.currentUser;
-    if (user) {
-      item.displayName = user.displayName;
-      if (this.file) {
-        const storage = getStorage();
-        let storageRef = ref(storage, `images/${this.file.name}`);
-
-        const uploadTaskSnapshot = await uploadBytesResumable(storageRef, this.file);
-        this.photoUrl = await getDownloadURL(uploadTaskSnapshot.ref);
-        item.wishes.forEach(element => {
-          element.image = this.photoUrl;
-        });
-
-      }
-
-      await addDoc(this.getSharedWishlistRef(user.uid), item);
-    }
-
-  }
-
   async addFeedback(feedback: Feedback) {
     await addDoc(this.getFeedbackRef(), feedback).catch((err) => {
       console.error(err);
@@ -97,10 +71,79 @@ export class FirebaseService {
     if (this.unsubFeedback) {
       this.unsubFeedback();
     }
-    // if (this.unsubWishlist) {
-    //   this.unsubWishlist();
-    // }
   }
+
+  async generateOrGetShareCode(): Promise<string | null> {
+    const user = this.auth.auth.currentUser;
+
+    if (!user) {
+      console.error("Kein angemeldeter Benutzer.");
+      return null;
+    }
+
+    const sharedCodeRef = this.getSharedRef(user.uid);
+
+    // Prüfe, ob bereits ein `shareCode` existiert
+    const sharedCodeSnapshot = await getDocs(sharedCodeRef);
+
+    if (!sharedCodeSnapshot.empty) {
+      // Verwende den bestehenden `shareCode`
+      const existingCode = sharedCodeSnapshot.docs[0].data()["shareCode"];
+      console.log("Bestehender Teilungs-Link:", `https://localhost:4200/wishes?shareCode=${existingCode}`);
+      return existingCode;
+    }
+
+    // Generiere einen neuen `shareCode`, wenn keiner existiert
+    const newSharedCodeRef = doc(sharedCodeRef);
+    const shareCode = uuidv4();
+
+    await setDoc(newSharedCodeRef, { shareCode, createdAt: serverTimestamp() });
+
+    console.log("Neuer Teilungs-Link:", `https://localhost:4200/wishes?shareCode=${shareCode}`);
+    return shareCode;
+  }
+
+  async loadSharedWishListByShareCode(shareCode: string): Promise<any[] | null> {
+    // Finde den Benutzer mit dem `shareCode`
+    const usersCollection = collection(this.firestore, 'users');
+    const userSnapshot = await getDocs(usersCollection);
+    let userId: string | null = null;
+
+    for (const userDoc of userSnapshot.docs) {
+      const sharedCodeCollection = collection(this.firestore, `users/${userDoc.id}/sharedCode`);
+      const sharedCodeSnapshot = await getDocs(sharedCodeCollection);
+
+      for (const codeDoc of sharedCodeSnapshot.docs) {
+        const codeData = codeDoc.data();
+        if (codeData["shareCode"] === shareCode) {
+          userId = userDoc.id;
+          break;
+        }
+      }
+
+      if (userId) {
+        break; // Benutzer gefunden, keine weitere Iteration nötig
+      }
+    }
+
+    if (!userId) {
+      console.error('Ungültiger Teilen-Code.');
+      return null;
+    }
+
+    // Lade die Wünsche des Benutzers
+    const wishesSnapshot = await getDocs(collection(this.firestore, `users/${userId}/wishes`));
+    return wishesSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  }
+
+
+
+
+
+
 
   // Subscribe to the user's wish list
   subscribeToUserWishes(userId: string) {
@@ -122,22 +165,6 @@ export class FirebaseService {
     })
   }
 
-  // subSharedWishlist() {
-  //   return onSnapshot(this.getSharedWishlistRef(), (list) => {
-  //     this.wishlists = []
-  //     list.forEach((item) => {
-  //       this.wishlists.push(this.setWishlistsObject(item.data(), item.id));
-  //     });
-  //   })
-  // }
-
-  loadWishlists(userId: string) {
-    onSnapshot(this.getSharedWishlistRef(userId), (snapshot) => {
-      const wishlists = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      this.wishlistsSubject.next(wishlists);
-    });
-  }
-
   setPriority(priority: string) {
     this.selectedPriority = priority;
   }
@@ -149,10 +176,6 @@ export class FirebaseService {
       const docRef = doc(this.getWishesRef(user.uid), wish.id);
       await updateDoc(docRef, this.getCleanJson(wish));
     }
-  }
-
-  async updateWishlist(wishlist: Wishlist) {
-
   }
 
   async updateLikes(feedback: Feedback) {
@@ -199,6 +222,7 @@ export class FirebaseService {
       image: wish.image,
       completedAt: wish.completedAt,
       completed: wish.completed,
+      shareCode: wish.shareCode,
     }
   }
 
@@ -217,10 +241,6 @@ export class FirebaseService {
   getColIdFromFeedback(feedback: Feedback) {
     return feedback.type === "feedback" ? "feedback" : feedback.type;
   }
-
-  getColIdFromWishlists(wishlists: Wishlist) {
-    return wishlists.type === "shared" ? "wishlists" : wishlists.type;
-  }
   private getWishesRef(userId: string): CollectionReference {
     return collection(this.firestore, `users/${userId}/wishes`);
   }
@@ -229,8 +249,8 @@ export class FirebaseService {
     return collection(this.firestore, 'feedback');
   }
 
-  private getSharedWishlistRef(userId: string) {
-    return collection(this.firestore, `wishlists/${userId}/wishes`);
+  private getSharedRef(userId: string): CollectionReference {
+    return collection(this.firestore, `users/${userId}/sharedCode`)
   }
 
   setFeedbackObject(obj: any, id: string): Feedback {
@@ -241,25 +261,6 @@ export class FirebaseService {
       likes: obj.likes || 0,
     } as Feedback
   }
-
-
-  setWishlistsObject(obj: any, id: string): Wishlist {
-    return {
-      id: id,
-      name: obj.name || "",
-      type: obj.type || "shared",
-      displayName: obj.displayName || null,
-      wishes: obj.wishes?.map((wish: any) => ({
-        wishName: wish.wishName || "",
-        link: wish.link || "",
-        image: wish.image || "",
-        priority: wish.priority || "low",
-        completedAt: wish.completedAt || null,
-        completed: wish.completed || false,
-      })) || [],
-    } as Wishlist
-  }
-
 
   getSingleDocRef(colId: string, docId: string) {
     return doc(collection(this.firestore, colId), docId)

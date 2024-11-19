@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Wish } from '../interfaces/wish.interface';
 import { FirebaseService } from '../Service/firebase.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '../Service/helper.service';
 import { CommonModule } from '@angular/common';
@@ -23,26 +23,45 @@ export class ViewWishesComponent {
   wishId: string = "";
   userName: any = ""
   wishes: any = []
-  constructor(private firebase: FirebaseService, private auth: AuthService, public dialog: MatDialog, public help: HelperService) {
+  errorMessage: string | null = null;
+  constructor(private firebase: FirebaseService, private auth: AuthService, public dialog: MatDialog, public help: HelperService, private route: ActivatedRoute) {
 
   }
 
   ngOnInit() {
-    this.help.checkRoute()
-    this.firebase.wishlists$.subscribe(wishlists => {
-      this.wishes = wishlists;
-    });
-    this.auth.createAnonymosUser()
+    // Abrufen des `shareCode` aus der URL
+    const shareCode = this.route.snapshot.paramMap.get('shareCode');
+
+    if (shareCode) {
+      // Lade Wünsche basierend auf `shareCode`
+      this.firebase.loadSharedWishListByShareCode(shareCode)
+        .then(wishes => {
+          if (wishes) {
+            this.wishes = wishes;
+          } else {
+            this.errorMessage = 'Ungültiger Teilungslink oder keine Wunschliste gefunden.';
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          this.errorMessage = 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.';
+        });
+    } else {
+      this.errorMessage = 'Ungültige URL. Teilungscode fehlt.';
+    }
   }
 
-  getWishList() {
-    console.log(this.wishes);
-
-    this.getUserName()
-  }
+  // // this.help.checkRoute()
+  // this.firebase.wishlists$.subscribe(wishlists => {
+  //   this.wishes = wishlists;
+  // });
+  // // this.auth.createAnonymosUser()
+  // this.getUserName()
+  // }
 
   getUserName() {
-    return 
+    console.log(this.wishes);
+
 
   }
 

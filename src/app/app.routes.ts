@@ -12,11 +12,12 @@ import { authGuard } from './Service/auth-guard.service';
 export const routes: Routes = [
     { path: "", redirectTo: "login", pathMatch: "full" },  // Redirect root to "wishes"
     { path: "login", component: LoginComponent },
-    { path: "wishes", component: WishesComponent,canActivate: [authGuard]},
+    { path: "wishes", component: WishesComponent, canActivate: [authGuard] },
     { path: "registration", component: RegistrationComponent },
     { path: "addWishes", component: AddWishComponent },
     { path: "feedback", component: FeedbackComponent },
     { path: "userProfil", component: UserProfilComponent },
-    { path: 'viewWish/:userId', component: ViewWishesComponent },
+    { path: 'wishes/:shareCode', component: ViewWishesComponent },
+    { path: '**', redirectTo: 'wishes', pathMatch: 'full' }
 ];
 

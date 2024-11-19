@@ -6,5 +6,6 @@ export interface Wish {
     priority: string;
     image: string;
     completedAt: any;
-    completed: boolean
+    completed: boolean;
+    shareCode: string
 }

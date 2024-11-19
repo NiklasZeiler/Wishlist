@@ -79,20 +79,20 @@ export class AuthService {
     }
   }
 
-  async createAnonymosUser() {
-    try {
-      await setPersistence(this.auth, browserLocalPersistence)
-      const userCredential = await signInAnonymously(this.auth);
-      const user = userCredential.user;
-      this.userSubject.next(user); // Update user state
-      return user;
-    }
-    catch (error) {
-      console.error('Error signing in anonymously:', error);
-      throw error;
-    }
+  // async createAnonymosUser() {
+  //   try {
+  //     await setPersistence(this.auth, browserLocalPersistence)
+  //     const userCredential = await signInAnonymously(this.auth);
+  //     const user = userCredential.user;
+  //     this.userSubject.next(user); // Update user state
+  //     return user;
+  //   }
+  //   catch (error) {
+  //     console.error('Error signing in anonymously:', error);
+  //     throw error;
+  //   }
 
-  }
+  // }
 
   // Listen for authentication state changes
   listenToAuthState() {
