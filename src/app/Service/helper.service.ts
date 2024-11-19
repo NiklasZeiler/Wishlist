@@ -35,7 +35,7 @@ export class HelperService {
         console.log("User is authenticated");
         clearInterval(interval);
         this.sharedLink = `${window.location.origin}/viewWish/${user?.uid}`;
-        this.displayLink = this.getShortLink(this.sharedLink)
+        // this.displayLink = this.getShortLink(this.sharedLink)
         this.deleteOlderWishes();
       } else {
         console.log("Waiting for user to authenticate...");
@@ -43,30 +43,35 @@ export class HelperService {
     }, 1000);
   }
 
-  getShortLink(url: string): string {
-    const maxLength = 30;
-    return url.length > maxLength ? url.substring(0, maxLength) + "..." : url;
-  }
-
   copyToClipboard(): void {
-    navigator.clipboard.writeText(this.sharedLink).then(
-      () => {
-        console.log('URL copied to clipboard');
-        alert('URL copied to clipboard');
-      },
-      (err) => {
-        console.error('Error copying URL: ', err);
-      }
-    );
+    this.firebase.generateShareLink()
   }
 
-  checkRoute() {
-    this.isRestrictedRoute = this.router.url.includes("/viewWish/")
+  // getShortLink(url: string): string {
+  //   const maxLength = 30;
+  //   return url.length > maxLength ? url.substring(0, maxLength) + "..." : url;
+  // }
 
-    if (this.isRestrictedRoute == true) {
-      this.userLoggedIn = false
-    }
-  }
+  // copyToClipboard(): void {
+  //   navigator.clipboard.writeText(this.sharedLink).then(
+  //     () => {
+  //       console.log('URL copied to clipboard');
+  //       //dialog öffnen das der Link kopiert wurde
+  //       alert('URL copied to clipboard');
+  //     },
+  //     (err) => {
+  //       console.error('Error copying URL: ', err);
+  //     }
+  //   );
+  // }
+
+  // checkRoute() {
+  //   this.isRestrictedRoute = this.router.url.includes("/viewWish/")
+
+  //   if (this.isRestrictedRoute == true) {
+  //     this.userLoggedIn = false
+  //   }
+  // }
 
 
   deleteOlderWishes() {

@@ -28,21 +28,17 @@ export class ViewWishesComponent {
   }
 
   ngOnInit() {
-    this.help.checkRoute()
+    // this.help.checkRoute()
     this.firebase.wishlists$.subscribe(wishlists => {
       this.wishes = wishlists;
     });
-    this.auth.createAnonymosUser()
-  }
-
-  getWishList() {
-    console.log(this.wishes);
-
+    // this.auth.createAnonymosUser()
     this.getUserName()
   }
 
   getUserName() {
-    return 
+    console.log(this.wishes);
+
 
   }
 
