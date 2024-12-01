@@ -30,7 +30,7 @@ export class HelperService {
 
   waitForUser() {
     const interval = setInterval(() => {
-      const user = this.auth.auth.currentUser;
+      const user = this.auth.authInstance.currentUser;
       if (user) {
         console.log("User is authenticated");
         clearInterval(interval);
@@ -44,34 +44,8 @@ export class HelperService {
   }
 
   copyToClipboard(): void {
-    this.firebase.generateOrGetShareCode()
+    this.firebase.generateOrGetShareCode();
   }
-
-  // getShortLink(url: string): string {
-  //   const maxLength = 30;
-  //   return url.length > maxLength ? url.substring(0, maxLength) + "..." : url;
-  // }
-
-  // copyToClipboard(): void {
-  //   navigator.clipboard.writeText(this.sharedLink).then(
-  //     () => {
-  //       console.log('URL copied to clipboard');
-  //       //dialog öffnen das der Link kopiert wurde
-  //       alert('URL copied to clipboard');
-  //     },
-  //     (err) => {
-  //       console.error('Error copying URL: ', err);
-  //     }
-  //   );
-  // }
-
-  // checkRoute() {
-  //   this.isRestrictedRoute = this.router.url.includes("/viewWish/")
-
-  //   if (this.isRestrictedRoute == true) {
-  //     this.userLoggedIn = false
-  //   }
-  // }
 
 
   deleteOlderWishes() {

@@ -2,12 +2,13 @@ import { Injectable, inject } from '@angular/core';
 // import { Auth, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
 import { browserLocalPersistence, getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, User, updateProfile, updateEmail, sendEmailVerification, updatePassword, sendPasswordResetEmail, signOut, setPersistence, signInAnonymously } from 'firebase/auth';
-import { Auth } from '@angular/fire/auth';
 import { ChangePasswordComponent } from '../dialogs/change-password/change-password.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EmailExistsComponent } from '../dialogs/email-exists/email-exists.component';
 import { Router } from '@angular/router';
 import { PasswordtoshortComponent } from '../dialogs/passwordtoshort/passwordtoshort.component';
+import { Auth } from '@angular/fire/auth';
+
 
 
 @Injectable({
@@ -16,17 +17,33 @@ import { PasswordtoshortComponent } from '../dialogs/passwordtoshort/passwordtos
 export class AuthService {
 
 
-  auth: Auth = inject(Auth)
+  auth: Auth;
   public userSubject = new BehaviorSubject<User | null>(null);
-  user$ = this.userSubject.asObservable(); // Expose as observable to subscribe
+  user$ = this.userSubject.asObservable();
+  authState: any;
+  displayName: any;
 
 
 
 
   constructor(public dialog: MatDialog, private router: Router) {
+    this.auth = inject(Auth);
 
-    this.auth = getAuth();
+    onAuthStateChanged(this.auth, (user) => {
+      this.userSubject.next(user);
+    });
     this.listenToAuthState();
+  }
+
+  get authInstance() {
+    return this.auth;
+  }
+
+  getUsername() {
+    this.displayName = this.userSubject.subscribe(user => {
+      this.displayName = user?.displayName;
+    });
+
   }
 
   isLoggedIn(): boolean {

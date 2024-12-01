@@ -1,5 +1,5 @@
 <section class="wishes-container">
-    <h1 class="headline">Wünsche von Niklas</h1>
+    <h1 class="headline">Wünsche von {{this.userName}}</h1>
     <div class="wishes">
 
         <table class="table">
@@ -9,14 +9,14 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr *ngFor="let wish of wishes; trackBy: trackByWishId" [ngClass]="{'completed': wish.wishes[0].completed}"
-                [style.pointer-events]="wish.wishes[0].completed ? 'none' : 'auto'">
-                <td [ngStyle]="getPriorityStyle(wish.wishes[0].priority)">{{ wish.wishes[0].wishName }}
+            <tr *ngFor="let wish of wishes; trackBy: trackByWishId" [ngClass]="{'completed': wish.completed}"
+                [style.pointer-events]="wish.completed ? 'none' : 'auto'">
+                <td [ngStyle]="getPriorityStyle(wish.priority)">{{ wish.wish }}
                 </td>
-                <td><img (click)="this.help.openImage(wish.wishes[0].image)" [src]=wish.wishes[0].image></td>
-                <td><a href=`${{wish.wishes[0].link}}`>{{wish.wishes[0].link}}</a></td>
+                <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
+                <td><a href=`${{wish.link}}`>{{wish.link}}</a></td>
                 <td>
-                    <button (click)="wishDone(wishes[0].wish)">Erledigt</button>
+                    <button (click)="wishDone(wish)">Erledigt</button>
                 </td>
             </tr>
         </table>

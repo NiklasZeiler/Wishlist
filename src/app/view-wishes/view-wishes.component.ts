@@ -6,8 +6,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '../Service/helper.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../Service/auth.service';
-import { User } from 'firebase/auth';
 
 @Component({
   selector: 'app-view-wishes',
@@ -24,46 +22,33 @@ export class ViewWishesComponent {
   userName: any = ""
   wishes: any = []
   errorMessage: string | null = null;
-  constructor(private firebase: FirebaseService, private auth: AuthService, public dialog: MatDialog, public help: HelperService, private route: ActivatedRoute) {
+  constructor(private firebase: FirebaseService, public dialog: MatDialog, public help: HelperService, private route: ActivatedRoute) {
 
   }
 
-  ngOnInit() {
-    // Abrufen des `shareCode` aus der URL
-    const shareCode = this.route.snapshot.paramMap.get('shareCode');
 
-    if (shareCode) {
-      // Lade Wünsche basierend auf `shareCode`
-      this.firebase.loadSharedWishListByShareCode(shareCode)
-        .then(wishes => {
-          if (wishes) {
-            this.wishes = wishes;
-          } else {
-            this.errorMessage = 'Ungültiger Teilungslink oder keine Wunschliste gefunden.';
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(async (params) => {
+      const shareCode = params['shareCode'];
+
+      if (shareCode) {
+        try {
+          this.wishes = await this.firebase.getWishesByShareCode(shareCode);
+          console.log(this.wishes);
+          this.userName = this.wishes[0].owener
+          if (!this.wishes || this.wishes.length === 0) {
+            this.errorMessage = 'Keine Wünsche gefunden.';
           }
-        })
-        .catch(err => {
-          console.error(err);
-          this.errorMessage = 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.';
-        });
-    } else {
-      this.errorMessage = 'Ungültige URL. Teilungscode fehlt.';
-    }
+        } catch (error) {
+          console.error('Fehler beim Laden der Wunschliste:', error);
+          this.errorMessage = 'Fehler beim Laden der Wunschliste.';
+        }
+      } else {
+        this.errorMessage = 'Kein Teilen-Code gefunden.';
+      }
+    });
   }
 
-  // // this.help.checkRoute()
-  // this.firebase.wishlists$.subscribe(wishlists => {
-  //   this.wishes = wishlists;
-  // });
-  // // this.auth.createAnonymosUser()
-  // this.getUserName()
-  // }
-
-  getUserName() {
-    console.log(this.wishes);
-
-
-  }
 
   trackByWishId(wish: any): string {
     return wish.id;
