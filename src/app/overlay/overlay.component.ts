@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WishesComponent } from "../wishes/wishes.component";
-import { Router, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
-import { AddWishComponent } from '../add-wish/add-wish.component';
 import { AuthService } from '../Service/auth.service';
 import { HelperService } from '../Service/helper.service';
 
@@ -14,13 +12,14 @@ import { HelperService } from '../Service/helper.service';
 @Component({
   selector: 'app-overlay',
   standalone: true,
-  imports: [CommonModule, WishesComponent, RouterOutlet, MatMenuModule, MatIconModule, AddWishComponent],
+  imports: [CommonModule, MatMenuModule, MatIconModule],
   templateUrl: './overlay.component.html',
   styleUrl: './overlay.component.scss'
 })
 export class OverlayComponent {
 
   noUser = true;
+  disable = false;
 
 
   constructor(private router: Router, private auth: AuthService, public help: HelperService) {
@@ -35,9 +34,9 @@ export class OverlayComponent {
       }
     })
 
+    this.auth.getUsername()
+
   }
-
-
 
   navigateToFeedback() {
     this.router.navigate(["/feedback"])

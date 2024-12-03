@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../Service/firebase.service';
 import { Wish } from '../interfaces/wish.interface';
 import { Router } from '@angular/router';
+import { AuthService } from '../Service/auth.service';
 
 
 
@@ -16,17 +17,17 @@ import { Router } from '@angular/router';
 })
 export class AddWishComponent {
 
-  constructor(public firebase: FirebaseService, private router: Router) {
+  constructor(public firebase: FirebaseService, private router: Router, private authService: AuthService) {
   }
 
   image: string = ""
   url: string = "";
   wish: string = ""
   wishlists: string = ""
-  displayName: string | null = "";
+  displayName: string = "";
   currentDate: any = null;
   completed: boolean = false
-  shareCode: string = "";
+
 
 
 
@@ -46,7 +47,7 @@ export class AddWishComponent {
       image: this.image,
       completedAt: this.currentDate,
       completed: this.completed,
-      shareCode: this.shareCode,
+      owener: this.authService.displayName
 
     };
 

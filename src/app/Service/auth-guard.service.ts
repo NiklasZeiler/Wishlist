@@ -1,16 +1,33 @@
-import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { inject, Injectable, Injector } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateFn, RouterStateSnapshot } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
+import { map, take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuardService {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private injector: Injector
+  ) { }
 
-export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
-
-  if (authService.isLoggedIn()) {
-    return true;
-  } else {
-    router.navigate(['/login']);
-    return false;
+  checkAuth(): Observable<boolean> {
+    const router = this.injector.get(Router);
+    return this.authService.user$.pipe(
+      take(1),
+      map(user => {
+        if (user) {
+          return true;
+        } else {
+          this.router.navigate(['/login']);
+          return false;
+        }
+      })
+    );
   }
-};
+}

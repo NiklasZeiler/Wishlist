@@ -7,5 +7,5 @@ export interface Wish {
     image: string;
     completedAt: any;
     completed: boolean;
-    shareCode: string
+    owener: string;
 }

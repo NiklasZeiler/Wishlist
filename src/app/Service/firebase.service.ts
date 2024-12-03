@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDocs, setDoc, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDocs, setDoc, serverTimestamp, query, where } from '@angular/fire/firestore';
 import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { Feedback } from '../interfaces/feedback.interface';
@@ -8,7 +8,7 @@ import { User } from 'firebase/auth';
 import { Email } from '../interfaces/email.interface';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { firebase } from 'firebaseui-angular';
+
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +45,8 @@ export class FirebaseService {
   }
 
   async addWish(item: Wish) {
-    const user = this.auth.auth.currentUser;
+    const user = this.auth.authInstance.currentUser;
+    // const user = this.auth.auth.currentUser;
     if (this.file) {
       const storage = getStorage();
       let storageRef = ref(storage, `images/${this.file.name}`);
@@ -74,7 +75,7 @@ export class FirebaseService {
   }
 
   async generateOrGetShareCode(): Promise<string | null> {
-    const user = this.auth.auth.currentUser;
+    const user = this.auth.authInstance.currentUser;
 
     if (!user) {
       console.error("Kein angemeldeter Benutzer.");
@@ -89,7 +90,7 @@ export class FirebaseService {
     if (!sharedCodeSnapshot.empty) {
       // Verwende den bestehenden `shareCode`
       const existingCode = sharedCodeSnapshot.docs[0].data()["shareCode"];
-      console.log("Bestehender Teilungs-Link:", `https://localhost:4200/wishes?shareCode=${existingCode}`);
+      console.log("Bestehender Teilungs-Link:", `http://localhost:4200/wishes/share?shareCode=${existingCode}`);
       return existingCode;
     }
 
@@ -97,53 +98,50 @@ export class FirebaseService {
     const newSharedCodeRef = doc(sharedCodeRef);
     const shareCode = uuidv4();
 
+    // `serverTimestamp()` korrekt verwenden
     await setDoc(newSharedCodeRef, { shareCode, createdAt: serverTimestamp() });
 
-    console.log("Neuer Teilungs-Link:", `https://localhost:4200/wishes?shareCode=${shareCode}`);
+    console.log("Neuer Teilungs-Link:", `http://localhost:4200/wishes/share?shareCode=${shareCode}`);
     return shareCode;
   }
 
-  async loadSharedWishListByShareCode(shareCode: string): Promise<any[] | null> {
-    // Finde den Benutzer mit dem `shareCode`
+
+
+  async getWishesByShareCode(shareCode: string): Promise<any[] | null> {
+
     const usersCollection = collection(this.firestore, 'users');
-    const userSnapshot = await getDocs(usersCollection);
+    const userQuery = query(usersCollection);
+    const userSnapshot = await getDocs(userQuery);
+
     let userId: string | null = null;
 
     for (const userDoc of userSnapshot.docs) {
-      const sharedCodeCollection = collection(this.firestore, `users/${userDoc.id}/sharedCode`);
-      const sharedCodeSnapshot = await getDocs(sharedCodeCollection);
+      const sharedCodeQuery = query(
+        collection(this.firestore, `users/${userDoc.id}/sharedCode`),
+        where('shareCode', '==', shareCode)
+      );
 
-      for (const codeDoc of sharedCodeSnapshot.docs) {
-        const codeData = codeDoc.data();
-        if (codeData["shareCode"] === shareCode) {
-          userId = userDoc.id;
-          break;
-        }
-      }
-
-      if (userId) {
-        break; // Benutzer gefunden, keine weitere Iteration nötig
+      const sharedCodeSnapshot = await getDocs(sharedCodeQuery);
+      if (!sharedCodeSnapshot.empty) {
+        userId = userDoc.id;
+        break;
       }
     }
 
     if (!userId) {
-      console.error('Ungültiger Teilen-Code.');
+      console.error('Kein Benutzer mit diesem Share-Code gefunden.');
       return null;
     }
 
-    // Lade die Wünsche des Benutzers
-    const wishesSnapshot = await getDocs(collection(this.firestore, `users/${userId}/wishes`));
+    // Wünsche abrufen
+    const wishesCollection = collection(this.firestore, `users/${userId}/wishes`);
+    const wishesSnapshot = await getDocs(wishesCollection);
+
     return wishesSnapshot.docs.map(doc => ({
       id: doc.id,
-      ...doc.data(),
+      ...doc.data()
     }));
   }
-
-
-
-
-
-
 
   // Subscribe to the user's wish list
   subscribeToUserWishes(userId: string) {
@@ -170,7 +168,7 @@ export class FirebaseService {
   }
 
   async updateWish(wish: Wish) {
-    const user = this.auth.auth.currentUser;
+    const user = this.auth.authInstance.currentUser;
 
     if (user && wish.id) {
       const docRef = doc(this.getWishesRef(user.uid), wish.id);
@@ -189,7 +187,7 @@ export class FirebaseService {
 
   async deleteOldWishes(setDate: any) {
     const currentDate = setDate
-    const user = this.auth.auth.currentUser
+    const user = this.auth.authInstance.currentUser;
 
     if (user) {
       const wishesRef = this.getWishesRef(user.uid);
@@ -206,7 +204,7 @@ export class FirebaseService {
 
 
   async deleteWish(wish: Wish) {
-    const user = this.auth.auth.currentUser;
+    const user = this.auth.authInstance.currentUser;
     if (user && wish.id) {
       const docRef = doc(this.getWishesRef(user.uid), wish.id);
       await deleteDoc(docRef);
@@ -222,7 +220,7 @@ export class FirebaseService {
       image: wish.image,
       completedAt: wish.completedAt,
       completed: wish.completed,
-      shareCode: wish.shareCode,
+      owener: wish.owener,
     }
   }
 
