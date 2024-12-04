@@ -33,11 +33,19 @@ export class ViewWishesComponent {
 
       if (shareCode) {
         try {
-          this.wishes = await this.firebase.getWishesByShareCode(shareCode);
-          console.log(this.wishes);
-          this.userName = this.wishes[0].owener
+          const result = await this.firebase.getWishesByShareCode(shareCode);
+          if (!result) {
+            this.errorMessage = 'Keine Wünsche oder Besitzer gefunden.';
+            this.noWishes = true;
+            return;
+          }
+
+          this.wishes = result.wishes;
+          this.userName = result.owner || 'Unbekannter Benutzer';
           if (!this.wishes || this.wishes.length === 0) {
             this.errorMessage = 'Keine Wünsche gefunden.';
+            this.noWishes = true;
+            return
           }
         } catch (error) {
           console.error('Fehler beim Laden der Wunschliste:', error);

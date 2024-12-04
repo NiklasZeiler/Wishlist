@@ -17,10 +17,10 @@ export class HelperService {
   presentedImage: any;
   currentBigImage: any;
   wishLength: number = 0;
-  sharedLink: string = "";
+
   displayLink: string = "";
   isRestrictedRoute = false;
-  userLoggedIn = true;
+  userLoggedIn = false;
 
 
   constructor(private firebase: FirebaseService, private auth: AuthService, private router: Router) {
@@ -32,10 +32,9 @@ export class HelperService {
     const interval = setInterval(() => {
       const user = this.auth.authInstance.currentUser;
       if (user) {
+        this.userLoggedIn = true
         console.log("User is authenticated");
         clearInterval(interval);
-        this.sharedLink = `${window.location.origin}/viewWish/${user?.uid}`;
-        // this.displayLink = this.getShortLink(this.sharedLink)
         this.deleteOlderWishes();
       } else {
         console.log("Waiting for user to authenticate...");
