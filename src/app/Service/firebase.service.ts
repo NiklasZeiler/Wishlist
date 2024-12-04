@@ -83,6 +83,8 @@ export class FirebaseService {
     }
 
     const sharedCodeRef = this.getSharedRef(user.uid);
+    const owner = user.displayName
+
 
     // Prüfe, ob bereits ein `shareCode` existiert
     const sharedCodeSnapshot = await getDocs(sharedCodeRef);
@@ -99,7 +101,7 @@ export class FirebaseService {
     const shareCode = uuidv4();
 
     // `serverTimestamp()` korrekt verwenden
-    await setDoc(newSharedCodeRef, { shareCode, createdAt: serverTimestamp() });
+    await setDoc(newSharedCodeRef, { shareCode, createdAt: serverTimestamp(), owner });
 
     console.log("Neuer Teilungs-Link:", `http://localhost:4200/wishes/share?shareCode=${shareCode}`);
     return shareCode;
@@ -107,13 +109,14 @@ export class FirebaseService {
 
 
 
-  async getWishesByShareCode(shareCode: string): Promise<any[] | null> {
+  async getWishesByShareCode(shareCode: string): Promise<{ owner?: string, wishes: any[] | null }> {
 
     const usersCollection = collection(this.firestore, 'users');
     const userQuery = query(usersCollection);
     const userSnapshot = await getDocs(userQuery);
 
     let userId: string | null = null;
+    let owner: string | null = null;
 
     for (const userDoc of userSnapshot.docs) {
       const sharedCodeQuery = query(
@@ -121,26 +124,34 @@ export class FirebaseService {
         where('shareCode', '==', shareCode)
       );
 
+
       const sharedCodeSnapshot = await getDocs(sharedCodeQuery);
+
       if (!sharedCodeSnapshot.empty) {
         userId = userDoc.id;
+        owner = sharedCodeSnapshot.docs[0].data()?.['owner'] || null;
+
         break;
       }
     }
 
     if (!userId) {
       console.error('Kein Benutzer mit diesem Share-Code gefunden.');
-      return null;
     }
 
     // Wünsche abrufen
     const wishesCollection = collection(this.firestore, `users/${userId}/wishes`);
     const wishesSnapshot = await getDocs(wishesCollection);
 
-    return wishesSnapshot.docs.map(doc => ({
+    const wishes = wishesSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
+
+    return {
+      owner: owner || undefined,
+      wishes
+    }
   }
 
   // Subscribe to the user's wish list
@@ -151,6 +162,7 @@ export class FirebaseService {
       snapshot.forEach((doc) => {
         this.wishes.push({ id: doc.id, ...doc.data() } as Wish);
       });
+      this.wishlistsSubject.next(this.wishes);
     });
   }
 

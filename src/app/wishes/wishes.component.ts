@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FirebaseService } from '../Service/firebase.service';
 import { CommonModule } from '@angular/common';
 import { Wish } from '../interfaces/wish.interface';
@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.component';
 import { HelperService } from '../Service/helper.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-wishes',
@@ -15,42 +16,21 @@ import { HelperService } from '../Service/helper.service';
   templateUrl: './wishes.component.html',
   styleUrl: './wishes.component.scss'
 })
-export class WishesComponent {
-  @Input() wish!: Wish
+export class WishesComponent implements OnInit {
 
   test: boolean = true;
-  wishes: any = []
+  wishes$: Observable<Wish[]>
+  // wishes: any[] = [];
 
 
 
   constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog, public help: HelperService) {
-
+    this.wishes$ = this.firebase.wishlists$;
   }
 
   ngOnInit() {
     this.help.waitForUser()
-    this.getWishes()
   }
-
-  getWishes() {
-    this.help.wishLength = this.firebase.wishes.length
-    this.wishes = this.firebase.wishes
-    console.log(this.wishes);
-
-    // this.setWishToPrivate(this.firebase.wishes)
-
-  }
-
-  // setWishToPrivate(wishes: any): void {
-  //   if (wishes.length === 0) {
-  //     return;
-  //   }
-  //   wishes.forEach((wish: any) => {
-  //     wish.isPublic = false
-  //     this.firebase.updateWish(wish)
-
-  //   });
-  // }
 
   trackByWishId(index: number, wish: any): string {
     return wish.id;

@@ -9,7 +9,7 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr *ngFor="let wish of wishes; trackBy: trackByWishId">
+            <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
                 <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
                 </td>
                 <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
@@ -20,7 +20,7 @@
             </tr>
             <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
             <tr>
-                <td *ngIf="this.help.wishLength === 0" colspan="4">Keine Wünsche vorhanden</td>
+                <td *ngIf="(wishes$ | async)?.length === 0" colspan="4">Keine Wünsche vorhanden</td>
             </tr>
             <div class="addWishBtn">
                 <button [class.opacity]="!test" [disabled]="!test" (click)="navigateToAddWish()">Wunsch
