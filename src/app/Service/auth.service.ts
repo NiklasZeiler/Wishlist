@@ -18,7 +18,7 @@ export class AuthService {
 
 
   auth: Auth;
-  public userSubject = new BehaviorSubject<User | null>(null);
+  private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
   authState: any;
   displayName: any;
@@ -28,6 +28,10 @@ export class AuthService {
 
   constructor(public dialog: MatDialog, private router: Router) {
     this.auth = inject(Auth);
+    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+    if (storedUser) {
+      this.userSubject.next(storedUser);
+    }
 
     onAuthStateChanged(this.auth, (user) => {
       this.userSubject.next(user);
@@ -96,21 +100,6 @@ export class AuthService {
     }
   }
 
-  // async createAnonymosUser() {
-  //   try {
-  //     await setPersistence(this.auth, browserLocalPersistence)
-  //     const userCredential = await signInAnonymously(this.auth);
-  //     const user = userCredential.user;
-  //     this.userSubject.next(user); // Update user state
-  //     return user;
-  //   }
-  //   catch (error) {
-  //     console.error('Error signing in anonymously:', error);
-  //     throw error;
-  //   }
-
-  // }
-
   // Listen for authentication state changes
   listenToAuthState() {
     onAuthStateChanged(this.auth, (user) => {
@@ -129,7 +118,8 @@ export class AuthService {
       await setPersistence(this.auth, browserLocalPersistence)
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       const user = userCredential.user;
-      this.userSubject.next(user); // Update user state
+      this.userSubject.next(user);// Update user state
+      localStorage.setItem('user', JSON.stringify(user));
       return user;
     }
     catch (error) {
@@ -216,6 +206,7 @@ export class AuthService {
     signOut(this.auth).then(() => {
       this.userSubject.next(null); // Clear user state
       console.log('User signed out');
+      localStorage.removeItem('user');
     }).catch(() => {
       console.error('Error signing out');
     });
