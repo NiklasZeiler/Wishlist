@@ -20,8 +20,7 @@ import { DialogData } from '../../login/login.component';
   imports: [MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule, MatFormFieldModule,
     MatDialogTitle,
     MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,],
+    MatDialogActions],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss'
 })

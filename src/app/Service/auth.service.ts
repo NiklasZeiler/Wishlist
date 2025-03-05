@@ -59,7 +59,6 @@ export class AuthService {
   private getUserProfil(user: User | null) {
     if (user !== null) {
       const { displayName, email, emailVerified, uid, metadata } = user;
-      console.log('User profile:', { displayName, email, emailVerified, uid, metadata });
     }
   }
 
@@ -73,8 +72,6 @@ export class AuthService {
       await updateProfile(user, { displayName: username });
       await sendEmailVerification(user)
       this.userSubject.next(user);
-      console.log('User registered and profile updated:', user);
-      console.log('Verification email sent to:', user.email);
       this.router.navigate(['/wishes']);
       return user;
     } catch (error) {

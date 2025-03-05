@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Link teilen</h2>
+<mat-dialog-content>
+    <p>Link wurde in die Zwischenablage kopiert!</p>
+    <div class="share-link-container">
+        <input class="share-link-input" type="text" [value]="data.shareLink" readonly>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Schließen</button>
+</mat-dialog-actions>

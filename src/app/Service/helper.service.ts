@@ -1,7 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { Clipboard } from '@angular/cdk/clipboard';
+
+
+export interface ShareLinkData {
+  shareLink: string;
+}
 
 
 @Injectable({
@@ -23,7 +30,8 @@ export class HelperService {
   userLoggedIn = false;
 
 
-  constructor(private firebase: FirebaseService, private auth: AuthService, private router: Router) {
+  constructor(private firebase: FirebaseService, private auth: AuthService, private router: Router, private dialog: MatDialog,
+    private clipboard: Clipboard) {
     this.savedDate = localStorage.getItem('formattedDate');
 
   }
@@ -42,8 +50,28 @@ export class HelperService {
     }, 1000);
   }
 
-  copyToClipboard(): void {
-    this.firebase.generateOrGetShareCode();
+  copyToClipboard(text: string): void {
+    this.clipboard.copy(text);
+  }
+
+  // Method to handle share functionality
+  async shareWishList(): Promise<void> {
+    const shareCode = await this.firebase.generateOrGetShareCode();
+    if (shareCode) {
+      const shareLink = `http://localhost:4200/wishes/share?shareCode=${shareCode}`;
+
+      // Copy to clipboard
+      this.copyToClipboard(shareLink);
+
+      // Import the dialog component dynamically to avoid circular dependencies
+      const { ShareLinkComponent } = await import('../dialogs/share-link/share-link.component');
+
+      // Open dialog with the share link
+      this.dialog.open(ShareLinkComponent, {
+        width: '500px',
+        data: { shareLink }
+      });
+    }
   }
 
 

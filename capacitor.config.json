@@ -1,0 +1,9 @@
+{
+  "appId": "com.niklas.wishlist",
+  "appName": "Wishlist",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

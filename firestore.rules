@@ -1,0 +1,66 @@
+// Firestore Rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Allow users to read/write their own data
+    match /users/{userId} {
+      // Users can read/write their own data
+      allow read, write: if isOwner(userId);
+      
+      // Anyone authenticated can list users (needed for share functionality)
+      allow list: if isAuthenticated();
+      
+      // Allow read/write to nested collections for the owner
+      match /wishes/{wishId} {
+        // Owner can do anything with their wishes
+        allow read, write: if isOwner(userId);
+        
+        // Anyone authenticated can read wishes (for sharing)
+        allow read: if isAuthenticated();
+      }
+      
+      // SharedCode collection
+      match /sharedCode/{codeId} {
+        // Owner can do anything with their shared codes
+        allow read, write: if isOwner(userId);
+        
+        // Anyone authenticated can read shared codes (for sharing)
+        allow read: if isAuthenticated();
+      }
+    }
+    
+    // Feedback collection
+    match /feedback/{feedbackId} {
+      // Anyone can read feedback
+      allow read: if true;
+      
+      // Authenticated users can create and update feedback
+      allow create, update: if isAuthenticated();
+      
+      // No one can delete feedback for now
+      allow delete: if false;
+    }
+    
+    // ShareCodes global collection (if you decide to implement it)
+    match /shareCodes/{codeId} {
+      // Anyone can read share codes
+      allow read: if true;
+      
+      // Only authenticated users can create share codes
+      allow create, update: if isAuthenticated();
+      
+      // Only the owner can delete their share codes
+      allow delete: if isAuthenticated() && 
+                     resource.data.userId == request.auth.uid;
+    }
+  }
+}

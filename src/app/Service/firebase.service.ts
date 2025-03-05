@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDocs, setDoc, serverTimestamp, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDoc, getDocs, setDoc, serverTimestamp, query, where } from '@angular/fire/firestore';
 import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { Feedback } from '../interfaces/feedback.interface';
@@ -8,6 +8,7 @@ import { User } from 'firebase/auth';
 import { Email } from '../interfaces/email.interface';
 import { BehaviorSubject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Injectable({
@@ -25,8 +26,11 @@ export class FirebaseService {
   userName: string | null = "";
   unsubFeedback;
 
+
   firestore: Firestore = inject(Firestore);
   currentUser: User | null = null
+
+  private dialog = inject(MatDialog);
 
   constructor(private auth: AuthService) {
     this.unsubFeedback = this.subFeedbackList();
@@ -74,6 +78,9 @@ export class FirebaseService {
     }
   }
 
+  // Alternative simplified version without a custom dialog component
+  // Add this to your FirebaseService
+
   async generateOrGetShareCode(): Promise<string | null> {
     const user = this.auth.authInstance.currentUser;
 
@@ -82,64 +89,115 @@ export class FirebaseService {
       return null;
     }
 
-    const sharedCodeRef = this.getSharedRef(user.uid);
-    const owner = user.displayName
+    try {
+      // First check if the user already has a shareCode in the user-specific collection
+      const userSharedCodeRef = this.getSharedRef(user.uid);
+      const userSharedCodeSnapshot = await getDocs(userSharedCodeRef);
 
+      let shareCode: string;
 
-    // Prüfe, ob bereits ein `shareCode` existiert
-    const sharedCodeSnapshot = await getDocs(sharedCodeRef);
+      if (!userSharedCodeSnapshot.empty) {
+        // Use existing code from user's collection
+        shareCode = userSharedCodeSnapshot.docs[0].data()["shareCode"];
+      } else {
+        // Generate a new shareCode
+        shareCode = uuidv4();
 
-    if (!sharedCodeSnapshot.empty) {
-      // Verwende den bestehenden `shareCode`
-      const existingCode = sharedCodeSnapshot.docs[0].data()["shareCode"];
-      console.log("Bestehender Teilungs-Link:", `http://localhost:4200/wishes/share?shareCode=${existingCode}`);
-      return existingCode;
+        // Create a reference to the global shareCodes collection
+        const globalShareCodesRef = collection(this.firestore, 'shareCodes');
+
+        // Create the record in both places - globally and in user's collection
+
+        // 1. Create in global collection (for easy lookup)
+        await setDoc(doc(globalShareCodesRef, shareCode), {
+          userId: user.uid, // Store which user this code belongs to
+          owner: user.displayName,
+          createdAt: serverTimestamp()
+        });
+
+        // 2. Also store in user's collection (for backward compatibility)
+        await setDoc(
+          doc(userSharedCodeRef),
+          {
+            shareCode,
+            createdAt: serverTimestamp(),
+            owner: user.displayName
+          }
+        );
+      }
+
+      // Generate the share link
+      const shareLink = `http://localhost:4200/wishes/share?shareCode=${shareCode}`;
+
+      return shareCode;
+    } catch (error) {
+      console.error("Error in generateOrGetShareCode:", error);
+      return null;
     }
-
-    // Generiere einen neuen `shareCode`, wenn keiner existiert
-    const newSharedCodeRef = doc(sharedCodeRef);
-    const shareCode = uuidv4();
-
-    // `serverTimestamp()` korrekt verwenden
-    await setDoc(newSharedCodeRef, { shareCode, createdAt: serverTimestamp(), owner });
-
-    console.log("Neuer Teilungs-Link:", `http://localhost:4200/wishes/share?shareCode=${shareCode}`);
-    return shareCode;
   }
 
 
 
   async getWishesByShareCode(shareCode: string): Promise<{ owner?: string, wishes: any[] | null }> {
-
-    const usersCollection = collection(this.firestore, 'users');
-    const userQuery = query(usersCollection);
-    const userSnapshot = await getDocs(userQuery);
-
-    let userId: string | null = null;
-    let owner: string | null = null;
-
-    for (const userDoc of userSnapshot.docs) {
-      const sharedCodeQuery = query(
-        collection(this.firestore, `users/${userDoc.id}/sharedCode`),
-        where('shareCode', '==', shareCode)
-      );
+    // Look up the shareCode in the global collection first
+    const shareCodeDoc = doc(this.firestore, 'shareCodes', shareCode);
 
 
-      const sharedCodeSnapshot = await getDocs(sharedCodeQuery);
+    const shareCodeSnap = await getDoc(shareCodeDoc);
 
-      if (!sharedCodeSnapshot.empty) {
-        userId = userDoc.id;
-        owner = sharedCodeSnapshot.docs[0].data()?.['owner'] || null;
 
-        break;
+    if (!shareCodeSnap.exists()) {
+      console.error('Kein Share-Code gefunden.');
+
+      // DEBUGGING: Check if the shareCodes collection exists at all
+      try {
+        const allShareCodes = await getDocs(collection(this.firestore, 'shareCodes'));
+
+        allShareCodes.forEach(doc => {
+          ;
+        });
+      } catch (err) {
+        console.error("Error listing all shareCodes:", err);
       }
+
+      // DEBUGGING: Check the older method (user-specific collection)
+      try {
+        const usersCollection = collection(this.firestore, 'users');
+        const userQuery = query(usersCollection);
+        const userSnapshot = await getDocs(userQuery);
+
+        for (const userDoc of userSnapshot.docs) {
+
+          const sharedCodeQuery = query(
+            collection(this.firestore, `users/${userDoc.id}/sharedCode`)
+          );
+
+          const sharedCodeSnapshot = await getDocs(sharedCodeQuery);
+          sharedCodeSnapshot.forEach(doc => {
+
+            if (doc.data()['shareCode'] === shareCode) {
+              console.log("MATCH FOUND in user collection!");
+            }
+          });
+        }
+      } catch (err) {
+        console.error("Error with fallback method:", err);
+      }
+
+      return { owner: undefined, wishes: [] };
     }
+
+    // Get the userId associated with this shareCode
+    const shareCodeData = shareCodeSnap.data();
+    const userId = shareCodeData['userId'];
+    const owner = shareCodeData['owner'] || null;
 
     if (!userId) {
-      console.error('Kein Benutzer mit diesem Share-Code gefunden.');
+      console.error('Share-Code enthält keine UserId.');
+      return { owner: undefined, wishes: [] };
     }
 
-    // Wünsche abrufen
+    // Now fetch wishes directly with the userId
     const wishesCollection = collection(this.firestore, `users/${userId}/wishes`);
     const wishesSnapshot = await getDocs(wishesCollection);
 
@@ -149,9 +207,9 @@ export class FirebaseService {
     }));
 
     return {
-      owner: owner || undefined,
+      owner: owner,
       wishes
-    }
+    };
   }
 
   // Subscribe to the user's wish list
