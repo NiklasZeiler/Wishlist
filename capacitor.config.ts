@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.niklas.wishlist',
-  appName: 'Wishlist',
+  appId: 'com.wunschliste.app',
+  appName: 'Wunschliste',
   webDir: 'dist'
 };
 
