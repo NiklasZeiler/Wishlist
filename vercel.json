@@ -7,7 +7,7 @@
         }
     ],
     "buildCommand": "npm run build -- --configuration production",
-    "outputDirectory": "dist",
+    "outputDirectory": "dist/browser",
     "rewrites": [
         {
             "source": "/(.*)",
