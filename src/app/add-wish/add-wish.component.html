@@ -8,7 +8,7 @@
         <label for="prio">Priorität auswählen</label>
         <div class="row">
             <div class="col">
-                <div ngbDropdown class="d-inline-block">
+                <div ngbDropdown container="body" class="d-inline-block, ngb-dropdown-menu">
                     <button type="button" class="btn btn-outline-primary prio" id="dropdownBasic1" ngbDropdownToggle>
                         Priorität: {{ this.firebase.selectedPriority }}
                     </button>

@@ -9,11 +9,11 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
+            <tr class="secondTr" *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
                 <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
                 </td>
                 <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
-                <td><a href=`${{wish.link}}`>{{wish.link}}</a></td>
+                <td class="link"><a href=`${{wish.link}}`>{{wish.link}}</a></td>
                 <td>
                     <button (click)="deleteWish(wish)">Löschen</button>
                 </td>
