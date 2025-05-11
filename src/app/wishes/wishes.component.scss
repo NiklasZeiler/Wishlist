@@ -28,6 +28,21 @@
         }
     }
 
+    .secondTr {
+        display: flex;
+        align-items: center;
+    }
+
+    .link {
+        text-decoration: none;
+        color: white !important;
+        background-color: unset !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
+        white-space: nowrap;
+    }
+
     a {
         color: white !important;
         background-color: unset !important;
