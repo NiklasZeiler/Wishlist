@@ -13,7 +13,7 @@
                 <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
                 </td>
                 <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
-                <td class="link"><a href=`${{wish.link}}`>{{wish.link}}</a></td>
+                <td class="link"><a href={{wish.link}}>{{wish.link}}</a></td>
                 <td>
                     <button (click)="deleteWish(wish)">Löschen</button>
                 </td>

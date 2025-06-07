@@ -58,7 +58,7 @@ export class HelperService {
   async shareWishList(): Promise<void> {
     const shareCode = await this.firebase.generateOrGetShareCode();
     if (shareCode) {
-      const shareLink = `http://localhost:4200/wishes/share?shareCode=${shareCode}`;
+      const shareLink = `http://wishlist-676f9.web.app/wishes/share?shareCode=${shareCode}`;
 
       // Copy to clipboard
       this.copyToClipboard(shareLink);

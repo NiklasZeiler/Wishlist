@@ -127,7 +127,7 @@ export class FirebaseService {
       }
 
       // Generate the share link
-      const shareLink = `http://localhost:4200/wishes/share?shareCode=${shareCode}`;
+      const shareLink = `http://wishlist-676f9.web.app/wishes/share?shareCode=${shareCode}`;
 
       return shareCode;
     } catch (error) {
