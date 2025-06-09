@@ -9,14 +9,14 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr *ngFor="let wish of wishes; trackBy: trackByWishId" [ngClass]="{'completed': wish.completed}"
+            <tr class="secondTr" *ngFor="let wish of wishes; trackBy: trackByWishId" [ngClass]="{'completed': wish.completed}"
                 [style.pointer-events]="wish.completed ? 'none' : 'auto'">
                 <td [ngStyle]="getPriorityStyle(wish.priority)">{{ wish.wish }}
                 </td>
                 <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
-                <td><a href=`${{wish.link}}`>{{wish.link}}</a></td>
+                <td class="link"><a href={{wish.link}}>{{wish.link}}</a></td>
                 <td>
-                    <button (click)="wishDone(wish)">Erledigt</button>
+                    <button (click)="wishDone(wish)">Erledigt </button>
                 </td>
             </tr>
         </table>

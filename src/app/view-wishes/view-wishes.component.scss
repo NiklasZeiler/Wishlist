@@ -28,7 +28,23 @@
         }
     }
 
+    .secondTr {
+        display: flex;
+        align-items: center;
+    }
+
+    .link {
+        text-decoration: none;
+        color: white !important;
+        background-color: unset !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
+        white-space: nowrap;
+    }
+
     a {
+        text-decoration: none;
         color: white !important;
         background-color: unset !important;
     }
@@ -36,11 +52,6 @@
     button {
         padding: 4px !important;
         background-color: white !important;
-    }
-
-    .addWishBtn {
-        display: flex;
-        justify-content: center;
     }
 
     img {
@@ -56,7 +67,6 @@
 
     button.opacity {
         opacity: 0.5;
-        cursor: not-allowed;
     }
 }
 

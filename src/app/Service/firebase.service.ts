@@ -138,79 +138,126 @@ export class FirebaseService {
 
 
 
-  async getWishesByShareCode(shareCode: string): Promise<{ owner?: string, wishes: any[] | null }> {
-    // Look up the shareCode in the global collection first
+  // async getWishesByShareCode(shareCode: string): Promise<{ owner?: string, wishes: any[] | null }> {
+  //   // Look up the shareCode in the global collection first
+  //   const shareCodeDoc = doc(this.firestore, 'shareCodes', shareCode);
+
+
+  //   const shareCodeSnap = await getDoc(shareCodeDoc);
+
+
+  //   if (!shareCodeSnap.exists()) {
+  //     console.error('Kein Share-Code gefunden.');
+
+  //     // DEBUGGING: Check if the shareCodes collection exists at all
+  //     try {
+  //       const allShareCodes = await getDocs(collection(this.firestore, 'shareCodes'));
+
+  //       allShareCodes.forEach(doc => {
+  //         ;
+  //       });
+  //     } catch (err) {
+  //       console.error("Error listing all shareCodes:", err);
+  //     }
+
+  //     // DEBUGGING: Check the older method (user-specific collection)
+  //     try {
+  //       const usersCollection = collection(this.firestore, 'users');
+  //       const userQuery = query(usersCollection);
+  //       const userSnapshot = await getDocs(userQuery);
+
+  //       for (const userDoc of userSnapshot.docs) {
+
+  //         const sharedCodeQuery = query(
+  //           collection(this.firestore, `users/${userDoc.id}/sharedCode`)
+  //         );
+
+  //         const sharedCodeSnapshot = await getDocs(sharedCodeQuery);
+  //         sharedCodeSnapshot.forEach(doc => {
+
+  //           if (doc.data()['shareCode'] === shareCode) {
+  //             console.log("MATCH FOUND in user collection!");
+  //           }
+  //         });
+  //       }
+  //     } catch (err) {
+  //       console.error("Error with fallback method:", err);
+  //     }
+
+  //     return { owner: undefined, wishes: [] };
+  //   }
+
+  //   // Get the userId associated with this shareCode
+  //   const shareCodeData = shareCodeSnap.data();
+  //   const userId = shareCodeData['userId'];
+  //   const owner = shareCodeData['owner'] || null;
+
+  //   if (!userId) {
+  //     console.error('Share-Code enthält keine UserId.');
+  //     return { owner: undefined, wishes: [] };
+  //   }
+
+  //   // Now fetch wishes directly with the userId
+  //   const wishesCollection = collection(this.firestore, `users/${userId}/wishes`);
+  //   const wishesSnapshot = await getDocs(wishesCollection);
+
+  //   const wishes = wishesSnapshot.docs.map(doc => ({
+  //     id: doc.id,
+  //     ...doc.data()
+  //   }));
+
+  //   return {
+  //     owner: owner,
+  //     wishes
+  //   };
+  // }
+
+
+  subscribeToSharedWishes(
+    shareCode: string,
+    callback: (wishes: any[], owner?: string) => void
+  ): () => void {
     const shareCodeDoc = doc(this.firestore, 'shareCodes', shareCode);
 
+    let innerUnsubscribe: () => void;
 
-    const shareCodeSnap = await getDoc(shareCodeDoc);
-
-
-    if (!shareCodeSnap.exists()) {
-      console.error('Kein Share-Code gefunden.');
-
-      // DEBUGGING: Check if the shareCodes collection exists at all
-      try {
-        const allShareCodes = await getDocs(collection(this.firestore, 'shareCodes'));
-
-        allShareCodes.forEach(doc => {
-          ;
-        });
-      } catch (err) {
-        console.error("Error listing all shareCodes:", err);
+    const outerUnsubscribe = onSnapshot(shareCodeDoc, (shareCodeSnap) => {
+      if (!shareCodeSnap.exists()) {
+        callback([], undefined);
+        return;
       }
 
-      // DEBUGGING: Check the older method (user-specific collection)
-      try {
-        const usersCollection = collection(this.firestore, 'users');
-        const userQuery = query(usersCollection);
-        const userSnapshot = await getDocs(userQuery);
+      const shareCodeData = shareCodeSnap.data();
+      const userId = shareCodeData['userId'];
+      const owner = shareCodeData['owner'] || null;
 
-        for (const userDoc of userSnapshot.docs) {
-
-          const sharedCodeQuery = query(
-            collection(this.firestore, `users/${userDoc.id}/sharedCode`)
-          );
-
-          const sharedCodeSnapshot = await getDocs(sharedCodeQuery);
-          sharedCodeSnapshot.forEach(doc => {
-
-            if (doc.data()['shareCode'] === shareCode) {
-              console.log("MATCH FOUND in user collection!");
-            }
-          });
-        }
-      } catch (err) {
-        console.error("Error with fallback method:", err);
+      if (!userId) {
+        callback([], undefined);
+        return;
       }
 
-      return { owner: undefined, wishes: [] };
-    }
+      // Falls bereits ein Listener aktiv ist, entfernen:
+      if (innerUnsubscribe) innerUnsubscribe();
 
-    // Get the userId associated with this shareCode
-    const shareCodeData = shareCodeSnap.data();
-    const userId = shareCodeData['userId'];
-    const owner = shareCodeData['owner'] || null;
+      const wishesRef = collection(this.firestore, `users/${userId}/wishes`);
 
-    if (!userId) {
-      console.error('Share-Code enthält keine UserId.');
-      return { owner: undefined, wishes: [] };
-    }
+      innerUnsubscribe = onSnapshot(wishesRef, (snapshot) => {
+        const wishes = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        callback(wishes, owner);
+      });
+    });
 
-    // Now fetch wishes directly with the userId
-    const wishesCollection = collection(this.firestore, `users/${userId}/wishes`);
-    const wishesSnapshot = await getDocs(wishesCollection);
-
-    const wishes = wishesSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
-
-    return {
-      owner: owner,
-      wishes
+    // Gibt die Funktion zurück, um beide Listener abzubrechen
+    return () => {
+      if (innerUnsubscribe) innerUnsubscribe();
+      outerUnsubscribe();
     };
   }
+
+
 
   // Subscribe to the user's wish list
   subscribeToUserWishes(userId: string) {

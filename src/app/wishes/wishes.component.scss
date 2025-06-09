@@ -34,7 +34,7 @@
     }
 
     .link {
-        text-decoration: none;
+        text-decoration: none !important;
         color: white !important;
         background-color: unset !important;
         overflow: hidden;
@@ -46,6 +46,7 @@
     a {
         color: white !important;
         background-color: unset !important;
+        text-decoration: none !important;
     }
 
     button {
