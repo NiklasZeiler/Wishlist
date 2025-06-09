@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.component';
 import { HelperService } from '../Service/helper.service';
 import { Observable } from 'rxjs';
+import { AuthService } from '../Service/auth.service';
+import { AuthGuardService } from '../Service/auth-guard.service';
 
 @Component({
   selector: 'app-wishes',
@@ -24,7 +26,7 @@ export class WishesComponent implements OnInit {
 
 
 
-  constructor(private firebase: FirebaseService, private router: Router, public dialog: MatDialog, public help: HelperService) {
+  constructor(private firebase: FirebaseService, private auth: AuthService, private router: Router, public dialog: MatDialog, public help: HelperService) {
     this.wishes$ = this.firebase.wishlists$;
   }
 
@@ -65,8 +67,31 @@ export class WishesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         wish.priority = result.priority;
-        this.firebase.updateWish(wish)
+
+        const user = this.auth.authInstance.currentUser;
+        const userId = user?.uid;
+
+        if (userId) {
+          this.firebase.updateWish(userId, wish);
+        } else {
+          console.error("Kein angemeldeter Benutzer gefunden.");
+        }
       }
     });
   }
+
+
+  // changePriority(wish: Wish): void {
+  //   const dialogRef = this.dialog.open(ChangePrioComponent, {
+  //     width: '250px',
+  //     data: { wish: wish }
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       wish.priority = result.priority;
+  //       this.firebase.updateWish(wish.id, wish)
+  //     }
+  //   });
+  // }
 }

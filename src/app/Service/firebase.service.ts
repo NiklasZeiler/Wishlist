@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDoc, getDocs, setDoc, serverTimestamp, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, onSnapshot, updateDoc, deleteDoc, CollectionReference, getDoc, getDocs, setDoc, serverTimestamp, query, where, writeBatch } from '@angular/fire/firestore';
 import { Wish } from '../interfaces/wish.interface';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { Feedback } from '../interfaces/feedback.interface';
@@ -78,9 +78,6 @@ export class FirebaseService {
     }
   }
 
-  // Alternative simplified version without a custom dialog component
-  // Add this to your FirebaseService
-
   async generateOrGetShareCode(): Promise<string | null> {
     const user = this.auth.authInstance.currentUser;
 
@@ -121,10 +118,21 @@ export class FirebaseService {
           {
             shareCode,
             createdAt: serverTimestamp(),
-            owner: user.displayName
+            owner: user.displayName,
+            userId: user.uid,
           }
         );
       }
+
+      const wishesRef = collection(this.firestore, `users/${user.uid}/wishes`);
+      const wishesSnap = await getDocs(wishesRef);
+
+      const batch = writeBatch(this.firestore);
+      wishesSnap.forEach(docSnap => {
+        const docRef = doc(this.firestore, `users/${user.uid}/wishes/${docSnap.id}`);
+        batch.update(docRef, { public: true });
+      });
+      await batch.commit();
 
       // Generate the share link
       const shareLink = `http://wishlist-676f9.web.app/wishes/share?shareCode=${shareCode}`;
@@ -137,85 +145,9 @@ export class FirebaseService {
   }
 
 
-
-  // async getWishesByShareCode(shareCode: string): Promise<{ owner?: string, wishes: any[] | null }> {
-  //   // Look up the shareCode in the global collection first
-  //   const shareCodeDoc = doc(this.firestore, 'shareCodes', shareCode);
-
-
-  //   const shareCodeSnap = await getDoc(shareCodeDoc);
-
-
-  //   if (!shareCodeSnap.exists()) {
-  //     console.error('Kein Share-Code gefunden.');
-
-  //     // DEBUGGING: Check if the shareCodes collection exists at all
-  //     try {
-  //       const allShareCodes = await getDocs(collection(this.firestore, 'shareCodes'));
-
-  //       allShareCodes.forEach(doc => {
-  //         ;
-  //       });
-  //     } catch (err) {
-  //       console.error("Error listing all shareCodes:", err);
-  //     }
-
-  //     // DEBUGGING: Check the older method (user-specific collection)
-  //     try {
-  //       const usersCollection = collection(this.firestore, 'users');
-  //       const userQuery = query(usersCollection);
-  //       const userSnapshot = await getDocs(userQuery);
-
-  //       for (const userDoc of userSnapshot.docs) {
-
-  //         const sharedCodeQuery = query(
-  //           collection(this.firestore, `users/${userDoc.id}/sharedCode`)
-  //         );
-
-  //         const sharedCodeSnapshot = await getDocs(sharedCodeQuery);
-  //         sharedCodeSnapshot.forEach(doc => {
-
-  //           if (doc.data()['shareCode'] === shareCode) {
-  //             console.log("MATCH FOUND in user collection!");
-  //           }
-  //         });
-  //       }
-  //     } catch (err) {
-  //       console.error("Error with fallback method:", err);
-  //     }
-
-  //     return { owner: undefined, wishes: [] };
-  //   }
-
-  //   // Get the userId associated with this shareCode
-  //   const shareCodeData = shareCodeSnap.data();
-  //   const userId = shareCodeData['userId'];
-  //   const owner = shareCodeData['owner'] || null;
-
-  //   if (!userId) {
-  //     console.error('Share-Code enthält keine UserId.');
-  //     return { owner: undefined, wishes: [] };
-  //   }
-
-  //   // Now fetch wishes directly with the userId
-  //   const wishesCollection = collection(this.firestore, `users/${userId}/wishes`);
-  //   const wishesSnapshot = await getDocs(wishesCollection);
-
-  //   const wishes = wishesSnapshot.docs.map(doc => ({
-  //     id: doc.id,
-  //     ...doc.data()
-  //   }));
-
-  //   return {
-  //     owner: owner,
-  //     wishes
-  //   };
-  // }
-
-
   subscribeToSharedWishes(
     shareCode: string,
-    callback: (wishes: any[], owner?: string) => void
+    callback: (wishes: any[], owner?: string, userId?: string) => void
   ): () => void {
     const shareCodeDoc = doc(this.firestore, 'shareCodes', shareCode);
 
@@ -246,7 +178,7 @@ export class FirebaseService {
           id: doc.id,
           ...doc.data(),
         }));
-        callback(wishes, owner);
+        callback(wishes, owner, userId);
       });
     });
 
@@ -284,14 +216,38 @@ export class FirebaseService {
     this.selectedPriority = priority;
   }
 
-  async updateWish(wish: Wish) {
-    const user = this.auth.authInstance.currentUser;
+  async updateWish(userId: any, wish: Wish) {
+    console.log("Aktualisiere Wunsch:", wish);
+    console.log("Aktueller Benutzer:", userId);
 
-    if (user && wish.id) {
-      const docRef = doc(this.getWishesRef(user.uid), wish.id);
+    if (!userId || !wish.id) {
+      console.warn('Update fehlgeschlagen – userId oder wish.id fehlt.');
+      return;
+    }
+
+    const docRef = doc(this.getWishesRef(userId), wish.id);
+
+    try {
       await updateDoc(docRef, this.getCleanJson(wish));
+      console.log("Wunsch erfolgreich aktualisiert");
+    } catch (error) {
+      console.error("Fehler beim Aktualisieren des Wunschs:", error);
     }
   }
+
+
+  // async updateWish(wish: Wish) {
+  //   console.log("Updating wish:", wish);
+
+  //   const user = this.auth.authInstance.currentUser;
+  //   console.log("Current user:", user);
+
+
+  //   if (user && wish.id) {
+  //     const docRef = doc(this.getWishesRef(user.uid), wish.id);
+  //     await updateDoc(docRef, this.getCleanJson(wish));
+  //   }
+  // }
 
   async updateLikes(feedback: Feedback) {
     if (feedback.id) {

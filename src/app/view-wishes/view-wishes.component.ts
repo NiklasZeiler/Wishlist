@@ -22,6 +22,8 @@ export class ViewWishesComponent {
   userName: any = ""
   wishes: any = []
   errorMessage: string | null = null;
+  userIdFromShareCode: string = '';
+
   constructor(private firebase: FirebaseService, public dialog: MatDialog, public help: HelperService, private route: ActivatedRoute) {
 
 
@@ -36,9 +38,10 @@ export class ViewWishesComponent {
       if (shareCode) {
         this.unsubscribeFn = this.firebase.subscribeToSharedWishes(
           shareCode,
-          (wishes, owner) => {
+          (wishes, owner, userId) => {
             this.wishes = wishes;
             this.userName = owner || 'Unbekannter Benutzer';
+            this.userIdFromShareCode = userId ??'';
 
             if (!wishes || wishes.length === 0) {
               this.errorMessage = 'Keine Wünsche gefunden.';
@@ -62,46 +65,15 @@ export class ViewWishesComponent {
     }
   }
 
-  // ngOnInit(): void {
-  //   this.route.queryParams.subscribe(async (params) => {
-  //     const shareCode = params['shareCode'];
-
-  //     if (shareCode) {
-  //       try {
-  //         const result = await this.firebase.getWishesByShareCode(shareCode);
-  //         if (!result) {
-  //           this.errorMessage = 'Keine Wünsche oder Besitzer gefunden.';
-  //           this.noWishes = true;
-  //           return;
-  //         }
-
-  //         this.wishes = result.wishes;
-  //         this.userName = result.owner || 'Unbekannter Benutzer';
-  //         if (!this.wishes || this.wishes.length === 0) {
-  //           this.errorMessage = 'Keine Wünsche gefunden.';
-  //           this.noWishes = true;
-  //           return
-  //         }
-  //       } catch (error) {
-  //         console.error('Fehler beim Laden der Wunschliste:', error);
-  //         this.errorMessage = 'Fehler beim Laden der Wunschliste.';
-  //       }
-  //     } else {
-  //       this.errorMessage = 'Kein Teilen-Code gefunden.';
-  //     }
-  //   });
-  // }
-
 
   trackByWishId(wish: any): string {
     return wish.id;
   }
 
   wishDone(wish: Wish) {
-
     wish.completed = true
     wish.completedAt = new Date()
-    this.firebase.updateWish(wish)
+    this.firebase.updateWish(this.userIdFromShareCode, wish)
   }
 
   getPriorityStyle(priority: string): any {
