@@ -217,9 +217,6 @@ export class FirebaseService {
   }
 
   async updateWish(userId: any, wish: Wish) {
-    console.log("Aktualisiere Wunsch:", wish);
-    console.log("Aktueller Benutzer:", userId);
-
     if (!userId || !wish.id) {
       console.warn('Update fehlgeschlagen – userId oder wish.id fehlt.');
       return;
@@ -234,20 +231,6 @@ export class FirebaseService {
       console.error("Fehler beim Aktualisieren des Wunschs:", error);
     }
   }
-
-
-  // async updateWish(wish: Wish) {
-  //   console.log("Updating wish:", wish);
-
-  //   const user = this.auth.authInstance.currentUser;
-  //   console.log("Current user:", user);
-
-
-  //   if (user && wish.id) {
-  //     const docRef = doc(this.getWishesRef(user.uid), wish.id);
-  //     await updateDoc(docRef, this.getCleanJson(wish));
-  //   }
-  // }
 
   async updateLikes(feedback: Feedback) {
     if (feedback.id) {
