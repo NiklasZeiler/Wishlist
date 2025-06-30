@@ -44,6 +44,16 @@ export class HelperService {
         console.log("User is authenticated");
         clearInterval(interval);
         this.deleteOlderWishes();
+        this.getSavedDate().then(savedDate => {
+          if (savedDate) {
+            this.savedDate = savedDate;
+            console.log("Saved date:", this.savedDate);
+          } else {
+            console.log("No saved date found, setting to current date.");
+            this.savedDate = this.formatDate(this.currentDate);
+            this.saveDate(this.savedDate);
+          }
+        });
       } else {
         console.log("Waiting for user to authenticate...");
       }
@@ -90,10 +100,19 @@ export class HelperService {
       } else {
         console.log("Saved date is newer or same.");
       }
-    } else {
-      console.log("No saved date in localStorage.");
-    }
+    } 
   }
+
+  saveDate(selectedDate: string) {
+    // Save the formatted date on firebase
+    this.firebase.saveDate(selectedDate);
+  }
+
+  async getSavedDate(): Promise<string | null> {
+    return await this.firebase.getSavedDate();
+  }
+
+
 
   formatDate(date: any) {
     let day = date.getDate().toString().padStart(2, '0');

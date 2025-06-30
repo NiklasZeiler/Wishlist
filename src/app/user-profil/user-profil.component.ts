@@ -29,6 +29,7 @@ export class UserProfilComponent {
     this.help.waitForUser()
     this.getUserInfo();
     this.auth.listenToAuthState();
+    this.help.getSavedDate()
   }
 
 
@@ -58,7 +59,8 @@ export class UserProfilComponent {
 
   saveDate(selectedDate: string) {
     let formattedDate = this.formatDate(selectedDate);
-    localStorage.setItem('formattedDate', formattedDate);
+    // Save the formatted date on firebase
+    this.help.saveDate(formattedDate);
     console.log('Selected date:', formattedDate);
     location.reload();
   }

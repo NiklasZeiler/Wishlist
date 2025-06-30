@@ -241,6 +241,44 @@ export class FirebaseService {
     }
   }
 
+  saveDate(setDate: any) {
+    const user = this.auth.authInstance.currentUser; 
+    if (user) {
+      const userRef = doc(this.firestore, `users/${user.uid}`);
+      setDoc(userRef, { savedDate: setDate }, { merge: true })
+        .then(() => {
+          console.log("Datum erfolgreich gespeichert");
+        })
+        .catch((error) => {
+          console.error("Fehler beim Speichern des Datums:", error);
+        });
+    } else {
+      console.warn("Kein angemeldeter Benutzer zum Speichern des Datums.");
+    } 
+
+  }
+
+  async getSavedDate(): Promise<string | null> {
+    const user = this.auth.authInstance.currentUser;
+    if (user) {
+      const userRef = doc(this.firestore, `users/${user.uid}`);
+      return getDoc(userRef).then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          return docSnapshot.data()?.['savedDate'] || null;
+        } else {
+          console.warn("Dokument nicht gefunden.");
+          return null;
+        }
+      }).catch((error) => {
+        console.error("Fehler beim Abrufen des gespeicherten Datums:", error);
+        return null;
+      });
+    } else {
+      console.warn("Kein angemeldeter Benutzer zum Abrufen des gespeicherten Datums.");
+      return Promise.resolve(null);
+    }
+  }
+
   async deleteOldWishes(setDate: any) {
     const currentDate = setDate
     const user = this.auth.authInstance.currentUser;

@@ -80,18 +80,4 @@ export class WishesComponent implements OnInit {
     });
   }
 
-
-  // changePriority(wish: Wish): void {
-  //   const dialogRef = this.dialog.open(ChangePrioComponent, {
-  //     width: '250px',
-  //     data: { wish: wish }
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       wish.priority = result.priority;
-  //       this.firebase.updateWish(wish.id, wish)
-  //     }
-  //   });
-  // }
 }
