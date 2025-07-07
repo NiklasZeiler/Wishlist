@@ -1,15 +1,15 @@
-<section class="wishes-container">
+<section class="wish-container">
     <h1 class="headline">Wünsche von {{this.userName}}</h1>
     <div class="wishes">
 
         <table class="table">
-            <tr class="first_tr">
+            <tr>
                 <th>Wunsch</th>
                 <th>Bild</th>
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <tr class="secondTr" *ngFor="let wish of wishes; trackBy: trackByWishId" [ngClass]="{'completed': wish.completed}"
+            <tr *ngFor="let wish of wishes; trackBy: trackByWishId" [ngClass]="{'completed': wish.completed}"
                 [style.pointer-events]="wish.completed ? 'none' : 'auto'">
                 <td [ngStyle]="getPriorityStyle(wish.priority)">{{ wish.wish }}
                 </td>

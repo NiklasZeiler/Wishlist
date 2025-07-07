@@ -1,48 +1,50 @@
-<section class="profilInfo">
-    <h1>Benutzerinformationen</h1>
-    <div class="info">
-        <p>Name: {{ this.userName }}</p>
-        <p>E-Mail: {{ this.userEmail }}</p>
-        <p>Letzter Login: {{ this.lastLogin }}</p>
-    </div>
+<div class="user-container">
+    <section class="profilInfo">
+        <h1>Benutzerinformationen</h1>
+        <div class="info">
+            <p>Name: {{ this.userName }}</p>
+            <p>E-Mail: {{ this.userEmail }}</p>
+            <p>Letzter Login: {{ this.lastLogin }}</p>
+        </div>
 
-    <!-- Hier Datum einfügen zu welchem Datum 
+        <!-- Hier Datum einfügen zu welchem Datum 
     die Wünsche gelöscht werden sollen wenn sie vom Schenker
     als erledigt makiert wurden  -->
-    <div>
-        <h4>Datum des Ereignisses</h4>
-        <span>{{ this.help.savedDate || "Kein Datum gespeichert"}}</span>
-    </div>
-
-    <div class="saveDate">
-        <input type="date" name="date" id="actionDate" #dateInput>
-        <button class="saveBtn" (click)="this.saveDate(dateInput.value)">Speichern</button>
-    </div>
-
-</section>
-
-<section class="changeProfil">
-    <h1>Daten ändern</h1>
-    <div class="inputFields">
-        <div class="form-group">
-            <label for="name">Name ändern</label>
-            <input type="text" [(ngModel)]="name" placeholder="Neuen Namen angeben" required>
-            <button [disabled]="!name || name.trim() === ''" (click)="updateName()">Ändern</button>
+        <div>
+            <h4>Datum des Ereignisses</h4>
+            <span>{{ this.help.savedDate || "Kein Datum gespeichert"}}</span>
         </div>
-        <div class="form-group">
-            <label for="name">E-Mail ändern</label>
-            <input type="text" [(ngModel)]="email" placeholder="Neue E-Mail angeben" required>
-            <button [disabled]="!email || email.trim() === ''" (click)="updateEmail()">Ändern</button>
-        </div>
-        <div class="form-group">
-            <label for="password">Passwort ändern</label>
-            <input type="password" [(ngModel)]="password" placeholder="Neues Passwort eingeben" required>
-            <button [disabled]="!password || password.trim() === ''" (click)="changePassword()">Ändern</button>
-        </div>
-    </div>
-</section>
 
-<section class="shareableLink">
-    <!-- <span>Link: {{this.help.displayLink}}</span> -->
-    <button (click)="this.help.shareWishList()">Wunschliste teilen</button>
-</section>
+        <div class="saveDate">
+            <input type="date" name="date" id="actionDate" #dateInput>
+            <button class="saveBtn" (click)="this.saveDate(dateInput.value)">Speichern</button>
+        </div>
+
+    </section>
+
+    <section class="changeProfil">
+        <h1>Daten ändern</h1>
+        <div class="inputFields">
+            <div class="form-group">
+                <label for="name">Name ändern</label>
+                <input type="text" [(ngModel)]="name" placeholder="Neuen Namen angeben" required>
+                <button [disabled]="!name || name.trim() === ''" (click)="updateName()">Ändern</button>
+            </div>
+            <div class="form-group">
+                <label for="name">E-Mail ändern</label>
+                <input type="text" [(ngModel)]="email" placeholder="Neue E-Mail angeben" required>
+                <button [disabled]="!email || email.trim() === ''" (click)="updateEmail()">Ändern</button>
+            </div>
+            <div class="form-group">
+                <label for="password">Passwort ändern</label>
+                <input type="password" [(ngModel)]="password" placeholder="Neues Passwort eingeben" required>
+                <button [disabled]="!password || password.trim() === ''" (click)="changePassword()">Ändern</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="shareableLink">
+        <!-- <span>Link: {{this.help.displayLink}}</span> -->
+        <button (click)="this.help.shareWishList()">Wunschliste teilen</button>
+    </section>
+</div>
