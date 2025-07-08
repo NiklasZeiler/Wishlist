@@ -4,7 +4,6 @@
     align-items: center;
     justify-content: center;
     width: 100vw;
-    height: 2000px;
     background-color: #121212;
 }
 
@@ -63,8 +62,6 @@
 .addWishBtn {
     margin-top: 20px;
     text-align: center;
-    // display: flex;
-    // justify-content: center;
 }
 
 .table th,
@@ -75,6 +72,7 @@
     word-break: keep-all;
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .bigImagebox {
