@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HelperService } from '../Service/helper.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { ConfirmWishComponent } from '../dialogs/confirm-wish/confirm-wish.component';
 
 @Component({
   selector: 'app-view-wishes',
@@ -41,7 +42,7 @@ export class ViewWishesComponent {
           (wishes, owner, userId) => {
             this.wishes = wishes;
             this.userName = owner || 'Unbekannter Benutzer';
-            this.userIdFromShareCode = userId ??'';
+            this.userIdFromShareCode = userId ?? '';
 
             if (!wishes || wishes.length === 0) {
               this.errorMessage = 'Keine Wünsche gefunden.';
@@ -71,10 +72,28 @@ export class ViewWishesComponent {
   }
 
   wishDone(wish: Wish) {
-    wish.completed = true
-    wish.completedAt = new Date()
-    this.firebase.updateWish(this.userIdFromShareCode, wish)
+    console.log("Dialog öffnen");
+
+    this.dialog.open(ConfirmWishComponent, {
+      width: '500px',
+      disableClose: true,
+
+    })
+      .afterClosed().subscribe(result => {
+        if (result === 'confirm') {
+          wish.completed = true
+          wish.completedAt = new Date()
+          this.firebase.updateWish(this.userIdFromShareCode, wish)
+        } else if (result === 'cancel') {
+          wish.completed = false;
+          wish.completedAt = null;
+          this.firebase.updateWish(this.userIdFromShareCode, wish);
+        }
+      });
+
   }
+
+
 
   getPriorityStyle(priority: string): any {
     switch (priority) {
