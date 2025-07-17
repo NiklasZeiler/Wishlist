@@ -82,7 +82,7 @@ export class ViewWishesComponent {
       .afterClosed().subscribe(result => {
         if (result === 'confirm') {
           wish.completed = true
-          wish.completedAt = new Date()
+          wish.completedAt = new Date()          
           this.firebase.updateWish(this.userIdFromShareCode, wish)
         } else if (result === 'cancel') {
           wish.completed = false;

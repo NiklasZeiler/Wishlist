@@ -8,4 +8,5 @@ export interface Wish {
     completedAt: any;
     completed: boolean;
     owener: string;
+    public:boolean
 }

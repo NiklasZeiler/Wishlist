@@ -45,6 +45,7 @@ export class AddWishComponent {
       link: this.url,
       priority: this.firebase.selectedPriority,
       image: this.image,
+      public: true,
       completedAt: this.currentDate,
       completed: this.completed,
       owener: this.authService.displayName
