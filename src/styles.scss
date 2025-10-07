@@ -6,16 +6,12 @@ body {
     background-color: rgb(5, 23, 31) !important;
     color: white !important;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-    overflow-y: auto;
     box-sizing: border-box;
-}
-
-.scroll-container {
-//   width: 100vw;
-//   height: 100vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-//   padding: 1rem;
+    display: flex;
+    align-items: center;
+    height: auto;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .high-priority {

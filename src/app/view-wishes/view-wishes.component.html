@@ -14,6 +14,9 @@
                     [style.pointer-events]="wish.completed ? 'none' : 'auto'">
                     <td [ngStyle]="getPriorityStyle(wish.priority)">{{ wish.wish }}
                     </td>
+                    <td><img (click)="wish.description ? openDescription(wish.description) : null" class="info"
+                            src="../../assets/icons/info.svg" alt="Infobutton">
+                    </td>
                     <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
                     <td class="link"><a href={{wish.link}}>{{wish.link}}</a></td>
                     <td>

@@ -26,7 +26,9 @@ export class AddWishComponent {
   wishlists: string = ""
   displayName: string = "";
   currentDate: any = null;
-  completed: boolean = false
+  completed: boolean = false;
+  description: string = "";
+
 
 
 
@@ -45,6 +47,7 @@ export class AddWishComponent {
       link: this.url,
       priority: this.firebase.selectedPriority,
       image: this.image,
+      description: this.description,
       public: true,
       completedAt: this.currentDate,
       completed: this.completed,

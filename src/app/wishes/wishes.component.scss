@@ -1,52 +1,68 @@
-.wishes-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
-    background-color: #121212;
-}
-
 .headline {
-    margin-top: 60px;
-    margin-bottom: 20px;
+    position: fixed;
+    top: 60px;
     left: 10px;
 }
 
 .table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    position: fixed;
+    top: 170px;
+    left: 0;
+    padding: 0 5px 0 5px;
 
-    .link {
-        text-decoration: none !important;
-        color: white !important;
-        background-color: unset !important;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 150px;
-        white-space: nowrap;
-        text-align: center;
+    .first_tr {
+        justify-content: space-between !important;
+        margin-bottom: 20px;
+    }
+
+    tr {
+        display: flex;
+        justify-content: space-around;
+        align-items: baseline;
+
+        :first-child {
+            margin-bottom: 20px;
+        }
     }
 
     a {
         color: white !important;
         background-color: unset !important;
-        text-decoration: none !important;
     }
 
     button {
-        padding: 4px 2px 4px 2px !important;
+        padding: 4px !important;
         background-color: white !important;
-        white-space: nowrap;
-        margin: 0 auto;
-        display: block;
     }
 
-    img {
+    .addWishBtn {
+        display: flex;
+        justify-content: center;
+    }
+
+    .wishImage {
+        padding: 0 !important;
         width: 100px;
-        height: 70px;
+        height: 50px;
         object-fit: cover;
+    }
+
+    .wishName {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+        min-width: 80px;
+    }
+
+    .link {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px;
     }
 
     .completed {
@@ -57,22 +73,19 @@
         opacity: 0.5;
         cursor: not-allowed;
     }
-}
 
-.addWishBtn {
-    margin-top: 20px;
-    text-align: center;
-}
+    .info {
+        height: 20px;
+        width: max-content;
+        background-color: transparent !important;
+        padding: 0 !important;
+    }
 
-.table th,
-.table td {
-    text-align: center;
-    padding: 8px;
-    vertical-align: middle;
-    word-break: keep-all;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    .wishlist {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
 }
 
 .bigImagebox {

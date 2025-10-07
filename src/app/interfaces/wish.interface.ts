@@ -4,6 +4,7 @@ export interface Wish {
     wish: string;
     link: string;
     priority: string;
+    description: string;
     image: string;
     completedAt: any;
     completed: boolean;

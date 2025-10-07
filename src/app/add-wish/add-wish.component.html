@@ -22,6 +22,9 @@
         </div>
         <label for="wish">Wunsch eingeben</label>
         <input [(ngModel)]="wish" type="text" id="wish" placeholder="Name des Wunsches">
+        <label for="description">Beschreibung</label>
+        <textarea [(ngModel)]="description" type="text" id="description"
+            placeholder="Anmerkungen zum Wunsch"></textarea>
         <button (click)="this.addWish()">Wunsch hinzufügen</button>
     </div>
 </section>

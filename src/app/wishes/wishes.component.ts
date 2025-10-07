@@ -10,6 +10,7 @@ import { HelperService } from '../Service/helper.service';
 import { Observable } from 'rxjs';
 import { AuthService } from '../Service/auth.service';
 import { AuthGuardService } from '../Service/auth-guard.service';
+import { WishInfoComponent } from '../dialogs/wish-info/wish-info.component';
 
 @Component({
   selector: 'app-wishes',
@@ -56,6 +57,13 @@ export class WishesComponent implements OnInit {
       default:
         return {};
     }
+  }
+
+  openDescription(des: string): void {
+    this.dialog.open(WishInfoComponent, {
+      width: '250px',
+      data: des
+    });
   }
 
   changePriority(wish: Wish): void {

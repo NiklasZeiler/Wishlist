@@ -7,6 +7,7 @@ import { HelperService } from '../Service/helper.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ConfirmWishComponent } from '../dialogs/confirm-wish/confirm-wish.component';
+import { WishInfoComponent } from '../dialogs/wish-info/wish-info.component';
 
 @Component({
   selector: 'app-view-wishes',
@@ -82,7 +83,7 @@ export class ViewWishesComponent {
       .afterClosed().subscribe(result => {
         if (result === 'confirm') {
           wish.completed = true
-          wish.completedAt = new Date()          
+          wish.completedAt = new Date()
           this.firebase.updateWish(this.userIdFromShareCode, wish)
         } else if (result === 'cancel') {
           wish.completed = false;
@@ -106,6 +107,13 @@ export class ViewWishesComponent {
       default:
         return {};
     }
+  }
+
+  openDescription(des: string): void {
+    this.dialog.open(WishInfoComponent, {
+      width: '250px',
+      data: des
+    });
   }
 
 

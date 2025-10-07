@@ -17,9 +17,12 @@
                     <th>Aktionen</th>
                 </tr>
                 <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
-                    <td [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
+                    <td class="wishName" [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
                     </td>
-                    <td><img (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
+                    <td><img (click)="openDescription(wish.description)" class="info" src="../../assets/icons/info.svg"
+                            alt="Infobutton">
+                    </td>
+                    <td><img class="wishImage" (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
                     <td class="link"><a href={{wish.link}}>{{wish.link}}</a></td>
                     <td>
                         <button (click)="deleteWish(wish)">Löschen</button>
@@ -29,10 +32,6 @@
                 <tr>
                     <td *ngIf="(wishes$ | async)?.length === 0" colspan="4">Keine Wünsche vorhanden</td>
                 </tr>
-                <!-- <div class="addWishBtn">
-                    <button [class.opacity]="!test" [disabled]="!test" (click)="navigateToAddWish()">Wunsch
-                        hinzufügen</button>
-                </div> -->
             </table>
             <div class="addWishBtn">
                 <button [class.opacity]="!test" [disabled]="!test" (click)="navigateToAddWish()">
