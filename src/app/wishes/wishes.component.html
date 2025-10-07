@@ -1,49 +1,48 @@
-<div class="scroll-container">
-    <section class="wishes-container">
-        <h1 class="headline">Wünsche</h1>
-        <div class="wishes">
+<section class="wishes-container">
+    <h1 class="headline">Wünsche</h1>
+    <div class="wishes">
 
-            <table class="table">
-                <colgroup>
-                    <col style="width: 25%;">
-                    <col style="width: 20%;">
-                    <col style="width: 35%;">
-                    <col style="width: 20%;">
-                </colgroup>
-                <tr>
-                    <th>Wunsch</th>
-                    <th>Bild</th>
-                    <th>Link</th>
-                    <th>Aktionen</th>
-                </tr>
-                <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
-                    <td class="wishName" [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{ wish.wish }}
-                    </td>
-                    <td><img (click)="openDescription(wish.description)" class="info" src="../../assets/icons/info.svg"
-                            alt="Infobutton">
-                    </td>
-                    <td><img class="wishImage" (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
-                    <td class="link"><a href={{wish.link}}>{{wish.link}}</a></td>
-                    <td>
-                        <button (click)="deleteWish(wish)">Löschen</button>
-                    </td>
-                </tr>
-                <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
-                <tr>
-                    <td *ngIf="(wishes$ | async)?.length === 0" colspan="4">Keine Wünsche vorhanden</td>
-                </tr>
-            </table>
-            <div class="addWishBtn">
-                <button [class.opacity]="!test" [disabled]="!test" (click)="navigateToAddWish()">
-                    Wunsch hinzufügen
-                </button>
-            </div>
-            <div *ngIf="this.help.showBigImg" class="bigImagebox">
-                <mat-icon (click)="this.help.closeImage()" aria-hidden="false"> close </mat-icon>
-                <div *ngIf="this.help.previewImage">
-                    <img class="bigImage" src="{{ this.help.currentBigImage }}" alt="">
-                </div>
+        <table class="table">
+            <colgroup>
+                <col style="width: 25%;">
+                <col style="width: 20%;">
+                <col style="width: 35%;">
+                <col style="width: 20%;">
+            </colgroup>
+            <tr>
+                <th>Wunsch</th>
+                <th>Bild</th>
+                <th>Link</th>
+                <th>Aktionen</th>
+            </tr>
+            <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
+                <td class="wishName" [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{
+                    wish.wish }}
+                </td>
+                <td><img (click)="openDescription(wish.description)" class="info" src="../../assets/icons/info.svg"
+                        alt="Infobutton">
+                </td>
+                <td><img class="wishImage" (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
+                <td class="link"><a href={{wish.link}}>{{wish.link}}</a></td>
+                <td>
+                    <button (click)="deleteWish(wish)">Löschen</button>
+                </td>
+            </tr>
+            <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
+            <tr>
+                <td *ngIf="(wishes$ | async)?.length === 0" colspan="4">Keine Wünsche vorhanden</td>
+            </tr>
+        </table>
+        <div class="addWishBtn">
+            <button [class.opacity]="!test" [disabled]="!test" (click)="navigateToAddWish()">
+                Wunsch hinzufügen
+            </button>
+        </div>
+        <div *ngIf="this.help.showBigImg" class="bigImagebox">
+            <mat-icon (click)="this.help.closeImage()" aria-hidden="false"> close </mat-icon>
+            <div *ngIf="this.help.previewImage">
+                <img class="bigImage" src="{{ this.help.currentBigImage }}" alt="">
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>
