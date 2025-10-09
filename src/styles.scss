@@ -1,17 +1,32 @@
 /* Importing Bootstrap SCSS file. */
 @import "bootstrap/scss/bootstrap";
 
+// body {
+//     margin: 0;
+//     background-color: rgb(5, 23, 31) !important;
+//     color: white !important;
+//     font-family: Roboto, "Helvetica Neue", sans-serif;
+//     box-sizing: border-box;
+//     display: flex;
+//     align-items: center;
+//     height: auto;
+//     justify-content: center;
+//     flex-direction: column;
+//     overflow-y: scroll;
+// }
+
 body {
     margin: 0;
+    padding: 0;
     background-color: rgb(5, 23, 31) !important;
     color: white !important;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-    box-sizing: border-box;
     display: flex;
-    align-items: center;
-    height: auto;
-    justify-content: center;
     flex-direction: column;
+    align-items: center;
+    overflow-y: visible !important;
+    height: auto !important;
+    min-height: 100vh;
 }
 
 .high-priority {
@@ -51,6 +66,6 @@ body {
 
 html,
 body {
-    height: 100%;
-    overflow: auto !important;
+    height: auto !important;
+    overflow-y: scroll !important;
 }

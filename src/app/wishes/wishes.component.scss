@@ -1,32 +1,66 @@
+.wishes-container {
+    width: 100%;
+    // max-width: 1200px;
+    padding: 20px 0;
+    padding-top: 120px;
+}
+
 .headline {
-    position: fixed;
-    top: 60px;
-    left: 10px;
+    // position: fixed;
+    // top: 60px;
+    // left: 20px; // Some spacing from edge
+    // z-index: 100;
+    background-color: rgb(5, 23, 31);
+    padding: 10px;
+}
+
+.wishes {
+    width: 100%;
+    // NO height restrictions here either!
 }
 
 .table {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    position: fixed;
-    top: 170px;
-    left: 0;
-    padding: 0 5px 0 5px;
+    // display: flex;
+    // flex-direction: column;
+    width: 100%;
+    // position: fixed;
+    // top: 170px;
+    table-layout: fixed;
+    // left: 0;
+    // padding: 0 5px 0 5px;
+    border-collapse: collapse;
 
-    .first_tr {
-        justify-content: space-between !important;
-        margin-bottom: 20px;
+    th,
+    td {
+        padding: 10px 15px; // Add horizontal padding for readability
     }
 
-    tr {
-        display: flex;
-        justify-content: space-around;
-        align-items: baseline;
-
-        :first-child {
-            margin-bottom: 20px;
-        }
+    th {
+        text-align: left;
+        padding: 10px 5px;
+        border-bottom: 2px solid white;
+        position: sticky;
+        top: 0;
+        background-color: rgb(5, 23, 31);
+        z-index: 10;
     }
+
+    // td {
+    //     padding: 10px 5px;
+    //     vertical-align: middle;
+    // }
+
+    // .first_tr {
+    //     justify-content: space-between !important;
+    //     margin-bottom: 20px;
+    // }
+
+    // tr {
+    // border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    // display: flex;
+    // justify-content: space-around;
+    // align-items: baseline;
+    // }
 
     a {
         color: white !important;
@@ -54,8 +88,15 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 180px;
-        min-width: 80px;
+        display: flex;
+        align-items: center;
+        gap: 8px; // Space between name and icon
+    }
+
+    .wish-cell {
+        background-color: transparent !important;
+        display: flex !important;
+        gap: 10px;
     }
 
     .link {
@@ -63,6 +104,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 300px;
+        min-width: 295px;
     }
 
     .completed {
@@ -89,12 +131,165 @@
 }
 
 .bigImagebox {
-    z-index: 99;
-    position: absolute;
-    top: 110px;
-    left: 28px;
+    position: fixed; // Fixed to viewport, not document
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: auto;
+
+    mat-icon {
+        position: fixed; // Also fixed so close button stays visible
+        top: 20px;
+        right: 20px;
+        cursor: pointer;
+        color: white;
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        z-index: 1001;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
 }
 
 .bigImage {
-    width: 360px;
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .wishes-container {
+        padding: 100px 10px 20px 10px;
+    }
+
+    .headline {
+        left: 10px;
+        font-size: 24px;
+    }
+
+    .table {
+        display: block;
+
+        thead {
+            display: none; // Hide headers on mobile
+        }
+
+        tbody {
+            display: block;
+        }
+
+        tr {
+            display: block;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        td {
+            display: block;
+            text-align: left;
+            padding: 8px 0;
+            border: none;
+
+            &:before {
+                content: attr(data-label);
+                font-weight: bold;
+                display: inline-block;
+                width: 100px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+        }
+
+        .wish-cell {
+            align-items: flex-start;
+        }
+
+        .wishName {
+            white-space: normal;
+            max-width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .wishImage {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            margin: 10px 0;
+        }
+
+        .link a {
+            white-space: normal;
+            word-break: break-all;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px !important;
+            margin-top: 10px;
+        }
+
+        .bigImagebox {
+            position: fixed; // Fixed to viewport, not document
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: auto;
+
+            mat-icon {
+                position: fixed; // Also fixed so close button stays visible
+                top: 20px;
+                right: 20px;
+                cursor: pointer;
+                color: white;
+                font-size: 36px;
+                width: 36px;
+                height: 36px;
+                z-index: 1001;
+                background-color: rgba(0, 0, 0, 0.5);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        .bigImage {
+            max-width: 90vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+    }
 }

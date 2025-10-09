@@ -4,20 +4,49 @@
 
         <table class="table">
             <colgroup>
-                <col style="width: 25%;">
-                <col style="width: 20%;">
+                <col style="width: 15%;">
+                <col style="width: 10%;">
                 <col style="width: 35%;">
-                <col style="width: 20%;">
+                <col style="width: 10%;">
             </colgroup>
-            <tr>
+            <tr class="first_tr">
                 <th>Wunsch</th>
                 <th>Bild</th>
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
+            <!-- Test -->
             <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
+                <td data-label="Wunsch:">
+                    <div class="wish-cell">
+                        <span class="wishName" [ngStyle]="getPriorityStyle(wish.priority)"
+                            (click)="changePriority(wish)">
+                            {{ wish.wish }}
+                        </span>
+                        <img (click)="openDescription(wish.description); $event.stopPropagation()" class="info"
+                            src="../../assets/icons/info.svg" alt="Infobutton">
+                    </div>
+                </td>
+
+                <td data-label="Bild:">
+                    <img class="wishImage" (click)="this.help.openImage(wish.image)" [src]="wish.image"
+                        alt="Wish image">
+                </td>
+
+                <td class="link" data-label="Link:">
+                    <a [href]="wish.link" target="_blank">{{ wish.link }}</a>
+                </td>
+
+                <td data-label="Aktionen:">
+                    <button (click)="deleteWish(wish)">Löschen</button>
+                </td>
+            </tr>
+            <!-- Test -->
+            <!-- <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
                 <td class="wishName" [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{
                     wish.wish }}
+                    <img (click)="openDescription(wish.description)" class="info" src="../../assets/icons/info.svg"
+                        alt="Infobutton">
                 </td>
                 <td><img (click)="openDescription(wish.description)" class="info" src="../../assets/icons/info.svg"
                         alt="Infobutton">
@@ -27,10 +56,10 @@
                 <td>
                     <button (click)="deleteWish(wish)">Löschen</button>
                 </td>
-            </tr>
+            </tr> -->
             <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
-            <tr>
-                <td *ngIf="(wishes$ | async)?.length === 0" colspan="4">Keine Wünsche vorhanden</td>
+            <tr *ngIf="(wishes$ | async)?.length === 0">
+                <td colspan="4">Keine Wünsche vorhanden</td>
             </tr>
         </table>
         <div class="addWishBtn">
@@ -38,11 +67,11 @@
                 Wunsch hinzufügen
             </button>
         </div>
-        <div *ngIf="this.help.showBigImg" class="bigImagebox">
-            <mat-icon (click)="this.help.closeImage()" aria-hidden="false"> close </mat-icon>
-            <div *ngIf="this.help.previewImage">
-                <img class="bigImage" src="{{ this.help.currentBigImage }}" alt="">
-            </div>
-        </div>
     </div>
 </section>
+<div *ngIf="this.help.showBigImg" class="bigImagebox">
+    <mat-icon (click)="this.help.closeImage()" aria-hidden="false"> close </mat-icon>
+    <div *ngIf="this.help.previewImage">
+        <img class="bigImage" src="{{ this.help.currentBigImage }}" alt="">
+    </div>
+</div>
