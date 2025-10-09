@@ -176,6 +176,10 @@
 }
 
 @media (max-width: 768px) {
+    .first_tr {
+        display: none !important; // Hide the first row on mobile
+    }
+
     .wishes-container {
         padding: 100px 10px 20px 10px;
     }
