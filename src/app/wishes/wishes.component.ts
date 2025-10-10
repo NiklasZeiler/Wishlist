@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../Service/auth.service';
 import { AuthGuardService } from '../Service/auth-guard.service';
 import { WishInfoComponent } from '../dialogs/wish-info/wish-info.component';
+import { ConfirmDeleteComponent } from '../dialogs/confirm-delete/confirm-delete.component';
 
 @Component({
   selector: 'app-wishes',
@@ -40,7 +41,20 @@ export class WishesComponent implements OnInit {
   }
 
   deleteWish(wish: Wish) {
-    this.firebase.deleteWish(wish)
+    const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
+      width: '450px',
+      height: '200px',
+      disableClose: true,
+    
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+
+      if (result) {
+        this.firebase.deleteWish(wish)
+      }
+    });
+
   }
   navigateToAddWish() {
     this.router.navigate(['/addWishes'])

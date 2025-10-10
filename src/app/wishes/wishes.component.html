@@ -15,7 +15,6 @@
                 <th>Link</th>
                 <th>Aktionen</th>
             </tr>
-            <!-- Test -->
             <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
                 <td data-label="Wunsch:">
                     <div class="wish-cell">
@@ -41,22 +40,6 @@
                     <button (click)="deleteWish(wish)">Löschen</button>
                 </td>
             </tr>
-            <!-- Test -->
-            <!-- <tr *ngFor="let wish of wishes$ | async; trackBy: trackByWishId">
-                <td class="wishName" [ngStyle]="getPriorityStyle(wish.priority)" (click)="changePriority(wish)">{{
-                    wish.wish }}
-                    <img (click)="openDescription(wish.description)" class="info" src="../../assets/icons/info.svg"
-                        alt="Infobutton">
-                </td>
-                <td><img (click)="openDescription(wish.description)" class="info" src="../../assets/icons/info.svg"
-                        alt="Infobutton">
-                </td>
-                <td><img class="wishImage" (click)="this.help.openImage(wish.image)" [src]=wish.image></td>
-                <td class="link"><a href={{wish.link}}>{{wish.link}}</a></td>
-                <td>
-                    <button (click)="deleteWish(wish)">Löschen</button>
-                </td>
-            </tr> -->
             <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
             <tr *ngIf="(wishes$ | async)?.length === 0">
                 <td colspan="4">Keine Wünsche vorhanden</td>

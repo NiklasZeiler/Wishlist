@@ -1,19 +1,14 @@
 /* Importing Bootstrap SCSS file. */
 @import "bootstrap/scss/bootstrap";
+@import 'material-icons/iconfont/material-icons.css';
 
-// body {
-//     margin: 0;
-//     background-color: rgb(5, 23, 31) !important;
-//     color: white !important;
-//     font-family: Roboto, "Helvetica Neue", sans-serif;
-//     box-sizing: border-box;
-//     display: flex;
-//     align-items: center;
-//     height: auto;
-//     justify-content: center;
-//     flex-direction: column;
-//     overflow-y: scroll;
-// }
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100 900;
+  src: url('/assets/fonts/Roboto-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
 
 body {
     margin: 0;

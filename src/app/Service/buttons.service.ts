@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogModule, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.component';
 
 @Injectable({
@@ -7,7 +7,8 @@ import { ChangePrioComponent } from '../dialogs/change-prio/change-prio.componen
 })
 export class ButtonsService {
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
+
 
 
 }
