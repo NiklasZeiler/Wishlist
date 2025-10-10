@@ -56,6 +56,13 @@ export class WishesComponent implements OnInit {
     });
 
   }
+
+  navigateToEditWish(wish: Wish) {
+    console.log(wish);
+    this.router.navigate(['/editWishes', wish.id])
+  }
+
+
   navigateToAddWish() {
     this.router.navigate(['/addWishes'])
   }
@@ -75,14 +82,14 @@ export class WishesComponent implements OnInit {
 
   openDescription(des: string): void {
     this.dialog.open(WishInfoComponent, {
-      width: '250px',
+      width: '400px',
       data: des
     });
   }
 
   changePriority(wish: Wish): void {
     const dialogRef = this.dialog.open(ChangePrioComponent, {
-      width: '250px',
+      width: '300px',
       data: { wish: wish }
     });
 

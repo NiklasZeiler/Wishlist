@@ -1,14 +1,7 @@
 <section class="wishes-container">
     <h1 class="headline">Wünsche</h1>
     <div class="wishes">
-
         <table class="table">
-            <colgroup>
-                <col style="width: 15%;">
-                <col style="width: 10%;">
-                <col style="width: 35%;">
-                <col style="width: 10%;">
-            </colgroup>
             <tr class="first_tr">
                 <th>Wunsch</th>
                 <th>Bild</th>
@@ -38,9 +31,10 @@
 
                 <td data-label="Aktionen:">
                     <button (click)="deleteWish(wish)">Löschen</button>
+                    <!-- <button (click)="navigateToEditWish(wish)">Bearbeiten</button> -->
                 </td>
             </tr>
-            <!--Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind-->
+            <!-- Wird nur angezeigt wenn keine Wünsche mehr in der Liste sind -->
             <tr *ngIf="(wishes$ | async)?.length === 0">
                 <td colspan="4">Keine Wünsche vorhanden</td>
             </tr>
