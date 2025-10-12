@@ -33,13 +33,13 @@
 
     <form (ngSubmit)="this.addWish()">
         <label for="image">Bild auswählen</label>
-        <input type="file" id="image" />
+        <input type="file" id="image" name="image" [(ngModel)]="image" (change)="firebase.changePicture($event)" />
 
         <label for="link">Link einfügen</label>
-        <input type="text" id="link" placeholder="Link zum Wunsch" />
+        <input type="text" id="link" name="url" [(ngModel)]="url" placeholder="Link zum Wunsch" />
 
         <label for="priority">Priorität auswählen</label>
-        <select id="priority">
+        <select id="priority" name="priority" [(ngModel)]="firebase.selectedPriority">
             <option>Priorität:</option>
             <option>Hoch</option>
             <option>Mittel</option>
@@ -47,10 +47,10 @@
         </select>
 
         <label for="wish">Wunsch eingeben</label>
-        <input type="text" id="wish" placeholder="Name des Wunsches" />
+        <input type="text" id="wish" name="wish" [(ngModel)]="wish" placeholder="Name des Wunsches" />
 
         <label for="desc">Beschreibung</label>
-        <textarea id="desc" placeholder="Anmerkungen zum Wunsch"></textarea>
+        <textarea id="desc" name="description" [(ngModel)]="description" placeholder="Anmerkungen zum Wunsch"></textarea>
 
         <button type="submit">Wunsch hinzufügen</button>
     </form>
