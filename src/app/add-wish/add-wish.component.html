@@ -31,7 +31,7 @@
 <section class="addWish">
     <h1>Wunsch hinzufügen</h1>
 
-    <form>
+    <form (ngSubmit)="this.addWish()">
         <label for="image">Bild auswählen</label>
         <input type="file" id="image" />
 
@@ -52,6 +52,6 @@
         <label for="desc">Beschreibung</label>
         <textarea id="desc" placeholder="Anmerkungen zum Wunsch"></textarea>
 
-        <button (click)="addWish()" type="button">Wunsch hinzufügen</button>
+        <button type="submit">Wunsch hinzufügen</button>
     </form>
 </section>
