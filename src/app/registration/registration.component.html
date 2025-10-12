@@ -1,16 +1,18 @@
-<div class="registration-form">
-    <h2>Registrieren</h2>
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" [(ngModel)]="name" id="name" placeholder="Bitte Name angeben" required>
+<div class="registration-container">
+    <div class="registration-form card">
+        <h2>Registrieren</h2>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" [(ngModel)]="name" id="name" placeholder="Bitte Name angeben" required>
+        </div>
+        <div class="form-group">
+            <label for="email">E-Mail</label>
+            <input type="email" [(ngModel)]="email" id="email" placeholder="Bitte E-Mail angeben" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Passwort</label>
+            <input type="password" [(ngModel)]="password" id="password" placeholder="Bitte Passwort eingeben" required>
+        </div>
+        <button class="btn primary" type="submit" (click)="register()">Registrieren</button>
     </div>
-    <div class="form-group">
-        <label for="email">E-Mail</label>
-        <input type="email" [(ngModel)]="email" id="email" placeholder="Bitte E-Mail angeben" required>
-    </div>
-    <div class="form-group">
-        <label for="password">Passwort</label>
-        <input type="password" [(ngModel)]="password" id="password" placeholder="Bitte Passwort eingeben" required>
-    </div>
-    <button type="submit" (click)="register()">Registrieren</button>
 </div>

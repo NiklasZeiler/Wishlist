@@ -1,4 +1,4 @@
-<section class="addWish">
+<!-- <section class="addWish">
     <h1 class="headline">Wunsch hinzufügen</h1>
     <div class="form">
         <label for="image">Bild auswählen</label>
@@ -27,4 +27,31 @@
             placeholder="Anmerkungen zum Wunsch"></textarea>
         <button (click)="this.addWish()">Wunsch hinzufügen</button>
     </div>
+</section> -->
+<section class="addWish">
+    <h1>Wunsch hinzufügen</h1>
+
+    <form>
+        <label for="image">Bild auswählen</label>
+        <input type="file" id="image" />
+
+        <label for="link">Link einfügen</label>
+        <input type="text" id="link" placeholder="Link zum Wunsch" />
+
+        <label for="priority">Priorität auswählen</label>
+        <select id="priority">
+            <option>Priorität:</option>
+            <option>Hoch</option>
+            <option>Mittel</option>
+            <option>Niedrig</option>
+        </select>
+
+        <label for="wish">Wunsch eingeben</label>
+        <input type="text" id="wish" placeholder="Name des Wunsches" />
+
+        <label for="desc">Beschreibung</label>
+        <textarea id="desc" placeholder="Anmerkungen zum Wunsch"></textarea>
+
+        <button type="submit">Wunsch hinzufügen</button>
+    </form>
 </section>

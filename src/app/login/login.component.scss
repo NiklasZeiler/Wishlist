@@ -1,76 +1,118 @@
-.login {
+.login-container {
+    background-color: #0f171c;
+    color: #e4e4e4;
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 400px;
+    margin: 8rem auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid #1e2b33;
+    font-family: "Segoe UI", sans-serif;
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    font-size: 1.8rem;
+}
+
+.login-fields {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    width: 100vw;
-    padding: 20px;
-    box-sizing: border-box;
+    gap: 1rem;
+}
 
-    form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        width: 100%;
-        max-width: 300px;
-    }
+.login-fields input {
+    width: 100%;
+    background-color: #1b232a;
+    color: #e0e0e0;
+    border: 1px solid #2a3a44;
+    border-radius: 6px;
+    padding: 0.7rem;
+    font-size: 1rem;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
 
-    form input {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-        box-sizing: border-box;
-    }
+.login-fields input:focus {
+    border-color: #3fa9f5;
+    box-shadow: 0 0 6px rgba(63, 169, 245, 0.5);
+    outline: none;
+}
 
-    .inputFields {
-        display: flex;
-        flex-direction: column;
-    }
+.login-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 0.5rem;
+}
 
-    form button {
-        padding: 12px 24px;
-        margin: 5px;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-    }
+.btn {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
 
-    .button {
-        // box-shadow: inset 0 1px 0 0 #ffffff;
-        background: #ffffff linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
-        border-radius: 6px;
-        border: 1px solid #dcdcdc;
-        display: inline-block;
-        cursor: pointer;
-        color: #666666;
-        font-size: 15px;
-        font-weight: bold;
-        padding: 6px 16px;
-        text-decoration: none;
-        text-shadow: 0 1px 0 #ffffff;
-        outline: 0;
-        box-shadow: 3px 3px 7px -1px rgba(255, 255, 255, 0.75);
-        margin: 10px 5px 10px 0;
-    }
+.btn.primary {
+    background-color: #3fa9f5;
+    color: #fff;
+}
 
-    .forgot {
-        text-decoration: underline;
-        display: flex;
-        justify-content: center;
-        cursor: pointer;
-    }
+.btn.primary:hover {
+    background-color: #5bc0ff;
+    transform: scale(1.03);
+}
 
-    input {
-        margin-top: 5px;
-    }
+.btn.secondary {
+    background-color: #1b232a;
+    color: #e4e4e4;
+    border: 1px solid #2a3a44;
+}
 
-    .custom-dialog-container {
-        bottom: 400px;
-        position: absolute !important;
-    }
+.btn.secondary:hover {
+    background-color: #222d35;
+    border-color: #3fa9f5;
+    transform: scale(1.03);
+}
+
+.btn:disabled {
+    background-color: #2a3a44;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.forgot {
+    color: #3fa9f5;
+    text-decoration: underline;
+    margin-top: 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.forgot:hover {
+    color: #5bc0ff;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #1b232a;
+    border: 1px solid #2a3a44;
+    border-radius: 6px;
+    padding: 0.5rem 0.8rem;
+}
+
+.input-wrapper mat-icon {
+    color: #3fa9f5;
+    margin-right: 0.5rem;
 }

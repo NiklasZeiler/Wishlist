@@ -1,4 +1,4 @@
-<div class="scroll-container">
+<!-- <div class="shared-wishes-container">
     <section class="wish-container">
         <h1 class="headline">Wünsche von {{this.userName}}</h1>
         <div class="wishes">
@@ -32,4 +32,59 @@
             </div>
         </div>
     </section>
-</div>
+</div> -->
+<section class="wishes-container">
+    <h1 class="headline">Wünsche von {{ this.userName }}</h1>
+
+    <div class="wishes">
+        <table class="table">
+            <tr class="first_tr">
+                <th>Wunsch</th>
+                <th>Bild</th>
+                <th>Link</th>
+                <th>Aktionen</th>
+            </tr>
+
+            <tr *ngFor="let wish of wishes; trackBy: trackByWishId"
+                [ngClass]="{ completed: wish.completed }">
+                <td data-label="Wunsch:">
+                    <div class="wish-cell">
+                        <span class="wishName" [ngStyle]="getPriorityStyle(wish.priority)">
+                            {{ wish.wish }}
+                        </span>
+                        <img *ngIf="wish.description"
+                            (click)="openDescription(wish.description); $event.stopPropagation()" class="info"
+                            src="../../assets/icons/info.svg" alt="Infobutton" />
+                    </div>
+                </td>
+
+                <td data-label="Bild:">
+                    <img class="wishImage" (click)="this.help.openImage(wish.image)" [src]="wish.image"
+                        alt="Wish image" />
+                </td>
+
+                <td class="link" data-label="Link:">
+                    <a [href]="wish.link" target="_blank">{{ wish.link }}</a>
+                </td>
+
+                <td data-label="Aktionen:">
+                    <button [disabled]="wish.completed" (click)="wishDone(wish)">
+                        {{ wish.completed ? "Erledigt" : "Erledigt markieren" }}
+                    </button>
+                </td>
+            </tr>
+
+            <tr *ngIf="wishes?.length === 0">
+                <td colspan="4">Keine Wünsche vorhanden</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Großes Bild -->
+    <div *ngIf="this.help.showBigImg" class="bigImagebox">
+        <mat-icon (click)="this.help.closeImage()" aria-hidden="false">close</mat-icon>
+        <div *ngIf="this.help.previewImage">
+            <img class="bigImage" [src]="this.help.currentBigImage" alt="" />
+        </div>
+    </div>
+</section>

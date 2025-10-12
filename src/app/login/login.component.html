@@ -1,14 +1,21 @@
-<div class="login">
-    <h1 class="headline">
+<div class="login-container">
+    <h1>
         Wunschliste
     </h1>
-    <div class="inputFields">
-        <input type="email" [(ngModel)]="email" placeholder="Bitte E-Mail angeben">
-        <input type="password" [(ngModel)]="password" placeholder="Bitte Passwort eingeben">
-        <div class="buttons">
-            <button [disabled]="!email || email.trim() === ''" class="button" (click)="onLogin()"
+    <div class="input-fields">
+        <div class="input-wrapper">
+            <mat-icon>email</mat-icon>
+            <input type="email" [(ngModel)]="email" placeholder="Bitte E-Mail angeben" />
+        </div>
+
+        <div class="input-wrapper">
+            <mat-icon>lock</mat-icon>
+            <input type="password" [(ngModel)]="password" placeholder="Bitte Passwort eingeben" />
+        </div>
+        <div class="login-buttons">
+            <button [disabled]="!email || email.trim() === ''" class="btn primary" (click)="onLogin()"
                 type="submit">Login</button>
-            <button class="button" (click)="navigateToRegistration()" type="button">Registrieren</button>
+            <button class="btn secondary" (click)="navigateToRegistration()" type="button">Registrieren</button>
 
         </div>
         <!-- Dialog öffnen in dem eine Email adresse angegeben werden muss -->

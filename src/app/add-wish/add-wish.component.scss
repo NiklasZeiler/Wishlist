@@ -1,39 +1,82 @@
 .addWish {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    box-sizing: border-box;
+    background-color: #0f171c;
+    color: #e4e4e4;
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 500px;
+    margin: 3rem auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    border: 1px solid #1e2b33;
+    font-family: "Segoe UI", sans-serif;
 }
 
-.headline {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
+.addWish h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
 }
 
-.form {
+.addWish form {
     display: flex;
-    flex-wrap: wrap;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 1rem;
+}
 
-    label {
-        margin-bottom: 10px;
-    }
+.addWish label {
+    font-weight: 500;
+    color: #b0bec5;
+    margin-bottom: 0.3rem;
+}
 
-    input {
-        margin-bottom: 20px;
-    }
+.addWish input[type="text"],
+.addWish input[type="file"],
+.addWish select,
+.addWish textarea {
+    background-color: #1b232a;
+    color: #e0e0e0;
+    border: 1px solid #2a3a44;
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    transition:
+        border 0.2s ease,
+        box-shadow 0.2s ease;
+}
 
-    textarea {
-        margin-bottom: 20px;
-    }
+.addWish input:focus,
+.addWish textarea:focus,
+.addWish select:focus {
+    border-color: #3fa9f5;
+    box-shadow: 0 0 6px rgba(63, 169, 245, 0.5);
+    outline: none;
+}
 
-    .prio {
-        color: black !important;
-        background-color: white !important;
-        border-color: white !important;
-    }
+.addWish textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.addWish button {
+    background-color: #3fa9f5;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+.addWish button:hover {
+    background-color: #5bc0ff;
+    transform: scale(1.02);
+}
+
+.addWish button:disabled {
+    background-color: #2a3a44;
+    color: #777;
+    cursor: not-allowed;
 }

@@ -1,20 +1,23 @@
-<div class="feedback_container">
+<div class="feedback-container">
     <h1>Feedback</h1>
-    <h5>Ich bitte euch mir ein kurzes Feedback zu geben, was ich noch verbessern sollte</h5>
+    <p class="feedback-description">
+        Ich bitte euch, mir ein kurzes Feedback zu geben, was ich noch verbessern sollte.
+    </p>
 
-    <div class="feedback">
+    <div class="feedback-form">
         <textarea [(ngModel)]="text" id="text" placeholder="Bitte Feedback eingeben..."></textarea>
         <button (click)="addFeedback()">Abschicken</button>
     </div>
-    <div class="placeholder"></div>
-    <div class="overflow">
-        <div class="feedback_text" *ngFor="let feedback of getFeedback()">
-            <span>{{feedback.feedback}}</span>
-            <div class="likes">
-                <mat-icon (click)="count(feedback)">thumb_up</mat-icon>
-                <span id="counter-{{feedback.id}}">{{feedback.likes}}</span>
+    <!-- <div class="placeholder"></div> -->
+    <div class="feedback-list" *ngIf="getFeedback()?.length">
+        <div class="feedback-item" *ngFor="let feedback of getFeedback()">
+            <div class="feedback-text">
+                <span>{{feedback.feedback}}</span>
+                <div class="likes">
+                    <mat-icon (click)="count(feedback)">thumb_up</mat-icon>
+                    <span id="counter-{{feedback.id}}">{{feedback.likes}}</span>
+                </div>
             </div>
-
         </div>
     </div>
 

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../Service/auth.service';
 import { ForgotPasswordComponent } from '../dialogs/forgot-password/forgot-password.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from "@angular/material/icon";
 
 export interface DialogData {
   emailFor: string;
@@ -12,7 +13,7 @@ export interface DialogData {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, MatIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
