@@ -31,7 +31,7 @@
 <section class="addWish">
     <h1>Wunsch hinzufügen</h1>
 
-    <form (ngSubmit)="this.addWish()">
+    <form (ngSubmit)="addWish()">
         <label for="image">Bild auswählen</label>
         <input type="file" id="image" name="image" [(ngModel)]="image" (change)="firebase.changePicture($event)" />
 
