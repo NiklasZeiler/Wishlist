@@ -8,6 +8,7 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
 import { ViewWishesComponent } from './view-wishes/view-wishes.component';
 import { AuthGuardService } from './Service/auth-guard.service';
 import { inject } from '@angular/core';
+import { EditWishComponent } from './edit-wish/edit-wish.component';
 
 
 export const authGuard: CanActivateFn = () => {
@@ -22,6 +23,7 @@ export const routes: Routes = [
     { path: "wishes", component: WishesComponent, canActivate: [authGuard] },
     { path: "registration", component: RegistrationComponent },
     { path: "addWishes", component: AddWishComponent },
+    { path: "editWishes/:id", component: EditWishComponent },
     { path: "feedback", component: FeedbackComponent },
     { path: "userProfil", component: UserProfilComponent },
     { path: 'wishes/share', component: ViewWishesComponent },

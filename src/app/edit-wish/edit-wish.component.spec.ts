@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShareLinkComponent } from './share-link.component';
+import { EditWishComponent } from './edit-wish.component';
 
-describe('ShareLinkComponent', () => {
-  let component: ShareLinkComponent;
-  let fixture: ComponentFixture<ShareLinkComponent>;
+describe('EditWishComponent', () => {
+  let component: EditWishComponent;
+  let fixture: ComponentFixture<EditWishComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShareLinkComponent]
+      imports: [EditWishComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ShareLinkComponent);
+    fixture = TestBed.createComponent(EditWishComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
