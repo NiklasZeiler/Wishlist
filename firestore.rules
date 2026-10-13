@@ -1,66 +1,72 @@
-// Firestore Rules
+// Firestore Rules – Quelle der Wahrheit für dieses Projekt.
+// Deploy: firebase deploy --only firestore:rules --project wishlist-676f9
+//
+// Grundsätze:
+//  - Nutzerdaten und Wünsche gehören dem Besitzer (isOwner).
+//  - Fremde sehen von einer geteilten Liste nur Wünsche mit public == true
+//    und dürfen daran ausschließlich completed/completedAt setzen (mit Login).
+//  - /users ist nicht auflistbar (sonst wären alle E-Mail-Adressen lesbar).
+//  - Share-Codes sind per bekanntem Code lesbar, aber nicht enumerierbar.
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper functions
+
     function isAuthenticated() {
       return request.auth != null;
     }
-    
+
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
-    
-    // Allow users to read/write their own data
+
+    // Fremder darf an einem öffentlichen Wunsch ausschließlich den
+    // Erledigt-Status setzen.
+    function isCompleteToggle() {
+      return resource.data.public == true
+          && request.resource.data.public == true
+          && request.resource.data.diff(resource.data)
+               .changedKeys().hasOnly(['completed', 'completedAt']);
+    }
+
     match /users/{userId} {
-      // Users can read/write their own data
-      allow read, write: if isOwner(userId);
-      
-      // Anyone authenticated can list users (needed for share functionality)
-      allow list: if isAuthenticated();
-      
-      // Allow read/write to nested collections for the owner
+      allow get, write: if isOwner(userId);
+
       match /wishes/{wishId} {
-        // Owner can do anything with their wishes
+        // Besitzer: Vollzugriff
         allow read, write: if isOwner(userId);
-        
-        // Anyone authenticated can read wishes (for sharing)
-        allow read: if isAuthenticated();
+
+        // Fremde: nur öffentliche Wünsche lesen. Für list() erzwingt Firestore
+        // dadurch eine .where('public', isEqualTo: true)-Query.
+        allow read: if resource.data.public == true;
+
+        // Fremde: öffentlichen Wunsch abhaken (nur completed/completedAt)
+        allow update: if isAuthenticated() && isCompleteToggle();
       }
-      
-      // SharedCode collection
+
       match /sharedCode/{codeId} {
-        // Owner can do anything with their shared codes
         allow read, write: if isOwner(userId);
-        
-        // Anyone authenticated can read shared codes (for sharing)
-        allow read: if isAuthenticated();
       }
     }
-    
-    // Feedback collection
-    match /feedback/{feedbackId} {
-      // Anyone can read feedback
-      allow read: if true;
-      
-      // Authenticated users can create and update feedback
-      allow create, update: if isAuthenticated();
-      
-      // No one can delete feedback for now
-      allow delete: if false;
-    }
-    
-    // ShareCodes global collection (if you decide to implement it)
+
     match /shareCodes/{codeId} {
-      // Anyone can read share codes
-      allow read: if true;
-      
-      // Only authenticated users can create share codes
-      allow create, update: if isAuthenticated();
-      
-      // Only the owner can delete their share codes
-      allow delete: if isAuthenticated() && 
-                     resource.data.userId == request.auth.uid;
+      allow get: if true;      // Lookup per bekanntem Code (auch ohne Login)
+      allow list: if false;    // keine Enumeration aller Codes
+      allow create: if isAuthenticated()
+          && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated()
+          && resource.data.userId == request.auth.uid
+          && request.resource.data.userId == resource.data.userId;
+      allow delete: if isAuthenticated()
+          && resource.data.userId == request.auth.uid;
+    }
+
+    match /feedback/{feedbackId} {
+      allow get, list: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated()
+          && request.resource.data.diff(resource.data)
+               .changedKeys().hasOnly(['likes']);
+      allow delete: if false;
     }
   }
 }

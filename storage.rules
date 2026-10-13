@@ -2,22 +2,14 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    // Images folder
-    match /images/{imageId} {
-      // Anyone can view images
+    match /users/{userId}/wishes/{imageId} {
       allow read: if true;
-      
-      // Only authenticated users can upload images
-      allow create: if request.auth != null && 
-                      request.resource.size < 5 * 1024 * 1024 && // 5MB limit
+      allow create: if request.auth != null &&
+                      request.auth.uid == userId &&
+                      request.resource.size < 5 * 1024 * 1024 &&
                       request.resource.contentType.matches('image/.*');
-      
-      // Only authenticated users can delete images
-      // In a production app, you'd want to check ownership here
-      allow delete: if request.auth != null;
+      allow delete: if request.auth != null && request.auth.uid == userId;
     }
-    
-    // Default deny for everything else
     match /{allPaths=**} {
       allow read, write: if false;
     }
