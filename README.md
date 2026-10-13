@@ -1,27 +1,53 @@
-# Wishlist
+# Wunschliste (Angular)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.0.
+Web-Version der Wunschlisten-App. Sie nutzt dasselbe Firebase-Projekt (`wishlist-676f9`),
+dieselben Firestore-/Storage-Regeln und dasselbe Design wie die Flutter-App
+[`wishlist_app`](https://github.com/NiklasZeiler/wishlist_app).
 
-## Development server
+## Entwicklung
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+npm ci
+npm start        # http://localhost:4200
+npm test         # Karma/Jasmine
+npm run build    # Ausgabe in dist/browser
+```
 
-## Code scaffolding
+Auf localhost gibt App Check ein Debug-Token in der Konsole aus. Es muss in der
+Firebase-Konsole unter *App Check → Apps → Debug-Tokens* eingetragen werden.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Aufbau
 
-## Build
+| Ordner | Inhalt |
+| --- | --- |
+| `src/app/core` | Services (Auth, Wünsche, Feedback, Profil, Theme), Guards, Validatoren, Modelle |
+| `src/app/pages` | Routen: Login, Registrierung, E-Mail-Verifizierung, Wunschliste, Wunsch hinzufügen, Teilen, Profil, Feedback, Datenschutz, Impressum |
+| `src/app/shared` | Layout mit Menü, Wunschkarte, Dialoge, Bestätigungs-Button |
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Abgleich mit der Flutter-App
 
-## Running unit tests
+- `firestore.rules`, `storage.rules` und `firestore.indexes.json` sind identisch mit denen in
+  `wishlist_app`. Änderungen immer in beiden Repos nachziehen und mit
+  `firebase deploy --only firestore:rules,storage` ausrollen.
+- Das Farbschema wird wie `ColorScheme.fromSeed` aus der Akzentfarbe (Standard `#05171f`)
+  erzeugt und im Browser gespeichert.
+- Share-Links haben die Form `<Domain>/share?code=<Code>`. Ältere Links
+  (`/wishes/share?shareCode=…`) werden weiterhin aufgelöst.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Hosting (Vercel)
 
-## Running end-to-end tests
+Die Web-App wird über Vercel ausgeliefert (`vercel.json`: Build `npm run build`, Ausgabe
+`dist/browser`, SPA-Rewrite auf `/index.html`). Backend (Auth, Firestore, Storage, App Check)
+läuft in Firebase. Die Vercel-Domain muss in Firebase unter *Authentication → Autorisierte
+Domains* sowie im reCAPTCHA-Key und in der App-Check-Registrierung der Web-App stehen.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Android (Capacitor)
 
-## Further help
+```bash
+npm run build
+npx cap sync android
+npx cap open android
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Die App-ID ist `com.wunschliste.app`; vor einem Release müssen Version, Signing-Konfiguration und
+`minifyEnabled` in `android/app/build.gradle` gesetzt werden.
