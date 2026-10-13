@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -71,6 +72,20 @@ export class AuthService {
     await updateProfile(credential.user, { displayName: name });
     await sendEmailVerification(credential.user);
     this.publish(credential.user);
+  }
+
+  /**
+   * Sends the reset mail. An unknown address is reported as success so the form
+   * cannot be used to find out which addresses have an account.
+   */
+  async sendPasswordReset(email: string): Promise<void> {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+    } catch (error) {
+      if ((error as { code?: string }).code !== 'auth/user-not-found') {
+        throw error;
+      }
+    }
   }
 
   async logout(): Promise<void> {

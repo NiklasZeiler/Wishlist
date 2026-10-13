@@ -47,3 +47,7 @@ Thumbs.db
 *-debug.log
 .runtimeconfig.json
 dist/
+
+# Local tooling
+/.claude/
+/.impeccable/

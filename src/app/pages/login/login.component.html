@@ -40,6 +40,8 @@
       }
     </div>
 
+    <button type="button" class="auth__forgot" (click)="openForgotPassword()">Passwort vergessen?</button>
+
     @if (errorMessage()) {
       <div class="error-box" role="alert">
         <mat-icon>error_outline</mat-icon>
