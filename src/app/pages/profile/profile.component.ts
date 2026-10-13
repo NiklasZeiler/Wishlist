@@ -6,6 +6,7 @@ import { NotifierService } from '../../core/notifier.service';
 import { UserService } from '../../core/user.service';
 import { validateEmail, validatePassword } from '../../core/validators';
 import { WishService } from '../../core/wish.service';
+import { SHARE_PAGE_URL } from '../../../environments/share';
 import { MainLayoutComponent } from '../../shared/main-layout/main-layout.component';
 
 @Component({
@@ -100,7 +101,7 @@ export class ProfileComponent {
         return;
       }
 
-      const link = `${location.origin}/share?code=${code}`;
+      const link = `${SHARE_PAGE_URL}?code=${code}`;
       const text = `🎁 Schau dir meine Wunschliste an!\n\n${link}\n\nOder gib in der App den Code ein: ${code}`;
 
       if (navigator.share) {

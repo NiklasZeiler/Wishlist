@@ -31,8 +31,9 @@ Firebase-Konsole unter *App Check → Apps → Debug-Tokens* eingetragen werden.
   `firebase deploy --only firestore:rules,storage` ausrollen.
 - Das Farbschema wird wie `ColorScheme.fromSeed` aus der Akzentfarbe (Standard `#05171f`)
   erzeugt und im Browser gespeichert.
-- Share-Links haben die Form `<Domain>/share?code=<Code>`. Ältere Links
-  (`/wishes/share?shareCode=…`) werden weiterhin aufgelöst.
+- Share-Links zeigen wie in Flutter auf `https://wishlist-app.de/share.html?code=<Code>`
+  (`src/environments/share.ts`). Die App selbst löst `/share?code=<Code>` und ältere Links
+  (`/wishes/share?shareCode=…`) ebenfalls auf.
 
 ## Hosting (Vercel)
 
