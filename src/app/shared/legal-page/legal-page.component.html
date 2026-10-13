@@ -1,0 +1,22 @@
+<app-main-layout [title]="heading()">
+  <article class="legal">
+    <h2 class="legal__title">{{ heading() }}</h2>
+    @if (updatedAt()) {
+      <p class="legal__updated">Stand: {{ updatedAt() }}</p>
+    }
+
+    @for (section of sections(); track section.title) {
+      <section class="legal__section">
+        <h3 class="legal__heading">{{ section.title }}</h3>
+        <p class="legal__text">{{ section.content }}</p>
+      </section>
+    }
+
+    <div class="legal__contact">
+      <a class="btn-outlined" [href]="contactLink">
+        <mat-icon fontSet="material-icons-outlined">email</mat-icon>
+        Kontakt aufnehmen
+      </a>
+    </div>
+  </article>
+</app-main-layout>

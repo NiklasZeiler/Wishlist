@@ -1,0 +1,40 @@
+.strength {
+  width: 100%;
+  margin: -8px 0 16px;
+
+  &__bars {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__bar {
+    flex: 1;
+    height: 4px;
+    background: var(--md-surface-container);
+    border-radius: 2px;
+  }
+
+  &[data-tone='weak'] {
+    --strength-color: var(--md-error);
+  }
+
+  &[data-tone='medium'] {
+    --strength-color: #ff9800;
+  }
+
+  &[data-tone='strong'] {
+    --strength-color: #4caf50;
+  }
+
+  &__bar--filled {
+    background: var(--strength-color);
+  }
+
+  &__label {
+    display: block;
+    margin-top: 4px;
+    color: var(--strength-color);
+    font-size: 12px;
+    font-weight: 500;
+  }
+}

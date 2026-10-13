@@ -1,0 +1,68 @@
+<div class="layout on-dark-layout">
+  @if (title()) {
+    <header class="layout__bar">
+      <h1 class="layout__title">{{ title() }}</h1>
+      <button type="button" class="layout__icon-button" aria-label="Menü öffnen" (click)="drawerOpen.set(true)">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </header>
+  }
+
+  <main class="layout__content">
+    <ng-content />
+  </main>
+
+  @if (drawerOpen()) {
+    <div class="drawer__scrim" (click)="drawerOpen.set(false)"></div>
+    <aside class="drawer" aria-label="Menü">
+      <div class="drawer__header">
+        <span class="drawer__title">Menü</span>
+        <button type="button" class="layout__icon-button" aria-label="Menü schließen" (click)="drawerOpen.set(false)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      @if (auth.isLoggedIn()) {
+        <p class="drawer__section">NAVIGATION</p>
+        @for (link of navigationLinks; track link.route) {
+          <a class="drawer__item" [routerLink]="link.route" (click)="drawerOpen.set(false)">
+            <mat-icon fontSet="material-icons-outlined">{{ link.icon }}</mat-icon>
+            {{ link.title }}
+          </a>
+        }
+        <hr class="drawer__divider" />
+      }
+
+      <p class="drawer__section">RECHTLICHES</p>
+      @for (link of legalLinks; track link.route) {
+        <a class="drawer__item" [routerLink]="link.route" (click)="drawerOpen.set(false)">
+          <mat-icon fontSet="material-icons-outlined">{{ link.icon }}</mat-icon>
+          {{ link.title }}
+        </a>
+      }
+
+      @if (auth.isLoggedIn()) {
+        <p class="drawer__section">DESIGN</p>
+        <button type="button" class="drawer__item" (click)="openColorPicker()">
+          <mat-icon fontSet="material-icons-outlined">palette</mat-icon>
+          Akzentfarbe ändern
+        </button>
+        <div class="drawer__accent" [style.background]="theme.seedColor() + '33'" [style.border-color]="theme.seedColor() + '80'">
+          <span class="drawer__swatch" [style.background]="theme.seedColor()"></span>
+          Aktuelle Akzentfarbe
+        </div>
+        <hr class="drawer__divider" />
+        <button type="button" class="drawer__item drawer__item--destructive" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Abmelden
+        </button>
+      } @else {
+        <hr class="drawer__divider" />
+        <a class="drawer__login" routerLink="/login" (click)="drawerOpen.set(false)">
+          <mat-icon>login</mat-icon>
+          Anmelden
+        </a>
+      }
+    </aside>
+  }
+</div>

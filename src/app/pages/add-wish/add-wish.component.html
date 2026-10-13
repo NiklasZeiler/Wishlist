@@ -1,0 +1,80 @@
+<app-main-layout title="Wunsch hinzufügen">
+  <form class="add-wish" novalidate (ngSubmit)="save()">
+    <section class="add-wish__card">
+      <h2 class="add-wish__heading">Wunsch-Details</h2>
+
+      <div class="field" [class.field--invalid]="titleError()">
+        <label class="field__label" for="title">Titel</label>
+        <div class="field__control">
+          <input id="title" name="title" type="text" [ngModel]="title()" (ngModelChange)="title.set($event)" />
+        </div>
+        @if (titleError()) {
+          <p class="field__error">{{ titleError() }}</p>
+        }
+      </div>
+
+      <div class="field" [class.field--invalid]="descriptionError()">
+        <label class="field__label" for="description">Beschreibung</label>
+        <div class="field__control">
+          <textarea
+            id="description"
+            name="description"
+            rows="3"
+            [ngModel]="description()"
+            (ngModelChange)="description.set($event)"
+          ></textarea>
+        </div>
+        @if (descriptionError()) {
+          <p class="field__error">{{ descriptionError() }}</p>
+        }
+      </div>
+
+      <div class="field" [class.field--invalid]="linkError()">
+        <label class="field__label" for="link">Link zum Produkt</label>
+        <div class="field__control">
+          <input id="link" name="link" type="url" [ngModel]="link()" (ngModelChange)="link.set($event)" />
+        </div>
+        @if (linkError()) {
+          <p class="field__error">{{ linkError() }}</p>
+        }
+      </div>
+
+      @if (imagePreviewUrl(); as previewUrl) {
+        <div class="preview">
+          <img class="preview__image" [src]="previewUrl" alt="Vorschau des ausgewählten Bildes" />
+          <div class="preview__actions">
+            <label class="preview__button preview__button--edit" aria-label="Bild ändern">
+              <mat-icon>edit</mat-icon>
+              <input class="visually-hidden" type="file" accept="image/png,image/jpeg" (change)="pickImage($event)" />
+            </label>
+            <button type="button" class="preview__button preview__button--delete" aria-label="Bild entfernen" (click)="removeImage()">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      } @else {
+        <label class="pick">
+          <mat-icon fontSet="material-icons-outlined">add_photo_alternate</mat-icon>
+          Bild hinzufügen (optional)
+          <input class="visually-hidden" type="file" accept="image/png,image/jpeg" (change)="pickImage($event)" />
+        </label>
+      }
+
+      <div class="field">
+        <label class="field__label" for="priority">Priorität</label>
+        <div class="field__control">
+          <span class="dot" [style.background]="dotColor()"></span>
+          <select id="priority" name="priority" [ngModel]="priority()" (ngModelChange)="priority.set($event)">
+            @for (option of priorities; track option) {
+              <option [value]="option">{{ option.charAt(0).toUpperCase() + option.slice(1) }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <button class="add-wish__submit" type="submit" [disabled]="saving()">
+      {{ saving() ? 'Wird gespeichert…' : 'Wunsch hinzufügen' }}
+    </button>
+  </form>
+</app-main-layout>

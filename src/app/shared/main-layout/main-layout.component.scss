@@ -1,0 +1,150 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--layout-background);
+  color: var(--md-on-surface);
+
+  &__bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 8px 0 16px;
+    background: var(--layout-bar);
+    color: #fff;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  &__icon-button {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  &__content {
+    flex: 1;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  width: min(304px, 85vw);
+  overflow-y: auto;
+  padding-bottom: 16px;
+  background: var(--layout-bar);
+  color: rgba(255, 255, 255, 0.95);
+
+  &__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 120px;
+    padding: 16px;
+  }
+
+  &__title {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  &__section {
+    margin: 0;
+    padding: 8px 16px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: calc(100% - 16px);
+    margin: 0 8px;
+    padding: 12px 16px;
+    background: transparent;
+    border: 0;
+    border-radius: 12px;
+    color: var(--md-primary);
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &--destructive {
+      color: #f44336;
+    }
+  }
+
+  &__accent {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 16px;
+    padding: 16px;
+    border: 1px solid;
+    border-radius: 12px;
+    font-weight: 500;
+  }
+
+  &__swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  &__divider {
+    height: 1px;
+    margin: 16px 0;
+    background: rgba(255, 255, 255, 0.24);
+    border: 0;
+  }
+
+  &__login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px;
+    padding: 12px;
+    background: var(--md-primary);
+    border-radius: 12px;
+    color: var(--md-on-primary);
+    text-decoration: none;
+  }
+}

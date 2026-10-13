@@ -1,0 +1,83 @@
+<app-main-layout title="Profil">
+  <div class="profile">
+    <section class="card">
+      <h2 class="card__title">Benutzerinformationen</h2>
+      <p class="card__line">Name: {{ user()?.displayName || 'N/A' }}</p>
+      <p class="card__line">E-Mail: {{ user()?.email || 'N/A' }}</p>
+      <p class="card__line">Letzter Login: {{ lastLogin() }}</p>
+
+      <h3 class="card__subtitle">Datum des Ereignisses</h3>
+      <p class="card__line">{{ savedDate() || 'Kein Datum gespeichert' }}</p>
+      <p class="card__hint">Nach diesem Datum werden als erledigt markierte Wünsche automatisch gelöscht.</p>
+
+      <div class="field">
+        <div class="field__control">
+          <input
+            type="date"
+            name="event-date"
+            aria-label="Neues Datum des Ereignisses"
+            [ngModel]="dateInput()"
+            (ngModelChange)="dateInput.set($event)"
+          />
+        </div>
+      </div>
+      <button type="button" class="change" [disabled]="!dateInput()" (click)="saveDate()">Speichern</button>
+    </section>
+
+    <section class="card">
+      <h2 class="card__title">Daten ändern</h2>
+
+      <div class="field">
+        <label class="field__label" for="name">Name</label>
+        <div class="field__control">
+          <input id="name" name="name" type="text" [ngModel]="newName()" (ngModelChange)="newName.set($event)" />
+        </div>
+      </div>
+      <button type="button" class="change" [disabled]="!newName().trim()" (click)="changeName()">Ändern</button>
+
+      <div class="field" [class.field--invalid]="emailError()">
+        <label class="field__label" for="email">E-Mail</label>
+        <div class="field__control">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            [ngModel]="newEmail()"
+            (ngModelChange)="newEmail.set($event); emailError.set(null)"
+          />
+        </div>
+        @if (emailError()) {
+          <p class="field__error">{{ emailError() }}</p>
+        }
+      </div>
+      <button type="button" class="change" [disabled]="!newEmail().trim()" (click)="changeEmail()">Ändern</button>
+
+      <div class="field" [class.field--invalid]="passwordError()">
+        <label class="field__label" for="password">Passwort</label>
+        <div class="field__control">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            [ngModel]="newPassword()"
+            (ngModelChange)="newPassword.set($event); passwordError.set(null)"
+          />
+        </div>
+        @if (passwordError()) {
+          <p class="field__error">{{ passwordError() }}</p>
+        }
+      </div>
+      <button type="button" class="change" [disabled]="!newPassword()" (click)="changePassword()">Ändern</button>
+    </section>
+
+    <section class="card">
+      <h2 class="card__title">Wunschliste teilen</h2>
+      <p class="card__hint card__hint--large">Teile deine Wunschliste mit Freunden und Familie!</p>
+      <button type="button" class="share" [disabled]="sharing()" (click)="shareList()">
+        <mat-icon>share</mat-icon>
+        Liste teilen
+      </button>
+    </section>
+  </div>
+</app-main-layout>

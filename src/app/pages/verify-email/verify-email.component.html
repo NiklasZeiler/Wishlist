@@ -1,0 +1,23 @@
+<header class="bar">
+  <button type="button" class="bar__logout" (click)="logout()">Abmelden</button>
+</header>
+
+<main class="verify">
+  <mat-icon class="verify__icon">mark_email_unread</mat-icon>
+  <h1 class="verify__title">E-Mail verifizieren</h1>
+  <p class="verify__text">Wir haben dir eine Verifizierungs-E-Mail an</p>
+  <p class="verify__address">{{ auth.user()?.email }}</p>
+  <p class="verify__text">gesendet. Bitte öffne die E-Mail und klicke auf den Verifizierungslink.</p>
+
+  <div class="verify__info">
+    <mat-icon>info_outline</mat-icon>
+    <span>Nach der Verifizierung wirst du automatisch weitergeleitet</span>
+  </div>
+
+  <button type="button" class="btn-primary" [disabled]="!canResend() || resending()" (click)="resend()">
+    <mat-icon>refresh</mat-icon>
+    {{ canResend() ? 'E-Mail erneut senden' : 'Erneut senden in ' + countdown() + 's' }}
+  </button>
+
+  <p class="verify__hint">Keine E-Mail erhalten? Prüfe deinen Spam-Ordner</p>
+</main>

@@ -1,0 +1,44 @@
+.legal {
+  padding: 24px;
+
+  &__title {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  &__updated {
+    margin: 0 0 24px;
+    color: var(--md-on-surface-variant);
+    font-size: 14px;
+  }
+
+  &__section {
+    margin-bottom: 24px;
+  }
+
+  &__heading {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--md-on-surface-variant);
+    font-size: 15px;
+    line-height: 1.6;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+
+  &__contact {
+    display: flex;
+    justify-content: center;
+    margin: 32px 0 24px;
+  }
+}
+
+.btn-outlined {
+  text-decoration: none;
+}

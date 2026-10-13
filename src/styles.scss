@@ -1,66 +1,279 @@
-/* Importing Bootstrap SCSS file. */
-@import "bootstrap/scss/bootstrap";
 @import 'material-icons/iconfont/material-icons.css';
 
 @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 100 900;
-  src: url('/assets/fonts/Roboto-VariableFont_wght.ttf') format('truetype');
+  src: url('/assets/fonts/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
   font-display: swap;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #05171f !important;
-    color: white !important;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: visible !important;
-    height: auto !important;
-    min-height: 100vh;
+// Fallbacks until ThemeService publishes the seeded Material 3 palette.
+:root {
+  --md-primary: #8ccff0;
+  --md-on-primary: #003547;
+  --md-primary-container: #004d65;
+  --md-on-primary-container: #c0e8ff;
+  --md-tertiary: #c7c2ea;
+  --md-surface: #0f1417;
+  --md-on-surface: #dfe3e7;
+  --md-on-surface-variant: #c0c7cd;
+  --md-surface-container-low: #171c1f;
+  --md-surface-container: #1b2023;
+  --md-surface-container-highest: #303638;
+  --md-outline: #8a9297;
+  --md-error: #ffb4ab;
+  --md-on-error: #690005;
+  --md-error-container: #93000a;
+  --md-on-error-container: #ffdad6;
+
+  --layout-background: #1a1a1a;
+  --layout-bar: #2a2a2a;
+  --radius-field: 12px;
+  --radius-card: 16px;
 }
 
-.high-priority {
-    background-color: red;
-    color: white;
-}
-.medium-priority {
-    background-color: orange;
-    color: white;
-}
-.low-priority {
-    background-color: green;
-    color: white;
-}
-
-.mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label,
-.mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label--float-above {
-    color: white !important;
-}
-
-.mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
-    color: white !important;
-}
-
-.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
-    border-bottom-color: white !important;
+// Shell pages always render on the dark layout, so they use the dark palette
+// regardless of the system theme (as the Flutter app does).
+.on-dark-layout {
+  --md-primary: var(--md-dark-primary);
+  --md-on-primary: var(--md-dark-on-primary);
+  --md-primary-container: var(--md-dark-primary-container);
+  --md-on-primary-container: var(--md-dark-on-primary-container);
+  --md-tertiary: var(--md-dark-tertiary);
+  --md-surface: var(--md-dark-surface);
+  --md-on-surface: var(--md-dark-on-surface);
+  --md-on-surface-variant: var(--md-dark-on-surface-variant);
+  --md-surface-container-low: var(--md-dark-surface-container-low);
+  --md-surface-container: var(--md-dark-surface-container);
+  --md-surface-container-highest: var(--md-dark-surface-container-highest);
+  --md-outline: var(--md-dark-outline);
+  --md-error: var(--md-dark-error);
+  --md-on-error: var(--md-dark-on-error);
+  --md-error-container: var(--md-dark-error-container);
+  --md-on-error-container: var(--md-dark-on-error-container);
 }
 
-.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
-    color: green !important;
+// Surfaces with a fixed light background (wish cards, dialogs) use the light palette.
+.on-light-surface {
+  --md-primary: var(--md-light-primary);
+  --md-on-primary: var(--md-light-on-primary);
+  --md-primary-container: var(--md-light-primary-container);
+  --md-on-primary-container: var(--md-light-on-primary-container);
+  --md-tertiary: var(--md-light-tertiary);
+  --md-surface: var(--md-light-surface);
+  --md-on-surface: var(--md-light-on-surface);
+  --md-on-surface-variant: var(--md-light-on-surface-variant);
+  --md-surface-container-low: var(--md-light-surface-container-low);
+  --md-surface-container: var(--md-light-surface-container);
+  --md-surface-container-highest: var(--md-light-surface-container-highest);
+  --md-outline: var(--md-light-outline);
+  --md-error: var(--md-light-error);
+  --md-on-error: var(--md-light-on-error);
+  --md-error-container: var(--md-light-error-container);
+  --md-on-error-container: var(--md-light-on-error-container);
 }
 
-.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after,
-.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-indeterminate::after {
-    color: green !important;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
 body {
-    height: auto !important;
-    overflow-y: scroll !important;
+  margin: 0;
+  min-height: 100vh;
+  background: var(--md-surface);
+  color: var(--md-on-surface);
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+// ---- Form fields -----------------------------------------------------------
+
+.field {
+  display: block;
+  margin-bottom: 16px;
+
+  &__label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--md-on-surface-variant);
+    font-size: 14px;
+  }
+
+  &__control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--md-surface-container);
+    border: 1px solid color-mix(in srgb, var(--md-outline) 20%, transparent);
+    border-radius: var(--radius-field);
+
+    &:focus-within {
+      border: 2px solid var(--md-primary);
+      margin: -1px;
+    }
+
+    mat-icon {
+      margin-left: 12px;
+      color: var(--md-on-surface-variant);
+    }
+
+    input,
+    textarea,
+    select {
+      flex: 1;
+      min-width: 0;
+      padding: 16px 14px;
+      background: transparent;
+      border: 0;
+      outline: 0;
+      color: var(--md-on-surface);
+      font: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    select option {
+      background: var(--md-surface);
+      color: var(--md-on-surface);
+    }
+  }
+
+  &--invalid &__control {
+    border-color: var(--md-error);
+
+    &:focus-within {
+      border-color: var(--md-error);
+    }
+  }
+
+  &__error {
+    margin: 4px 0 0 14px;
+    color: var(--md-error);
+    font-size: 12px;
+  }
+}
+
+// ---- Buttons ---------------------------------------------------------------
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 56px;
+  background: var(--md-primary);
+  border: 0;
+  border-radius: var(--radius-field);
+  color: var(--md-on-primary);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    background: var(--md-surface-container);
+    color: color-mix(in srgb, var(--md-on-surface) 38%, transparent);
+    cursor: default;
+  }
+}
+
+.btn-text {
+  padding: 8px 12px;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+
+  &--accent {
+    color: var(--md-primary);
+    font-weight: 700;
+  }
+}
+
+.btn-outlined {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  border: 1px solid var(--md-primary);
+  border-radius: var(--radius-field);
+  color: var(--md-primary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.error-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 12px;
+  background: var(--md-error-container);
+  border-radius: 8px;
+  color: var(--md-on-error-container);
+
+  mat-icon {
+    color: var(--md-error);
+  }
+}
+
+// ---- Material overlays (dialogs, snack bars) -------------------------------
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-color: #fff;
+  --mdc-dialog-subhead-color: #212121;
+  --mdc-dialog-supporting-text-color: #424242;
+  --mdc-dialog-container-shape: 16px;
+}
+
+// Dialogs that follow the system theme (white in light mode, #2a2a2a in dark mode).
+.dialog-adaptive .mat-mdc-dialog-container {
+  --mdc-dialog-subhead-color: var(--md-on-surface);
+  --mdc-dialog-supporting-text-color: var(--md-on-surface-variant);
+}
+
+@media (prefers-color-scheme: dark) {
+  .dialog-adaptive .mat-mdc-dialog-container {
+    --mdc-dialog-container-color: #2a2a2a;
+  }
+}
+
+.viewer-dialog .mat-mdc-dialog-container {
+  --mdc-dialog-container-color: #000;
+  --mdc-dialog-container-shape: 0;
+}
+
+.viewer-dialog .mat-mdc-dialog-surface {
+  background: #000;
+}
+
+.snack-success .mdc-snackbar__surface {
+  background: var(--md-primary) !important;
+}
+
+.snack-success .mdc-snackbar__label {
+  color: var(--md-on-primary) !important;
+}
+
+.snack-error .mdc-snackbar__surface {
+  background: var(--md-error) !important;
+}
+
+.snack-error .mdc-snackbar__label {
+  color: var(--md-on-error) !important;
 }

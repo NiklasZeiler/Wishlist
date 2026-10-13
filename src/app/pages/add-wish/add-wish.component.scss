@@ -1,0 +1,116 @@
+.add-wish {
+  padding: 16px;
+
+  &__card {
+    margin-bottom: 16px;
+    padding: 20px;
+    background: var(--md-surface-container-low);
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  &__heading {
+    margin: 0 0 16px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  &__submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--md-primary);
+    border: 0;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+}
+
+// Fields on this page use 8px corners and no resting border, like the Flutter form.
+.field__control {
+  border-radius: 8px;
+  border-color: transparent;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.pick {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  margin-bottom: 16px;
+  border: 1px solid var(--md-outline);
+  border-radius: 8px;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+}
+
+.preview {
+  position: relative;
+  margin-bottom: 16px;
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: 180px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  &__actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+  }
+
+  &__button {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.54);
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+
+    mat-icon {
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+    }
+
+    &--edit mat-icon {
+      color: var(--md-primary);
+    }
+
+    &--delete mat-icon {
+      color: var(--md-error);
+    }
+  }
+}
+
+.dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-left: 14px;
+  border-radius: 50%;
+}

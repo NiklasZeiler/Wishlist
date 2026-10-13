@@ -1,0 +1,48 @@
+<app-main-layout title="Wunschliste">
+  <div class="wishlist">
+    @if (loadError(); as message) {
+      <div class="state">
+        <mat-icon class="state__icon state__icon--error">error_outline</mat-icon>
+        <p>Fehler: {{ message }}</p>
+      </div>
+    } @else if (wishes() === null) {
+      <div class="state" role="status">
+        <span class="spinner" aria-label="Wird geladen"></span>
+      </div>
+    } @else if (wishes()!.length === 0) {
+      <div class="state">
+        <mat-icon class="state__icon" fontSet="material-icons-outlined">card_giftcard</mat-icon>
+        <p class="state__title">Keine Wünsche vorhanden</p>
+        <p class="state__hint">Füge deinen ersten Wunsch hinzu</p>
+      </div>
+    } @else {
+      <header class="wishlist__header">
+        <span class="wishlist__emoji" aria-hidden="true">🎁</span>
+        <div>
+          <h2 class="wishlist__title">Wunschliste</h2>
+          <p class="wishlist__count">
+            {{ wishes()!.length }} {{ wishes()!.length === 1 ? 'Wunsch' : 'Wünsche' }}
+          </p>
+        </div>
+      </header>
+
+      @for (wish of wishes(); track wish.id) {
+        <app-wish-card [wish]="wish" [editable]="true" (priorityChange)="changePriority(wish, $event)">
+          <app-confirm-action-button
+            label="Löschen"
+            tone="delete"
+            dialogTitle="Wunsch löschen?"
+            [dialogContent]="'Möchtest du &quot;' + wish.wish + '&quot; wirklich löschen?'"
+            confirmText="Löschen"
+            (confirmed)="deleteWish(wish)"
+          />
+        </app-wish-card>
+      }
+    }
+  </div>
+
+  <a class="fab" routerLink="/add-wish">
+    <mat-icon>add</mat-icon>
+    Wunsch hinzufügen
+  </a>
+</app-main-layout>

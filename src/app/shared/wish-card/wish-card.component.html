@@ -1,0 +1,65 @@
+<article class="card on-light-surface">
+  <div class="card__head">
+    <span class="card__label">Wunsch</span>
+
+    <div class="card__title-wrap">
+      @if (editable()) {
+        <button
+          type="button"
+          class="card__title card__title--editable"
+          [style.color]="titleColor()"
+          [attr.aria-expanded]="dropdownOpen()"
+          (click)="dropdownOpen.set(!dropdownOpen())"
+        >
+          {{ wish().wish }}
+          <mat-icon class="card__chevron">{{ dropdownOpen() ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      } @else {
+        <span class="card__title" [style.color]="titleColor()">{{ wish().wish }}</span>
+      }
+
+      @if (editable() && dropdownOpen()) {
+        <ul class="card__priorities">
+          @for (priority of priorities; track priority) {
+            <li>
+              <button type="button" class="card__priority" (click)="selectPriority(priority)">
+                <span [style.color]="titleColorFor(priority)">{{ priority.toUpperCase() }}</span>
+                @if (wish().priority === priority) {
+                  <mat-icon class="card__check">check</mat-icon>
+                }
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    <span class="card__badge" [style.background]="badgeColor()">{{ badgeText() }}</span>
+    <button type="button" class="card__info" aria-label="Beschreibung anzeigen" (click)="showDescription()">
+      <mat-icon fontSet="material-icons-outlined">info</mat-icon>
+    </button>
+  </div>
+
+  <p class="card__description">{{ wish().description }}</p>
+
+  @if (wish().image && !imageFailed()) {
+    <button type="button" class="card__image-button" aria-label="Bild vergrößern" (click)="openImage()">
+      <img class="card__image" [src]="wish().image" alt="Bild zu {{ wish().wish }}" (error)="imageFailed.set(true)" />
+    </button>
+  } @else {
+    <div class="card__placeholder">
+      <mat-icon>{{ wish().image ? 'broken_image' : 'card_giftcard' }}</mat-icon>
+    </div>
+  }
+
+  @if (wish().link) {
+    <a class="card__link" [href]="wish().link" target="_blank" rel="noopener noreferrer">
+      <mat-icon>link</mat-icon>
+      Link zum Produkt →
+    </a>
+  }
+
+  <div class="card__action">
+    <ng-content />
+  </div>
+</article>

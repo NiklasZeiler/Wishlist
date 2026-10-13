@@ -1,0 +1,79 @@
+@switch (status()) {
+  @case ('loading') {
+    <app-main-layout title="Lädt Wunschliste...">
+      <div class="state" role="status">
+        <span class="spinner" aria-hidden="true"></span>
+        <p>Wunschliste wird geladen...</p>
+      </div>
+    </app-main-layout>
+  }
+
+  @case ('error') {
+    <app-main-layout title="Fehler">
+      <div class="state">
+        <mat-icon class="state__icon state__icon--error">error_outline</mat-icon>
+        <h2>Fehler beim Laden</h2>
+        <p class="state__hint">{{ errorMessage() }}</p>
+      </div>
+    </app-main-layout>
+  }
+
+  @case ('invalid') {
+    <app-main-layout title="Ungültiger Code">
+      <div class="state">
+        <mat-icon class="state__icon state__icon--error">link_off</mat-icon>
+        <h2>Ungültiger Share-Code</h2>
+        <p class="state__hint">Dieser Code existiert nicht oder wurde gelöscht.</p>
+        <button type="button" class="state__button" (click)="back()">Zurück</button>
+      </div>
+    </app-main-layout>
+  }
+
+  @case ('no-code') {
+    <app-main-layout title="Geteilte Wunschliste">
+      <div class="state">
+        <mat-icon class="state__icon state__icon--accent">card_giftcard</mat-icon>
+        <p class="state__text">Gib einen Share-Code ein,<br />um eine Wunschliste zu öffnen</p>
+        <button type="button" class="state__button" (click)="openCodeDialog()">
+          <mat-icon>vpn_key</mat-icon>
+          Code eingeben
+        </button>
+      </div>
+    </app-main-layout>
+  }
+
+  @case ('ready') {
+    <app-main-layout title="Geteilte Wunschliste">
+      @if (listError(); as message) {
+        <div class="state">
+          <mat-icon class="state__icon state__icon--error">error_outline</mat-icon>
+          <p>Fehler: {{ message }}</p>
+        </div>
+      } @else if (wishes() === null) {
+        <div class="state" role="status">
+          <span class="spinner" aria-label="Wird geladen"></span>
+        </div>
+      } @else if (wishes()!.length === 0) {
+        <div class="state">
+          <mat-icon class="state__icon">inbox</mat-icon>
+          <p>Keine Wünsche vorhanden</p>
+        </div>
+      } @else {
+        <div class="list">
+          @for (wish of wishes(); track wish.id) {
+            <app-wish-card [wish]="wish">
+              <app-confirm-action-button
+                label="Als erledigt markieren"
+                tone="complete"
+                dialogTitle="Wunsch erfüllen?"
+                [dialogContent]="'Möchtest du &quot;' + wish.wish + '&quot; wirklich als erledigt markieren?'"
+                confirmText="Erledigt"
+                (confirmed)="complete(wish)"
+              />
+            </app-wish-card>
+          }
+        </div>
+      }
+    </app-main-layout>
+  }
+}

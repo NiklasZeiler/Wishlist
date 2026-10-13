@@ -1,0 +1,62 @@
+.auth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 48px 24px 24px;
+  color: var(--md-on-surface);
+
+  &__logo {
+    width: 80px;
+    height: 80px;
+    font-size: 80px;
+    color: var(--md-primary);
+  }
+
+  &__title {
+    margin: 24px 0 8px;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__subtitle {
+    margin: 0 0 48px;
+    color: var(--md-on-surface-variant);
+    font-size: 14px;
+    text-align: center;
+  }
+
+  &__form {
+    width: 100%;
+  }
+
+  &__submit {
+    margin-top: 16px;
+  }
+
+  &__legal {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+    color: var(--md-on-surface-variant);
+    font-size: 12px;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  &__switch {
+    margin: 24px 0 0;
+    color: var(--md-on-surface-variant);
+
+    a {
+      margin-left: 4px;
+      color: var(--md-primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+<app-main-layout title="Feedback">
+  <div class="feedback">
+    <section class="feedback__card">
+      <h2 class="feedback__heading">Dein Feedback ist uns wichtig!</h2>
+      <div class="field">
+        <div class="field__control">
+          <textarea
+            name="feedback"
+            rows="8"
+            aria-label="Feedback"
+            placeholder="Teile uns deine Gedanken mit..."
+            [ngModel]="text()"
+            (ngModelChange)="text.set($event)"
+          ></textarea>
+        </div>
+      </div>
+      <button type="button" class="feedback__submit" (click)="send()">Feedback absenden</button>
+    </section>
+
+    @if (loadFailed()) {
+      <p class="feedback__error">Fehler beim Laden der Feedbacks</p>
+    } @else if (entries() === null) {
+      <div class="feedback__loading" role="status"><span class="spinner" aria-label="Wird geladen"></span></div>
+    } @else if (entries()!.length === 0) {
+      <p class="feedback__empty">Noch kein Feedback vorhanden</p>
+    } @else {
+      <ul class="feedback__list">
+        @for (entry of entries(); track entry.id) {
+          <li class="entry">
+            <mat-icon class="entry__icon">feedback</mat-icon>
+            <div class="entry__body">
+              <p class="entry__text">{{ entry.feedback }}</p>
+              <p class="entry__likes">Likes: {{ entry.likes }}</p>
+            </div>
+            <button type="button" class="entry__like" aria-label="Gefällt mir" (click)="like(entry)">
+              <mat-icon>thumb_up</mat-icon>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</app-main-layout>

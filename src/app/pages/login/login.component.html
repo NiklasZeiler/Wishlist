@@ -1,0 +1,65 @@
+<main class="auth">
+  <mat-icon class="auth__logo">card_giftcard</mat-icon>
+  <h1 class="auth__title">Wunschliste Login</h1>
+  <p class="auth__subtitle">Melde dich an, um deine Wünsche zu verwalten</p>
+
+  <form class="auth__form" novalidate (ngSubmit)="login()">
+    <div class="field" [class.field--invalid]="emailError()">
+      <label class="field__label" for="email">E-Mail</label>
+      <div class="field__control">
+        <mat-icon>email</mat-icon>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="username"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event); emailError.set(null)"
+        />
+      </div>
+      @if (emailError()) {
+        <p class="field__error">{{ emailError() }}</p>
+      }
+    </div>
+
+    <div class="field" [class.field--invalid]="passwordError()">
+      <label class="field__label" for="password">Passwort</label>
+      <div class="field__control">
+        <mat-icon>lock</mat-icon>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event); passwordError.set(null)"
+        />
+      </div>
+      @if (passwordError()) {
+        <p class="field__error">{{ passwordError() }}</p>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <div class="error-box" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <button class="btn-primary auth__submit" type="submit" [disabled]="loading()">
+      {{ loading() ? 'Bitte warten…' : 'Anmelden' }}
+    </button>
+  </form>
+
+  <nav class="auth__legal" aria-label="Rechtliches">
+    <a routerLink="/privacy">Datenschutz</a>
+    <span aria-hidden="true">|</span>
+    <a routerLink="/imprint">Impressum</a>
+  </nav>
+
+  <p class="auth__switch">
+    Noch kein Account?
+    <a routerLink="/register">Registrieren</a>
+  </p>
+</main>

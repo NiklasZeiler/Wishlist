@@ -1,0 +1,111 @@
+<main class="auth">
+  <h1 class="auth__title">Konto erstellen</h1>
+  <p class="auth__subtitle">Erstelle ein Konto, um deine Wunschliste zu verwalten</p>
+
+  <form class="auth__form" novalidate (ngSubmit)="register()">
+    <div class="field" [class.field--invalid]="usernameError()">
+      <label class="field__label" for="username">Benutzername</label>
+      <div class="field__control">
+        <mat-icon>person</mat-icon>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          autocomplete="username"
+          [ngModel]="username()"
+          (ngModelChange)="username.set($event); usernameError.set(null)"
+        />
+      </div>
+      @if (usernameError()) {
+        <p class="field__error">{{ usernameError() }}</p>
+      }
+    </div>
+
+    <div class="field" [class.field--invalid]="emailError()">
+      <label class="field__label" for="email">E-Mail</label>
+      <div class="field__control">
+        <mat-icon>email</mat-icon>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event); emailError.set(null)"
+        />
+      </div>
+      @if (emailError()) {
+        <p class="field__error">{{ emailError() }}</p>
+      }
+    </div>
+
+    <div class="field" [class.field--invalid]="passwordError()">
+      <label class="field__label" for="password">Passwort</label>
+      <div class="field__control">
+        <mat-icon>lock</mat-icon>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="new-password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event); passwordError.set(null)"
+        />
+      </div>
+      @if (passwordError()) {
+        <p class="field__error">{{ passwordError() }}</p>
+      }
+    </div>
+
+    @if (password()) {
+      <div class="strength" [attr.data-tone]="strengthTone()">
+        <div class="strength__bars">
+          @for (segment of strengthSegments; track segment) {
+            <span class="strength__bar" [class.strength__bar--filled]="segment < strength()"></span>
+          }
+        </div>
+        <span class="strength__label">Stärke: {{ strengthLabel() }}</span>
+      </div>
+    }
+
+    <div class="field" [class.field--invalid]="confirmError()">
+      <label class="field__label" for="confirm-password">Passwort bestätigen</label>
+      <div class="field__control">
+        <mat-icon>lock_outline</mat-icon>
+        <input
+          id="confirm-password"
+          name="confirm-password"
+          type="password"
+          autocomplete="new-password"
+          [ngModel]="confirmPassword()"
+          (ngModelChange)="confirmPassword.set($event); confirmError.set(null)"
+        />
+      </div>
+      @if (confirmError()) {
+        <p class="field__error">{{ confirmError() }}</p>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <div class="error-box" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <button class="btn-primary auth__submit" type="submit" [disabled]="loading() || !formValid()">
+      {{ loading() ? 'Bitte warten…' : 'Registrieren' }}
+    </button>
+  </form>
+
+  <nav class="auth__legal" aria-label="Rechtliches">
+    <a routerLink="/privacy">Datenschutz</a>
+    <span aria-hidden="true">|</span>
+    <a routerLink="/imprint">Impressum</a>
+  </nav>
+
+  <p class="auth__switch">
+    Hast du bereits ein Konto?
+    <a routerLink="/login">Anmelden</a>
+  </p>
+</main>
